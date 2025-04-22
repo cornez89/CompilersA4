@@ -1,5 +1,6 @@
 package visitor;
 
+import java.lang.foreign.SymbolLookup;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -10,6 +11,7 @@ import ast.FormalList;
 import ast.Method;
 import util.ClassTreeNode;
 import util.ErrorHandler;
+import util.SymbolTable;
 
 abstract public class SemantVisitor extends Visitor {
     
@@ -19,6 +21,8 @@ abstract public class SemantVisitor extends Visitor {
     protected static String STRING = "String";
     protected static String INT = "int";
     protected static String BOOL = "boolean";
+    protected static String VOID = "void";
+    protected static String OBJECT = "Object";
     static private String[] reservedWordsArray = {
         "this", "super", "null", "class", "extends", "for", 
         "while", "if", "else", "return", "break", "new"
@@ -50,18 +54,29 @@ abstract public class SemantVisitor extends Visitor {
         }
     }
 
+
+    /**
+     * Must be given types that exist
+     * Checks if type 1 conforms to type 2 (type 1 is a subclass of type 2)
+     * or if they are primitive, checks if they are equal.
+     * Gives error messages if either are false
+     * @param type1 
+     * @param type2
+     * @return true if no errors are found
+     * @throws RuntimeException
+     */
     public boolean conformsTo(String type1, String type2) throws RuntimeException{
         ClassTreeNode node1; 
         ClassTreeNode node2;
-        if (!typeExists(type1) || !typeExists(type2)) {
-            //error
 
+        if (type1.equals(VOID) && type2.equals(VOID)) {
+            return true;
+        } else if (!typeExists(type1) || !typeExists(type2)) {
+            return false;
         } else if (isPrimitiveOrArray(type1) ^ isPrimitiveOrArray(type2)) {
-            registerSemanticError(null, type2);
-        } else if (!isPrimitiveOrArray(type1) && isPrimitive(type2)) {
-            //error
+            return false;
         } else if (isPrimitiveOrArray(type1) && isPrimitiveOrArray(type2) && !type1.equals(type2)) {
-            //error
+            return false;
         } else if (!isPrimitiveOrArray(type1) && !isPrimitiveOrArray(type2)) {
             node1 = classTreeNode.lookupClass(type1);
             node2 = classTreeNode.lookupClass(type2);
@@ -123,7 +138,7 @@ abstract public class SemantVisitor extends Visitor {
         if (method1.getFormalList().getSize() != method2.getFormalList().getSize()) {
             errorHandler.register(errorHandler.SEMANT_ERROR, 
                 classTreeNode.getASTNode().getFilename(),
-                0, "number of actual parameters (" + 3 + ") differs from number of formal parameters (2) in dispatch to method 'm6');
+                0, "number of actual parameters (" + method1.getFormalList().getSize() + ") differs from number of formal parameters (" + method2.getFormalList().getSize() + ") in dispatch to method '" + method1.getName() + "'");
             isValid = false;
         } else {
             Iterator<ASTNode> formals1 = method1.getFormalList().getIterator();
@@ -146,23 +161,6 @@ abstract public class SemantVisitor extends Visitor {
         return isValid;
     }
 
-    protected void checkFormalsMatch(FormalList formalList1, FormalList formalList2) {
-        Iterator<ASTNode> formals1 = formalList1.getIterator();
-        Iterator<ASTNode> formals2 = formalList2.getIterator();
-
-        int i = 1;
-        while (formals1.hasNext()) {
-            String type1 = ((Formal) formals1.next()).getType();
-            String type2 = ((Formal) formals2.next()).getType();
-
-            if (!type1.equals(type2)) {
-                errorHandler.register(errorHandler.SEMANT_ERROR, 
-                classTreeNode.getASTNode().getFilename(),
-                "actual parameter " + i + " with type '" + type1  + "'' does not match formal parameter " + i + " with declared type '" +  type2 + "' in dispatch to method'" + methodName + "'");
-            }
-            i++;
-        }
-    }
     protected void addVar(String name, String type) {
         classTreeNode.getVarSymbolTable().add(name, type);
         classTreeNode.getVarSymbolTable().add("this." + name, type);
@@ -180,7 +178,14 @@ abstract public class SemantVisitor extends Visitor {
         System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(), classTreeNode.getVarSymbolTable().getCurrScopeLevel(), classTreeNode.getVarSymbolTable().getCurrScopeSize());
        return classTreeNode.getVarSymbolTable().lookup(name);
     }
-
+    protected Object thisLookupVar(String name) {
+        System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(), classTreeNode.getVarSymbolTable().getCurrScopeLevel(), classTreeNode.getVarSymbolTable().getCurrScopeSize());
+       return lookupVar("this." + name);
+    }
+    protected Object superLookupVar(String name) {
+        System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(), classTreeNode.getVarSymbolTable().getCurrScopeLevel(), classTreeNode.getVarSymbolTable().getCurrScopeSize());
+       return classTreeNode.getParent().getVarSymbolTable().lookup(name);
+    }
     
     protected Object lookupMethod(String name) {
         System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(), classTreeNode.getVarSymbolTable().getCurrScopeLevel(), classTreeNode.getVarSymbolTable().getCurrScopeSize());

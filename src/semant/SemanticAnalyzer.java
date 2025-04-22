@@ -285,11 +285,11 @@ public class SemanticAnalyzer {
                         String className = entry.getKey();
                         Class_ classNode = entry.getValue();
 
-                        if (classMap.containsKey(entry.))
+                        if (classMap.containsKey(entry.getKey()))
                         for (int i = 0; i < classNodes.size();) {
 
                                 //make class tree node
-                                Class_ classNode = (Class_) classNodes.get(i);
+                                classNode = (Class_) classNodes.get(i);
                                 ClassTreeNode classTreeNode = new ClassTreeNode(
                                         classNode,
                                         false,//never built in 
@@ -352,20 +352,12 @@ public class SemanticAnalyzer {
                         }
                         classesChanged = initialNumOfClasses != classNodes.size();
                 }
-                for(String className : classMap.keySet()) {
-                        System.out.println("class: " + className + " value: " + classMap.get(className));
-                }
-                for (ClassTreeNode node : orderedClassList) {
-                        System.out.println(node.getName());
-                }
-                //The remaining nodes do not have a parent class
-                for (ASTNode node : classNodes) {
-                        Class_ classNode = (Class_) node;
-                        errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0, 
-                                "Error in BuildClassTree: Parent class: " + classNode.getParent() + 
-                                " does not exist in the class hiearchy.");
-                }
-                
+                // for(String className : classMap.keySet()) {
+                //         System.out.println("class: " + className + " value: " + classMap.get(className));
+                // }
+                // for (ClassTreeNode node : orderedClassList) {
+                //         System.out.println(node.getName());
+                // }
     }
     
     /** Build symbol table for each class

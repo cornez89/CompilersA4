@@ -101,6 +101,338 @@ public class TypeCheckVisitor extends SemantVisitor {
      * 
      */
 
+     public Object visit(ast.Field node) { 
+      if (node.getInit() != null) {
+        Expr initExpr = node.getInit();
+        initExpr.accept(this);
+
+        
+        if (!typeExists(node.getType())) {
+          registerSemanticError(node, "type '" + node.getType() + "' of field '" + node.getName() + "' is undefined");
+        } 
+
+        if (initExpr.getExprType().equals(VOID)) {
+          registerSemanticError(node, "cannot return an expression of type '" + VOID + "' from a method");
+        }
+
+        //Two errors in one
+        //checks if primitives match
+        //checks if references types conform
+        if (!conformsTo(initExpr.getExprType(), node.getType())) {
+          registerSemanticError(node, "expression type '" + initExpr.getExprType() + "' of field '" + node.getName()+ "' does not conform to declared type '" + node.getType() + "'");
+        }
+
+      }
+  
+      return null; 
+    }
+
+    /** Visit a method node
+      * @param node the method node
+      * @return result of the visit 
+      * */
+      public Object visit(Method node) { 
+        enterScope();
+        
+        //type check and add formals
+        node.getFormalList().accept(this);
+
+        //type check and add local vars
+        node.getStmtList().accept(this);
+
+        //check that return types conform
+        ReturnStmt returnStmt = null;
+        String returnType = "void";
+        Iterator<ASTNode> bodyStmts = node.getStmtList().getIterator();
+        
+        //check that return stmt should be the last stmt
+        while(bodyStmts.hasNext()) {
+          Stmt stmt = (Stmt) bodyStmts.next();
+          if (stmt instanceof ReturnStmt) {
+            returnStmt = (ReturnStmt) stmt;
+            returnType = returnStmt.getExpr().getExprType();
+            break;
+          }
+        }
+
+        //check that there are no expressions after the returnStmt
+        if (bodyStmts.hasNext()) {
+          registerSemanticError(node, "Unreachable statement of type '" + 
+          bodyStmts.next().getClass().getSimpleName() + "' after return statement");
+        }
+        
+        //check that return type matches the actual return statement
+        if (!conformsTo(returnType, node.getReturnType())) {
+          registerSemanticError(node, "return type '" + returnType + "' is not compatible with declared return type '" + node.getReturnType() + "' in method '" + node.getName() + "'");
+        }
+
+        exitScope();
+        return null; 
+      }
+
+      /** Visit a list node of formals
+      * @param node the formal list node
+      * @return result of the visit 
+      * */
+  public Object visit(FormalList node) { 
+    Iterator<ASTNode> formals = node.getIterator();
+    while(formals.hasNext()) {
+      Formal formal = (Formal) formals.next();
+      String name = formal.getName();
+      String type = formal.getType();
+      
+      //checks if type of formal exists, if not assign as "Object"
+      type = (String) formal.accept(this);
+      addVar(name, type);
+
+    }
+    return null;
+  }
+
+    /** Visit a formal node
+      * @param node the formal node
+      * @return result of the visit 
+      * */
+    public Object visit(Formal node) {
+      String type = node.getType();
+      String name = node.getName();
+
+      type = (String) checkFormal(name, type, node, "formal");
+      
+
+      return type;
+    }
+
+    protected Object checkFormal(String name, String type, ASTNode node, String nodeType) {
+      if (typeExists(type)) {
+        registerSemanticError(node, "type '" + type + "' of " + nodeType +" '" + name + "' is undefined");
+        type = "Object";
+      }
+
+      if (isReserved(name)) {
+        registerSemanticError(node, nodeType + "s cannot be named '" + name + "'");
+      }
+
+      if (existsInCurrentVarScope(name)) {
+        registerSemanticError(node, nodeType + " '" + name + "' is multiply defined");
+      }
+      return type;
+    } 
+
+    /** Visit a list node of statements
+      * @param node the statement list node
+      * @return result of the visit 
+      * */
+      public Object visit(StmtList node) {
+        for (Iterator it = node.getIterator(); it.hasNext(); ) {
+          Stmt stmt = (Stmt) it.next();
+          stmt.accept(this);
+        }
+        return null;
+    }
+
+    /** Visit a declaration statement node
+      * @param node the declaration statement node
+      * @return result of the visit 
+      * */
+      public Object visit(DeclStmt node) {
+            
+        //same as formal
+        String declaredType = node.getType();
+        String name = node.getName();
+        declaredType = (String) checkFormal(name, declaredType, node, "declaration");
+
+        //check that init type conforms to declared type
+        node.getInit().accept(this);
+        String type = node.getInit().getExprType();
+        if (!conformsTo(type, declaredType)) {
+          registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName() + "' does not match declared type '" + declaredType + "'");
+        }
+        
+          return null;
+      }
+
+      /** Visit an expression statement node
+      * @param node the expression statement node
+      * @return result of the visit 
+      * */
+    public Object visit(ExprStmt node) { 
+
+      //type check expression
+      node.getExpr().accept(this);
+      Expr expr = node.getExpr();
+      //Only valid ExprStmt are assignment, new, dispatch and unary
+      if (!(
+        expr instanceof AssignExpr    ||
+        expr instanceof ArrayAssignExpr||
+        expr instanceof NewExpr       ||
+        expr instanceof NewArrayExpr  ||
+        expr instanceof DispatchExpr  ||
+        expr instanceof UnaryIncrExpr ||
+        expr instanceof UnaryDecrExpr
+      )) {
+        registerSemanticError(node, "not a statement");
+      }
+
+      return null; 
+  }
+
+      /** Visit an assignment expression node
+      * @param node the assignment expression node
+      * @return result of the visit 
+      * */
+      public Object visit(AssignExpr node) { 
+        String exprType;
+        String name = node.getName();
+        String ref = node.getRefName();
+        String declaredType = checkTypeOfAssignment(name, ref, node);
+
+        //check that expr type conforms to the type of the variable
+        node.getExpr().accept(this);
+        exprType = node.getExpr().getExprType();
+        if (!conformsTo(exprType, declaredType)) {
+            registerSemanticError(node, "the lefthand type '" + declaredType + 
+            "' and righthand type '" + exprType + "' are not compatible in assignment");
+        }
+
+        node.setExprType(exprType);
+
+        return null;
+    }
+
+    protected String checkTypeOfAssignment(String name, String ref, ASTNode node) {
+      
+        String declaredType = (String) lookupVar(name);
+        //Check that lefthand side is declared
+        if (declaredType == null) {
+          registerSemanticError(node, "the lefthand variable '" + name + "' must be declared");
+        }
+
+        //check that ref is valid
+        if (ref == null) {
+          declaredType = (String) lookupVar(name);
+          //lookup from current scope
+        } else if (ref.equals("this")) {
+          declaredType = (String) thisLookupVar(name);
+          //lookup from first scope of curr class
+        } else if (ref.equals("super")) {
+          declaredType = (String) superLookupVar(name);
+          //lookup from first scope in super class
+        } else {
+          registerSemanticError(node, "bad reference '" + ref + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
+        }
+
+        return declaredType;
+    }
+
+    /** Visit an array assignment expression node
+      * @param node the array assignment expression node
+      * @return result of the visit 
+      * */
+      public Object visit(ArrayAssignExpr node) { 
+        
+        //check that index returns an int
+        node.getIndex().accept(this);
+        String indexType = node.getIndex().getExprType();
+        if (!indexType.equals(INT)) {
+           registerSemanticError(node, "invalid index expression of type '" + 
+           indexType + "' expression must be type 'int'");
+        } 
+
+        //Check that the var is defined
+        String name = node.getName();
+        String ref = node.getRefName();
+        String declaredType = checkTypeOfAssignment(name, ref, node);
+
+        //check that return type of expr conforms to type of array
+        node.getExpr().accept(this);
+        String exprType = node.getExpr().getExprType();
+
+        if (!conformsTo(exprType, declaredType)) {
+          registerSemanticError(node, "the lefthand type '" + declaredType + 
+          "' and righthand type '" + exprType + "' are not compatible in assignment");
+        }
+        
+        node.setExprType(exprType);
+
+        return null; 
+    }
+
+    /** Visit a new expression node
+      * @param node the new expression node
+      * @return result of the visit 
+      * */
+      public Object visit(NewExpr node) { 
+        
+        //Check that type exists
+        String type = node.getType();
+        if (!typeExists(type)) {
+          registerSemanticError(node, "type '" + type +"' of new construction is undefined");
+          node.setExprType(OBJECT);
+        } else if (isPrimitive(type)) {
+          registerSemanticError(node, "type '" + type + "' of new construction is primitive and cannot be constructed");
+          node.setExprType(OBJECT);
+        } else {
+          node.setExprType(type);
+        }
+          return null; 
+      }
+  /** Visit a dispatch expression node
+      * @param node the dispatch expression node
+      * @return result of the visit 
+      * */
+      public Object visit(DispatchExpr node) { 
+
+        //type check reference expression
+        node.getRefExpr().accept(this);
+        Expr refExpr = node.getRefExpr();
+
+        //not sure if this is right
+        //
+        //
+        //
+        Method method = (Method) lookupMethod(refExpr.getExprType() + 
+          "." + node.getMethodName()); 
+
+
+        //type check formals
+        node.getActualList().accept(this);
+        Iterator<ASTNode> arguments = node.getActualList().getIterator();
+        Iterator<ASTNode> formals = method.getFormalList().getIterator(); 
+        int numOfFormals = method.getFormalList().getSize();
+        int numOfArgs = node.getActualList().getSize();
+        if (numOfArgs != numOfFormals) {
+          registerSemanticError(node, "number of actual parameters (" + numOfArgs + 
+          ") differs from number of formal parameters (" + numOfFormals + 
+          ") in dispatch to method '" + method.getName() +"'");
+        }
+
+        //check that formals match in type and args aren't void
+        int i = 1;
+        while(arguments.hasNext() && formals.hasNext()) {
+          Expr arg = (Expr) arguments.next();
+          Formal formal = (Formal) formals.next();
+          if (arg.getExprType().equals(VOID)) {
+            registerSemanticError(node, "actual parameter " + i + 
+              " in the call to method " + method.getName() + 
+              " is void and cannot be used within an expression");
+          } else if (!conformsTo(arg.getExprType(), formal.getType())) {
+            registerSemanticError(node, "actual parameter " + i + " with type '" + arg.getExprType() + "' does not match formal parameter " + i + " with declared type '" + formal.getType() + "' in dispatch to method '" + method.getName() + "'");  
+          }
+        }
+
+        return null; 
+    }
+
+        /** Visit a list node of expressions
+      * @param node the expression list node
+      * @return result of the visit 
+      * */
+      public Object visit(ExprList node) {
+        for (Iterator it = node.getIterator(); it.hasNext(); )
+            ((Expr)it.next()).accept(this);
+        return null;
+    }
      /** Visit a list node of classes
       * @param node the class list node 
       * @return result of the visit 
@@ -135,60 +467,9 @@ public class TypeCheckVisitor extends SemantVisitor {
       return null;
         }
 
-    /** Visit an assignment expression node
-      * @param node the assignment expression node
-      * @return result of the visit 
-      * */
-      public Object visit(AssignExpr node) { 
-        //check that expr type conforms to the type of the variable
-        node.getExpr().accept(this);
-        String assignmentType = classTreeNode.getVarSymbolTable().lookup(node.getName()).toString();
-        if (!conformsTo(node.getExpr().getExprType(), assignmentType)) {
-            throw new RuntimeException(errorMessagePrefix(node) + "Expr type"
-                + node.getExpr().getExprType() + " doesn't conform to type: " 
-                + assignmentType + ".");
-        }
+    
 
-        node.setExprType(assignmentType);
-        return null;
-    }
-
-    /** Visit an array assignment expression node
-      * @param node the array assignment expression node
-      * @return result of the visit 
-      * */
-    public Object visit(ArrayAssignExpr node) { 
-        //check that index returns an int
-        
-        node.getIndex().accept(this);
-        System.out.printf("got here 1\n");
-        if (node.getIndex().getExprType() != INT) {
-            throw new RuntimeException(errorMessagePrefix(node) + "Type of index expression must be int, given type: " + node.getIndex().getExprType() + ". Line Num " + node.getLineNum());
-            
-        }
-        //check that the variable is 
-
-        //check that return type of expr conforms to type of array
-        node.getExpr().accept(this);
-        conformsTo("String", "Object");
-        lookupVar("foo");
-        System.out.printf("got here 2\n");
-
-        String exprType = node.getExpr().getExprType();
-        String baseTypeOfArray = (String) lookupVar(node.getName());
-
-        System.out.printf("got here 3\n");
-        if (!conformsTo(exprType, baseTypeOfArray)) {
-            throw new RuntimeException(errorMessagePrefix(node) + "Tried to assign type: " + 
-                exprType + " to the array: " + baseTypeOfArray + "[].");
-        }
-        
-        System.out.printf("got here 4\n");
-        node.setExprType(node.getExpr().getExprType());
-        
-        System.out.printf("got here 5\n");
-        return null; 
-    }
+    
 
     /** Visit a binary comparison expression node (should never be called)
       * @param node the binary comparison expression node
@@ -471,6 +752,7 @@ public class TypeCheckVisitor extends SemantVisitor {
                     " has not been declared.");
             } 
 
+            
             if (refExpr instanceof VarExpr) {
 
             } else if (refExpr instanceof ArrayExpr) {
@@ -519,96 +801,13 @@ public class TypeCheckVisitor extends SemantVisitor {
       *
       *
       */
-  public Object visit(ast.Field node) { 
-    if (node.getInit() != null) {
-      Expr initExpr = node.getInit();
-      initExpr.accept(this);
+  
 
-      if (initExpr.getExprType().equals("void")) {
+    
 
+    
 
-      }
-      if (!conformsTo(node.getInit().getExprType(), node.getType())) {
-        registerSemanticError(node, errorMessagePrefix(node) + "Type of init: " + 
-          node.getInit().getExprType() + " doesn't conform to type of field node: " + 
-          node.getType() + ".");
-      }
-    }
-
-          return null; 
-  }
-
-    /** Visit a method node
-      * @param node the method node
-      * @return result of the visit 
-      * */
-    public Object visit(Method node) { 
-      System.out.printf("Method\n");
-      enterScope();
-
-      if (methodExistsInClass(node.getName()) != null) {
-        registerSemanticError(node, "method '" + node.getName() + "' is already defined in class '" + classTreeNode.getName() + "'" );
-      } else if (lookupMethod(node.getName()) != null && !isValidMethodOverride(node)) {
-        //errors handled in method
-      }
-
-      //type check and add formals
-        node.getFormalList().accept(this);
-
-      //type check and add local vars
-        node.getStmtList().accept(this);
-        System.out.printf("Method\n");
-      exitScope();
-      return null; 
-    }
-
-    /** Visit a list node of formals
-      * @param node the formal list node
-      * @return result of the visit 
-      * */
-  public Object visit(FormalList node) { 
-    Iterator<ASTNode> formals = node.getIterator();
-    while(formals.hasNext()) {
-      Formal formal = (Formal) formals.next();
-      String name = formal.getName();
-      String type = formal.getType();
-      
-      //checks if type of formal exists, if not assign as "Object"
-      if ((boolean) formal.accept(this)) {  
-        type = "Object";
-      }
-
-      addVar(name, type);
-    }
-    return null;
-  }
-
-    /** Visit a formal node
-      * @param node the formal node
-      * @return result of the visit 
-      * */
-    public Object visit(Formal node) {
-      if (typeExists(node.getType())) {
-        registerSemanticError(node, "Type: " + node.getType() + " is unknown.");
-        return false;
-      }
-
-      return true;
-    }
-
-    /** Visit a list node of statements
-      * @param node the statement list node
-      * @return result of the visit 
-      * */
-    public Object visit(StmtList node) {
-        for (Iterator it = node.getIterator(); it.hasNext(); ) {
-          Stmt stmt = (Stmt) it.next();
-          if ()
-          
-          stmt.accept(this);
-        }
-        return null;
-    }
+    
 
     /** Visit a statement node (should never be calle)
       * @param node the statement node
@@ -618,40 +817,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         throw new RuntimeException("This visitor method should not be called (node is abstract)");
     }
 
-    /** Visit a declaration statement node
-      * @param node the declaration statement node
-      * @return result of the visit 
-      * */
-    public Object visit(DeclStmt node) {
-            
-      if (existsInCurrentVarScope(node.getName())) {
-        registerSemanticError(node, errorMessagePrefix(node)+ "Variable name: " + node.getName() + " already declared.");
-      } else if (!typeExists(node.getType())){
-        if (node.getInit() != null) {
-          node.getInit().accept(this);
-          System.out.println(node.getInit().getClass().getSimpleName());
-          System.out.println(node.getInit().getExprType());
-          System.out.println(node.getType());
-          if (conformsTo(node.getInit().getExprType(), node.getType())) {
-            registerSemanticError(node, errorMessagePrefix(node)+ "Expression type: " + node.getInit().getExprType() + " doesn't conform to var type: " + node.getType() + ".");
-          } 
-        }
-        registerSemanticError(node, errorMessagePrefix(node)+ "Variable type: " + node.getType() + " doesn't exist.");
-      } else {
-        addVar(node.getName(), node.getType());
-      }
-      
-        return null;
-    }
-
-    /** Visit an expression statement node
-      * @param node the expression statement node
-      * @return result of the visit 
-      * */
-    public Object visit(ExprStmt node) { 
-        node.getExpr().accept(this);
-        return null; 
-    }
+    
 
     /** Visit an if statement node
       * @param node the if statement node
@@ -750,15 +916,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         return null; 
     }
 
-    /** Visit a list node of expressions
-      * @param node the expression list node
-      * @return result of the visit 
-      * */
-    public Object visit(ExprList node) {
-        for (Iterator it = node.getIterator(); it.hasNext(); )
-            ((Expr)it.next()).accept(this);
-        return null;
-    }
+
 
     /** Visit an expression node (should never be called)
       * @param node the expression node
@@ -768,24 +926,9 @@ public class TypeCheckVisitor extends SemantVisitor {
         throw new RuntimeException("This visitor method should not be called (node is abstract)");
     }
 
-    /** Visit a dispatch expression node
-      * @param node the dispatch expression node
-      * @return result of the visit 
-      * */
-    public Object visit(DispatchExpr node) { 
-        node.getRefExpr().accept(this);
-        node.getActualList().accept(this);
-        return null; 
-    }
+  
 
-    /** Visit a new expression node
-      * @param node the new expression node
-      * @return result of the visit 
-      * */
-    public Object visit(NewExpr node) { 
-      node.setExprType(node.getType());
-        return null; 
-    }
+    
 
     /** Visit a new array expression node
       * @param node the new array expression node
