@@ -1,0 +1,404 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main SemanticErrors1.btm 
+SemanticErrors1.btm:0:semantic error: Error in BuildClassTree: Duplicate name: String found in class hiearchy.
+
+SemanticErrors1.btm:0:semantic error: Error in BuildClassTree: Duplicate name: C1 found in class hiearchy.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class: String is not extendable.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C5.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C6.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C7.
+
+SemanticErrors1.btm:0:semantic error: Parent class not added yet for C3.
+
+Stopping compilation due to errors
+200 error(s)

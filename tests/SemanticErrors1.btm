@@ -1,0 +1,162 @@
+class C1 { }                       // missing Main class
+class String { }                   // cannot redefine builtin class
+class C1 { }                       // multiple definition of class C1
+class C2 extends C1 { }            // OK
+class C3 extends NotThere { }      // non-existent superclass
+class C4 extends String { }        // cannot extend builtin String class
+
+class C5 extends C6 { }            // cyclic inheritance chain
+class C6 extends C7 { }            // cyclic inheritance chain
+class C7 extends C5 { }            // cyclic inheritance chain
+
+class C8                           // class C8 is OK 
+{
+  int x;
+  boolean y;
+  void m(int a, boolean b) { return; }
+}
+
+class C9 extends C8
+{ 
+  int null;                        // null is not a valid field name
+  string this;                     // this is not a valid field name
+  boolean super;                   // super is not a valid field name
+  int x;                           // OK
+  boolean x;                       // field x is multiply-defined in C9
+  bool y;                          // type bool of field is undefined
+
+  bool this() { return; }          // return type is undefined
+                                   // this is not a valid method name
+                                   // no returned expression
+
+  void null() { return; }          // null is not a valid method name
+  void super() { return; }         // super is not a valid method name
+
+  void m1() { return; }            // OK                            
+  int m1(String s) { return "" ; } // multiply-defined method
+                                   // mismatch in return type
+
+                                   // wrong return type (see superclass) 
+  String m(int a, boolean b) { return ""; } 
+
+                                   // wrong # formals (see superclass) 
+  void m(int a, boolean b, TextIO t) { return; }
+
+                                   // wrong formal types (see superclass)
+  void m(boolean b, int a) { return; }
+}
+
+class C10 extends C8 // type errors on fields and methods
+{
+  int a;                           // OK for field to be uninitialized
+  int x = true;                    // type mismatch in initializer
+  boolean b = "";                  // type mismatch in initializer
+  int z = null;                    // type mismatch in initializer
+  String s = m(1,true);            // m returns void
+  TextIO t = "";                   // non-conformant type
+
+  void m0() { return; }                  // OK
+  int m1() { boolean b=true; return b; } // incompatible return types
+  void m2() { boolean b=true; return b; }// incompatible return types
+  boolean m3() { return; }               // incompatible return types
+  String m3() { return new TextIO(); }   // multiply-defined method and
+                                         // non-conformant return type
+  String m4() { return new Object(); }   // non-conformant return type
+
+
+                       // undefined formal type (integer/this/super/null)
+                       // formal cannot be names this/super/null
+  void m5( integer i, this x, super y, null z, 
+           int this, int super, int null ) 
+  { return; }
+
+  void m6( int a, int b ) { return; }    // OK
+ 
+  void m7 (int x, boolean x)             // formal x is multiply-defined
+  { 
+    int this = 1;                        // invalid variable name: this
+    int super = 1;                       // invalid variable name: super
+    int null = 1;                        // invalid variable name: null
+    int y = 1;                           // OK
+    integer z = 1;                       // variable type indefined
+                                         // int does not conform to Object
+    boolean y = false;                   // variable y is multiply-defined
+    int x = 0;                           // x is a formal parameter
+    boolean b = 1;                       // type mismatch
+    String s1 = new TextIO();            // non-conformance
+    String s2 = new Object();            // non-conformance
+    String s3 = 1;                       // type mismatch
+
+    1;                                   // not a valid statement
+    b;                                   // not a valid statement
+    1 + 2;                               // not a valid statement
+    b || b;                              // not a valid statement 
+    s1 instanceof String;                // not a valid statement
+    (String) (s);                        // not a valid statement
+    - (y+1);                             // not a valid statement
+    !b;                                  // not a valid statement
+
+    if ( 1 ) y = 10;                     // predicate must be boolean type
+    while ( "" ) { y = y-1; }            // predicate must be boolean type
+
+    {  String s3 = ""; }                 // s3 already defined in m7
+
+    y.m0();                              // can't dispatch on primitive type
+
+    // null.m0();                        // can't dispatch on null (but your 
+                                         // compler need not catch thus error)
+    m0().m2();                           // can't dispatch on void type
+    this.m25();                          // unknown method in dispatch
+    
+    m6( 1, 1, 1);                        // wrong # of actuals
+    m6( 1, m0() );                       // cannot use void as actual
+    m6( 1, true );                       // type mismatch
+    m6( 1, "" );                         // type mismatch
+    m6( 1, (int) ("1") );                // wrong target type for cast
+                                         // 2nd actual argument is type Object 
+    int u = (int) (y);                   // cannot cast a primitive type
+                                         // target type cannot be primitive
+                                         // type mismatch between int and Object
+    int v = (string) (s3);               // unknown type in casting op.
+                                         // type mismatch between int and Object
+    String s4 = "";                      // OK
+    TextIO t = (TextIO) (s4);            // inconvertible types
+
+    int n = 1;                           // OK
+    boolean io = n instanceof int;       // LHS is a primitive type
+                                         // RHS is a primitive type
+    io = n instanceof string;            // type int on LHS is primitive
+                                         // RHS is not a known type
+    io = new int();                      // new with primitive type
+                                         // type mismatch between boolean and Object
+    io = new Integer();                  // new with unknown type
+                                         // type mismatch between boolean and Object
+    t = 1;                               // type mismatch
+    v = t;                               // type mismatch
+    t = m0();                            // type mismatch
+    t.field = 1;                         // t ahould be this or super
+    this.x = t;                          // type mismatch
+    super.y = 1;                         // type mismatch
+
+
+    io = ! (n + 1);                      // type mismatch
+    n = -io;                             // type mismatch
+    t.putInt( 2 * io );                  // type mismatch
+    t.putInt( s1 + io );                 // type mismatch
+    t.putInt( 2 - io );                  // type mismatch
+    t.putInt( io / 2 );                  // type mismatch
+    t.putInt( io % 2 );                  // type mismatch
+    t.putString( u.substring(n,n+10) );  // type mismatch
+                                         // can't dispatch on primitive type
+    t.putString( "" * 2 );               // type mismatch
+                                         // actual has type int
+    t.putInt( 2 * (1 - v / s4) );        // type mismatch
+    if ( v == io ) { }                   // type mismatch
+    if ( (new C8()) == (new C10()) ) { } // OK
+    while ( v != io ) { }                // type mismatch
+
+    return; 
+  }
+
+  void m8() { return m6( 1, 2); }        // return type of m6 is void
+}

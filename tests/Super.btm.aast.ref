@@ -1,0 +1,71 @@
+// Source file: Super.btm
+// Source line: 1
+class A extends Object {
+    // Source line: 2
+    TextIO io = 
+(/*L2,type:TextIO*/new TextIO());
+    // Source line: 3
+    String name;
+    // Source line: 4
+    void setName() {
+        // Source line: 5
+        (/*L5,type:String*/this.name = (/*L5,type:String*/"A"));
+        // Source line: 6
+        return;
+    }
+    // Source line: 8
+    void foo() {
+        // Source line: 9
+        (/*L9,type:TextIO*/(/*L9,type:TextIO*/(/*L9,type:TextIO*/(/*L9,type:TextIO*/io).putString((/*L9,type:String*/"Static type = A, dynamic type = "))).putString((/*L9,type:String*/name))).putString((/*L9,type:String*/"\n")));
+        // Source line: 10
+        return;
+    }
+}
+// Source file: Super.btm
+// Source line: 14
+class B extends A {
+    // Source line: 15
+    String name;
+    // Source line: 16
+    void setName() {
+        // Source line: 17
+        (/*L17,type:String*/super.name = (/*L17,type:String*/"B"));
+        // Source line: 18
+        return;
+    }
+    // Source line: 20
+    void foo() {
+        // Source line: 21
+        (/*L21,type:TextIO*/(/*L21,type:TextIO*/(/*L21,type:TextIO*/(/*L21,type:TextIO*/io).putString((/*L21,type:String*/"Static type = B, dynamic type = "))).putString((/*L21,type:String*/name))).putString((/*L21,type:String*/"\n")));
+        // Source line: 22
+        (/*L22,type:void*/(/*L22,type:A*/super).foo());
+        // Source line: 23
+        return;
+    }
+}
+// Source file: Super.btm
+// Source line: 27
+class C extends B {
+    // Source line: 28
+    void setName() {
+        // Source line: 29
+        (/*L29,type:String*/this.name = (/*L29,type:String*/"C"));
+        // Source line: 30
+        return;
+    }
+}
+// Source file: Super.btm
+// Source line: 34
+class Main extends Object {
+    // Source line: 35
+    void main() {
+        // Source line: 36
+        C c = (/*L36,type:C*/new C());
+        // Source line: 37
+        (/*L37,type:void*/(/*L37,type:C*/c).setName());
+        // Source line: 38
+        (/*L38,type:void*/(/*L38,type:C*/c).foo());
+        // Source line: 39
+        return;
+    }
+}

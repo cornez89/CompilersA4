@@ -1,0 +1,165 @@
+1,61c1,102
+< // Source file: PrimesSieves.btm
+< // Source line: 4
+< class Main extends Object {
+<     // Source line: 6
+<     void main() {
+<         // Source line: 8
+<         TextIO io = (/*L8,type:TextIO*/new TextIO());
+<         // Source line: 11
+<         boolean[] primes = (/*L11,type:null*/null);
+<         // Source line: 13
+<         int n = (/*L13,type:int*/0);
+<         // Source line: 16
+<         while ((/*L16,type:boolean*/(/*L16,type:int*/n) < (/*L16,type:int*/2)))
+<             // Source line: 16
+<             {
+<                 // Source line: 18
+<                 (/*L18,type:int*/n = (/*L18,type:int*/(/*L18,type:TextIO*/(/*L18,type:TextIO*/io).putString((/*L18,type:String*/"Enter a number >= 2: "))).getInt()));
+<                 // Source line: 20
+<                 if ((/*L20,type:boolean*/(/*L20,type:int*/n) < (/*L20,type:int*/2)))
+<                     // Source line: 21
+<                     (/*L21,type:TextIO*/(/*L21,type:TextIO*/io).putString((/*L21,type:String*/"Error: input < 2\n")));
+<                 else
+<                     // Source line: 20
+<                     {
+<                     }
+<             }
+<         // Source line: 25
+<         (/*L25,type:boolean[]*/primes = (/*L25,type:boolean[]*/new boolean[(/*L25,type:int*/(/*L25,type:int*/n) + (/*L25,type:int*/1))]));
+<         // Source line: 28
+<         int i = (/*L28,type:int*/2);
+<         // Source line: 29
+<         while ((/*L29,type:boolean*/(/*L29,type:int*/i) <= (/*L29,type:int*/n)))
+<             // Source line: 29
+<             {
+<                 // Source line: 31
+<                 if ((/*L31,type:boolean*/!((/*L31,type:boolean*/primes[(/*L31,type:int*/i)]))))
+<                     // Source line: 31
+<                     {
+<                         // Source line: 33
+<                         (/*L33,type:TextIO*/(/*L33,type:TextIO*/(/*L33,type:TextIO*/io).putInt((/*L33,type:int*/i))).putString((/*L33,type:String*/"\n")));
+<                         // Source line: 36
+<                         int j = (/*L36,type:int*/(/*L36,type:int*/i) * (/*L36,type:int*/2));
+<                         // Source line: 37
+<                         while ((/*L37,type:boolean*/(/*L37,type:int*/j) <= (/*L37,type:int*/n)))
+<                             // Source line: 37
+<                             {
+<                                 // Source line: 38
+<                                 (/*L38,type:boolean*/primes[(/*L38,type:int*/j)] = (/*L38,type:boolean*/true));
+<                                 // Source line: 39
+<                                 (/*L39,type:int*/j = (/*L39,type:int*/(/*L39,type:int*/j) + (/*L39,type:int*/i)));
+<                             }
+<                     }
+<                 else
+<                     // Source line: 31
+<                     {
+<                     }
+<                 // Source line: 43
+<                 (/*L43,type:int*/i = (/*L43,type:int*/(/*L43,type:int*/i) + (/*L43,type:int*/1)));
+<             }
+<     }
+< }
+---
+> 
+> C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main PrimesSieves.btm 
+> java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
+> class: String value: util.ClassTreeNode@7530d0a
+> class: Object value: util.ClassTreeNode@27bc2616
+> class: Sys value: util.ClassTreeNode@3941a79c
+> class: Main value: util.ClassTreeNode@506e1b77
+> class: TextIO value: util.ClassTreeNode@4fca772d
+>         at java.base/java.util.Hashtable.get(Hashtable.java:381)
+>         at util.ClassTreeNode.lookupClass(Unknown Source)
+>         at visitor.SemantVisitor.typeExists(Unknown Source)
+> Main
+> Class: Object        at visitor.SemantVisitor.conformsTo(Unknown Source)
+>         at visitor.TypeCheckVisitor.binaryCompExpr(Unknown Source)
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> 
+> Scope level 2, contains:
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.BinaryCompLtExpr.accept(Unknown Source)
+> Class: Object
+> Entered Scope, scopes = 2
+> Entered Scope, scopes = 2
+> Scope level 3, contains:
+> Class: Object
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.WhileStmt.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+> Exited Scope, scopes = 3
+>         at ast.StmtList.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.Method.accept(Unknown Source)Exited Scope, scopes = 3
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> 
+> Class: Object        at visitor.Visitor.visit(Unknown Source)
+>         at ast.MemberList.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+> 
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+> Curr Class: Object, num of children: 1ClassTreeNode
+> Class: Object
+>         at ast.Class_.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+>         at semant.SemanticAnalyzer.analyze(Unknown Source)
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Method
+>         at Main.main(Unknown Source)
+> Internal error within compiler: stopping compilation
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Curr Class: Main, num of children: 0ClassTreeNode
+> Class: Main
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Main
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Scope level 2, contains:
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: this.io, value TextIO
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: this.io, value TextIO
+> key: primes, value boolean[]
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: this.io, value TextIO
+> key: primes, value boolean[]
+> key: this.primes, value boolean[]
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: this.io, value TextIO
+> key: primes, value boolean[]
+> key: this.primes, value boolean[]
+> key: n, value int
+> key: io, value TextIO

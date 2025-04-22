@@ -1,0 +1,13 @@
+// Source file: NullArrayUse.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        int[] array = (/*L3,type:null*/null);
+        // Source line: 4
+        int x = (/*L4,type:int*/array[(/*L4,type:int*/0)]);
+        // Source line: 5
+        return;
+    }
+}

@@ -1,0 +1,15 @@
+// Source file: SimpleCalc.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        (/*L3,type:TextIO*/(/*L3,type:TextIO*/new TextIO()).putString((/*L3,type:String*/"(3%2+(2*5)-6/3): ")));
+        // Source line: 4
+        (/*L4,type:TextIO*/(/*L4,type:TextIO*/new TextIO()).putInt((/*L4,type:int*/(/*L4,type:int*/(/*L4,type:int*/(/*L4,type:int*/3) % (/*L4,type:int*/2)) + (/*L4,type:int*/(/*L4,type:int*/2) * (/*L4,type:int*/5))) - (/*L4,type:int*/(/*L4,type:int*/6) / (/*L4,type:int*/3)))));
+        // Source line: 5
+        (/*L5,type:TextIO*/(/*L5,type:TextIO*/new TextIO()).putString((/*L5,type:String*/"\n")));
+        // Source line: 6
+        return;
+    }
+}

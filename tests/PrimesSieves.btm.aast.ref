@@ -1,0 +1,61 @@
+// Source file: PrimesSieves.btm
+// Source line: 4
+class Main extends Object {
+    // Source line: 6
+    void main() {
+        // Source line: 8
+        TextIO io = (/*L8,type:TextIO*/new TextIO());
+        // Source line: 11
+        boolean[] primes = (/*L11,type:null*/null);
+        // Source line: 13
+        int n = (/*L13,type:int*/0);
+        // Source line: 16
+        while ((/*L16,type:boolean*/(/*L16,type:int*/n) < (/*L16,type:int*/2)))
+            // Source line: 16
+            {
+                // Source line: 18
+                (/*L18,type:int*/n = (/*L18,type:int*/(/*L18,type:TextIO*/(/*L18,type:TextIO*/io).putString((/*L18,type:String*/"Enter a number >= 2: "))).getInt()));
+                // Source line: 20
+                if ((/*L20,type:boolean*/(/*L20,type:int*/n) < (/*L20,type:int*/2)))
+                    // Source line: 21
+                    (/*L21,type:TextIO*/(/*L21,type:TextIO*/io).putString((/*L21,type:String*/"Error: input < 2\n")));
+                else
+                    // Source line: 20
+                    {
+                    }
+            }
+        // Source line: 25
+        (/*L25,type:boolean[]*/primes = (/*L25,type:boolean[]*/new boolean[(/*L25,type:int*/(/*L25,type:int*/n) + (/*L25,type:int*/1))]));
+        // Source line: 28
+        int i = (/*L28,type:int*/2);
+        // Source line: 29
+        while ((/*L29,type:boolean*/(/*L29,type:int*/i) <= (/*L29,type:int*/n)))
+            // Source line: 29
+            {
+                // Source line: 31
+                if ((/*L31,type:boolean*/!((/*L31,type:boolean*/primes[(/*L31,type:int*/i)]))))
+                    // Source line: 31
+                    {
+                        // Source line: 33
+                        (/*L33,type:TextIO*/(/*L33,type:TextIO*/(/*L33,type:TextIO*/io).putInt((/*L33,type:int*/i))).putString((/*L33,type:String*/"\n")));
+                        // Source line: 36
+                        int j = (/*L36,type:int*/(/*L36,type:int*/i) * (/*L36,type:int*/2));
+                        // Source line: 37
+                        while ((/*L37,type:boolean*/(/*L37,type:int*/j) <= (/*L37,type:int*/n)))
+                            // Source line: 37
+                            {
+                                // Source line: 38
+                                (/*L38,type:boolean*/primes[(/*L38,type:int*/j)] = (/*L38,type:boolean*/true));
+                                // Source line: 39
+                                (/*L39,type:int*/j = (/*L39,type:int*/(/*L39,type:int*/j) + (/*L39,type:int*/i)));
+                            }
+                    }
+                else
+                    // Source line: 31
+                    {
+                    }
+                // Source line: 43
+                (/*L43,type:int*/i = (/*L43,type:int*/(/*L43,type:int*/i) + (/*L43,type:int*/1)));
+            }
+    }
+}

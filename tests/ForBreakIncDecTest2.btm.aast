@@ -1,0 +1,98 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main ForBreakIncDecTest2.btm 
+class: String value: util.ClassTreeNode@34a245ab
+class: Object value: util.ClassTreeNode@7cc355be
+class: Sys value: util.ClassTreeNode@6e8cf4c6
+class: Main value: util.ClassTreeNode@12edcd21
+class: TextIO value: util.ClassTreeNode@34c45dca
+Main
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Curr Class: Object, num of children: 1ClassTreeNode
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Method
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Curr Class: Main, num of children: 0ClassTreeNode
+Class: Main
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Main
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Scope level 2, contains:
+key: i, value int
+For Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
+        at java.base/java.util.Hashtable.get(Hashtable.java:381)
+        at util.ClassTreeNode.lookupClass(Unknown Source)
+        at visitor.SemantVisitor.typeExists(Unknown Source)
+        at visitor.SemantVisitor.conformsTo(Unknown Source)
+        at visitor.TypeCheckVisitor.binaryCompExpr(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.BinaryCompGeqExpr.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.IfStmt.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.StmtList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.BlockStmt.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.ForStmt.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.StmtList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.Method.accept(Unknown Source)
+        at visitor.Visitor.visit(Unknown Source)
+        at ast.MemberList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.Class_.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+        at semant.SemanticAnalyzer.analyze(Unknown Source)
+        at Main.main(Unknown Source)
+Internal error within compiler: stopping compilation

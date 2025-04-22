@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<project name="a4" default="all" basedir=".">
+
+  <!-- build the compiler, build the API, and compile all test files -->
+
+  <target name="all" depends="src,api,tests"/>
+
+  <!-- build the compiler -->
+
+  <target name="src">
+    <ant dir="src"/>
+  </target>
+
+  <!-- build the API documentation -->
+
+  <target name="api" depends="src">
+    <ant dir="api">
+    </ant>
+  </target>
+
+  <!-- run all the test files through the compiler -->
+
+  <target name="tests" depends="src">
+    <ant dir="tests"/>
+  </target>
+
+  <!-- clean up the whole project -->
+  <target name="clean">
+    <ant dir="api" target="clean"/>
+    <ant dir="src" target="clean"/>
+    <ant dir="tests" target="clean"/>
+    <delete>
+      <fileset dir="." includes="**/*~" defaultexcludes="no"/> 
+      <fileset dir="." includes="**/*#*" defaultexcludes="no"/> 
+    </delete>
+  </target>
+
+</project>
+
+

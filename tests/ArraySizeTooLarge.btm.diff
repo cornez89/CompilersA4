@@ -1,0 +1,113 @@
+1,19c1,92
+< // Source file: ArraySizeTooLarge.btm
+< // Source line: 1
+< class Main extends Object {
+<     // Source line: 2
+<     void main() {
+<         // Source line: 3
+<         int i = (/*L3,type:int*/0);
+<         // Source line: 4
+<         int[] array = (/*L4,type:int[]*/new int[(/*L4,type:int*/1500)]);
+<         // Source line: 5
+<         (/*L5,type:int[]*/array = (/*L5,type:int[]*/new int[(/*L5,type:int*/2000)]));
+<         // Source line: 6
+<         for ((/*L6,type:int*/i = (/*L6,type:int*/1500)); (/*L6,type:boolean*/(/*L6,type:int*/i) < (/*L6,type:int*/2000)); (/*L6,type:int*/((/*L6,type:int*/i))++))
+<             // Source line: 7
+<             (/*L7,type:TextIO*/(/*L7,type:TextIO*/(/*L7,type:TextIO*/new TextIO()).putInt((/*L7,type:int*/array[(/*L7,type:int*/i)]))).putString((/*L7,type:String*/"\n")));
+<         // Source line: 8
+<         return;
+<     }
+< }
+---
+> 
+> C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main ArraySizeTooLarge.btm 
+> class: String value: util.ClassTreeNode@7cc355be
+> class: Object value: util.ClassTreeNode@6e8cf4c6
+> class: Sys value: util.ClassTreeNode@12edcd21
+> class: Main value: util.ClassTreeNode@34c45dca
+> class: TextIO value: util.ClassTreeNode@52cc8049
+> Main
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Class: Object
+> Entered Scope, scopes = 2
+> Entered Scope, scopes = 2
+> Scope level 3, contains:
+> Class: Object
+> Exited Scope, scopes = 3
+> Exited Scope, scopes = 3
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+> Curr Class: Object, num of children: 1ClassTreeNode
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Method
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Curr Class: Main, num of children: 0ClassTreeNode
+> Class: Main
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Main
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Scope level 2, contains:
+> key: i, value int
+> Scope level 2, contains:
+> key: i, value int
+> key: this.i, value int
+> Scope level 2, contains:
+> key: i, value int
+> key: this.i, value int
+> key: array, value int[]
+> java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
+>         at java.base/java.util.Hashtable.get(Hashtable.java:381)
+>         at util.ClassTreeNode.lookupClass(Unknown Source)
+>         at visitor.SemantVisitor.typeExists(Unknown Source)
+>         at visitor.SemantVisitor.conformsTo(Unknown Source)
+>         at visitor.TypeCheckVisitor.binaryCompExpr(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.BinaryCompLtExpr.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.ForStmt.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.StmtList.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.Method.accept(Unknown Source)
+>         at visitor.Visitor.visit(Unknown Source)
+>         at ast.MemberList.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.Class_.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+>         at semant.SemanticAnalyzer.analyze(Unknown Source)
+>         at Main.main(Unknown Source)
+> Internal error within compiler: stopping compilation
+> got to NewArrayExay

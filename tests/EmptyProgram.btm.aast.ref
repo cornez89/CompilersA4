@@ -1,0 +1,9 @@
+// Source file: EmptyProgram.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        return;
+    }
+}

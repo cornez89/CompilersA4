@@ -1,0 +1,116 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main CountDivisors.btm 
+class: String value: util.ClassTreeNode@34c45dca
+class: Object value: util.ClassTreeNode@52cc8049
+class: Sys value: util.ClassTreeNode@5b6f7412
+class: Main value: util.ClassTreeNode@27973e9b
+class: TextIO value: util.ClassTreeNode@312b1dae
+Main
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Curr Class: Object, num of children: 1ClassTreeNode
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Method
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Curr Class: Main, num of children: 0ClassTreeNode
+Class: Main
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Main
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Scope level 2, contains:
+key: io, value TextIO
+Scope level 2, contains:
+key: this.io, value TextIO
+key: io, value TextIO
+Scope level 2, contains:
+key: this.io, value TextIO
+key: upperBound, value int
+key: io, value TextIO
+Scope level 2, contains:
+key: this.upperBound, value int
+key: this.io, value TextIO
+key: upperBound, value int
+key: io, value TextIO
+Scope level 2, contains:
+key: numWithMostDivisors, value int
+key: this.upperBound, value int
+key: this.io, value TextIO
+key: upperBound, value int
+key: io, value TextIO
+Scope level 2, contains:
+key: this.numWithMostDivisors, value int
+key: numWithMostDivisors, value int
+key: this.upperBound, value int
+key: this.io, value TextIO
+key: upperBound, value int
+key: io, value TextIO
+Scope level 2, contains:
+key: this.numWithMostDivisors, value int
+key: numWithMostDivisors, value int
+key: this.upperBound, value int
+key: maxDivisors, value int
+key: this.io, value TextIO
+key: upperBound, value int
+key: io, value TextIO
+java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
+        at java.base/java.util.Hashtable.get(Hashtable.java:381)
+        at util.ClassTreeNode.lookupClass(Unknown Source)
+        at visitor.SemantVisitor.typeExists(Unknown Source)
+        at visitor.SemantVisitor.conformsTo(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.AssignExpr.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.ExprStmt.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.StmtList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.Method.accept(Unknown Source)
+        at visitor.Visitor.visit(Unknown Source)
+        at ast.MemberList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.Class_.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+        at semant.SemanticAnalyzer.analyze(Unknown Source)
+        at Main.main(Unknown Source)
+Internal error within compiler: stopping compilation

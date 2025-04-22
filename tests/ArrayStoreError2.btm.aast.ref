@@ -1,0 +1,31 @@
+// Source file: ArrayStoreError2.btm
+// Source line: 1
+class A extends Object {
+}
+// Source file: ArrayStoreError2.btm
+// Source line: 2
+class B extends A {
+}
+// Source file: ArrayStoreError2.btm
+// Source line: 3
+class C extends A {
+}
+// Source file: ArrayStoreError2.btm
+// Source line: 4
+class D extends B {
+}
+// Source file: ArrayStoreError2.btm
+// Source line: 6
+class Main extends Object {
+    // Source line: 7
+    void main() {
+        // Source line: 8
+        Object[] objects = (/*L8,type:B[]*/new B[(/*L8,type:int*/10)]);
+        // Source line: 9
+        (/*L9,type:B*/objects[(/*L9,type:int*/0)] = (/*L9,type:B*/new B()));
+        // Source line: 10
+        (/*L10,type:D*/objects[(/*L10,type:int*/1)] = (/*L10,type:D*/new D()));
+        // Source line: 11
+        (/*L11,type:A*/objects[(/*L11,type:int*/2)] = (/*L11,type:A*/new A()));
+    }
+}

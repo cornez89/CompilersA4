@@ -1,0 +1,33 @@
+// Source file: Assign.btm
+// Source line: 4
+class Main extends Object {
+    // Source line: 6
+    void main() {
+        // Source line: 7
+        TextIO io = (/*L7,type:TextIO*/new TextIO());
+        // Source line: 8
+        int x = (/*L8,type:int*/0);
+        // Source line: 9
+        int y = (/*L9,type:int*/1);
+        // Source line: 10
+        int z = (/*L10,type:int*/2);
+        // Source line: 12
+        (/*L12,type:TextIO*/(/*L12,type:TextIO*/(/*L12,type:TextIO*/(/*L12,type:TextIO*/io).putString((/*L12,type:String*/"x="))).putInt((/*L12,type:int*/x))).putString((/*L12,type:String*/"\n")));
+        // Source line: 13
+        (/*L13,type:TextIO*/(/*L13,type:TextIO*/(/*L13,type:TextIO*/(/*L13,type:TextIO*/io).putString((/*L13,type:String*/"y="))).putInt((/*L13,type:int*/y))).putString((/*L13,type:String*/"\n")));
+        // Source line: 14
+        (/*L14,type:TextIO*/(/*L14,type:TextIO*/(/*L14,type:TextIO*/(/*L14,type:TextIO*/io).putString((/*L14,type:String*/"z="))).putInt((/*L14,type:int*/z))).putString((/*L14,type:String*/"\n")));
+        // Source line: 16
+        (/*L16,type:TextIO*/(/*L16,type:TextIO*/io).putString((/*L16,type:String*/"Executing: x = y = z\n")));
+        // Source line: 17
+        (/*L17,type:int*/x = (/*L17,type:int*/y = (/*L17,type:int*/z)));
+        // Source line: 19
+        (/*L19,type:TextIO*/(/*L19,type:TextIO*/(/*L19,type:TextIO*/(/*L19,type:TextIO*/io).putString((/*L19,type:String*/"x="))).putInt((/*L19,type:int*/x))).putString((/*L19,type:String*/"\n")));
+        // Source line: 20
+        (/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/io).putString((/*L20,type:String*/"y="))).putInt((/*L20,type:int*/y))).putString((/*L20,type:String*/"\n")));
+        // Source line: 21
+        (/*L21,type:TextIO*/(/*L21,type:TextIO*/(/*L21,type:TextIO*/(/*L21,type:TextIO*/io).putString((/*L21,type:String*/"z="))).putInt((/*L21,type:int*/z))).putString((/*L21,type:String*/"\n")));
+        // Source line: 23
+        return;
+    }
+}

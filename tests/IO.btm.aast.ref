@@ -1,0 +1,28 @@
+// Source file: IO.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        TextIO io = (/*L3,type:TextIO*/new TextIO());
+        // Source line: 4
+        int n = (/*L4,type:int*/(/*L4,type:TextIO*/(/*L4,type:TextIO*/io).putString((/*L4,type:String*/"Enter the number of repetitions: "))).getInt());
+        // Source line: 5
+        int i = (/*L5,type:int*/0);
+        // Source line: 6
+        while ((/*L6,type:boolean*/(/*L6,type:int*/i) < (/*L6,type:int*/n)))
+            // Source line: 6
+            {
+                // Source line: 7
+                String s = (/*L7,type:String*/(/*L7,type:TextIO*/(/*L7,type:TextIO*/io).putString((/*L7,type:String*/"> "))).getString());
+                // Source line: 8
+                (/*L8,type:TextIO*/(/*L8,type:TextIO*/(/*L8,type:TextIO*/(/*L8,type:TextIO*/io).putString((/*L8,type:String*/"You entered: "))).putString((/*L8,type:String*/s))).putString((/*L8,type:String*/"\n")));
+                // Source line: 9
+                (/*L9,type:int*/i = (/*L9,type:int*/(/*L9,type:int*/i) + (/*L9,type:int*/1)));
+            }
+        // Source line: 11
+        (/*L11,type:TextIO*/(/*L11,type:TextIO*/(/*L11,type:TextIO*/(/*L11,type:TextIO*/io).putString((/*L11,type:String*/"Finished "))).putInt((/*L11,type:int*/n))).putString((/*L11,type:String*/" echoes...exiting\n")));
+        // Source line: 12
+        return;
+    }
+}

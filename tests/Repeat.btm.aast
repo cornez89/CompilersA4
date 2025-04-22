@@ -1,0 +1,95 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main Repeat.btm 
+class: String value: util.ClassTreeNode@16b98e56
+class: Object value: util.ClassTreeNode@7ef20235
+class: Sys value: util.ClassTreeNode@27d6c5e0
+class: Main value: util.ClassTreeNode@4f3f5b24
+class: TextIO value: util.ClassTreeNode@15aeb7ab
+Main
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Curr Class: Object, num of children: 1ClassTreeNode
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Method
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Curr Class: Main, num of children: 0ClassTreeNode
+Class: Main
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Main
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Scope level 2, contains:
+key: io, value TextIO
+Scope level 2, contains:
+key: this.io, value TextIO
+key: io, value TextIO
+Scope level 2, contains:
+key: s, value String
+key: this.io, value TextIO
+key: io, value TextIO
+Method
+Class: Main
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Main
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+// Source file: Repeat.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        TextIO io = (/*L3*/new TextIO());
+        // Source line: 4
+        String s = (/*L4*/(/*L4*/(/*L4*/io).putString((/*L4*/"Enter some text: "))).getString());
+        // Source line: 5
+        (/*L5*/(/*L5*/(/*L5*/(/*L5*/io).putString((/*L5,type:String*/"You entered: "))).putString((/*L5*/s))).putString((/*L5,type:String*/"\n")));
+        // Source line: 6
+        return;
+    }
+}

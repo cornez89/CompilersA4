@@ -1,0 +1,231 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main VectorTest.btm Vector.btm Boolean.btm Integer.btm 
+class: TextIO value: util.ClassTreeNode@7cd84586
+class: Integer value: util.ClassTreeNode@30dae81
+class: Boolean value: util.ClassTreeNode@1b2c6ec2
+class: Vector value: util.ClassTreeNode@4edde6e5
+class: Object value: util.ClassTreeNode@70177ecd
+class: VectorElement value: util.ClassTreeNode@1e80bfe8
+class: Main value: util.ClassTreeNode@66a29884
+class: String value: util.ClassTreeNode@4769b07b
+class: Sys value: util.ClassTreeNode@cc34f4d
+Main
+Vector
+VectorElement
+Boolean
+Integer
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Scope level 3, contains:
+key: io, value TextIO
+Scope level 3, contains:
+Scope level 3, contains:
+key: main, value ast.Method@7a07c5b4
+Scope level 3, contains:
+key: main, value ast.Method@7a07c5b4
+key: printVector, value ast.Method@26a1ab54
+Scope level 3, contains:
+key: main, value ast.Method@7a07c5b4
+key: test1, value ast.Method@3d646c37
+key: printVector, value ast.Method@26a1ab54
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Scope level 3, contains:
+key: io, value TextIO
+Scope level 3, contains:
+key: elements, value Object[]
+key: io, value TextIO
+Scope level 3, contains:
+Scope level 3, contains:
+key: error, value ast.Method@41cf53f9
+Scope level 3, contains:
+key: checkIndex, value ast.Method@5a10411
+key: error, value ast.Method@41cf53f9
+Scope level 3, contains:
+key: checkIndex, value ast.Method@5a10411
+key: resize, value ast.Method@2ef1e4fa
+key: error, value ast.Method@41cf53f9
+Scope level 3, contains:
+key: checkIndex, value ast.Method@5a10411
+key: resize, value ast.Method@2ef1e4fa
+key: error, value ast.Method@41cf53f9
+key: size, value ast.Method@306a30c7
+Scope level 3, contains:
+key: checkIndex, value ast.Method@5a10411
+key: resize, value ast.Method@2ef1e4fa
+key: error, value ast.Method@41cf53f9
+key: contains, value ast.Method@b81eda8
+key: size, value ast.Method@306a30c7
+Scope level 3, contains:
+key: checkIndex, value ast.Method@5a10411
+key: elementAt, value ast.Method@68de145
+key: resize, value ast.Method@2ef1e4fa
+key: error, value ast.Method@41cf53f9
+key: contains, value ast.Method@b81eda8
+key: size, value ast.Method@306a30c7
+Scope level 3, contains:
+key: checkIndex, value ast.Method@5a10411
+key: addElementAt, value ast.Method@27fa135a
+key: elementAt, value ast.Method@68de145
+key: resize, value ast.Method@2ef1e4fa
+key: error, value ast.Method@41cf53f9
+key: contains, value ast.Method@b81eda8
+key: size, value ast.Method@306a30c7
+Scope level 3, contains:
+key: checkIndex, value ast.Method@5a10411
+key: addElementAt, value ast.Method@27fa135a
+key: elementAt, value ast.Method@68de145
+key: resize, value ast.Method@2ef1e4fa
+key: error, value ast.Method@41cf53f9
+key: contains, value ast.Method@b81eda8
+key: size, value ast.Method@306a30c7
+key: setElementAt, value ast.Method@46f7f36a
+Scope level 3, contains:
+key: resize, value ast.Method@2ef1e4fa
+key: contains, value ast.Method@b81eda8
+key: removeElementAt, value ast.Method@421faab1
+key: checkIndex, value ast.Method@5a10411
+key: addElementAt, value ast.Method@27fa135a
+key: elementAt, value ast.Method@68de145
+key: error, value ast.Method@41cf53f9
+key: setElementAt, value ast.Method@46f7f36a
+key: size, value ast.Method@306a30c7
+Scope level 3, contains:
+key: resize, value ast.Method@2ef1e4fa
+key: addElement, value ast.Method@2b71fc7e
+key: contains, value ast.Method@b81eda8
+key: removeElementAt, value ast.Method@421faab1
+key: checkIndex, value ast.Method@5a10411
+key: addElementAt, value ast.Method@27fa135a
+key: elementAt, value ast.Method@68de145
+key: error, value ast.Method@41cf53f9
+key: setElementAt, value ast.Method@46f7f36a
+key: size, value ast.Method@306a30c7
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Scope level 3, contains:
+key: element, value Object
+Scope level 3, contains:
+Scope level 3, contains:
+key: getElement, value ast.Method@5ce65a89
+Scope level 3, contains:
+key: setElement, value ast.Method@25f38edc
+key: getElement, value ast.Method@5ce65a89
+Scope level 3, contains:
+key: setElement, value ast.Method@25f38edc
+key: getElement, value ast.Method@5ce65a89
+key: getNext, value ast.Method@1a86f2f1
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Scope level 3, contains:
+Scope level 3, contains:
+key: booleanValue, value ast.Method@3eb07fd3
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Scope level 3, contains:
+Scope level 3, contains:
+key: intValue, value ast.Method@506c589e
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Curr Class: Object, num of children: 5ClassTreeNode
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Method
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Curr Class: Main, num of children: 0ClassTreeNode
+Class: Main
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
+        at java.base/java.util.Hashtable.get(Hashtable.java:381)
+        at util.ClassTreeNode.lookupClass(Unknown Source)
+        at visitor.SemantVisitor.typeExists(Unknown Source)
+        at visitor.SemantVisitor.conformsTo(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.Field.accept(Unknown Source)
+        at visitor.Visitor.visit(Unknown Source)
+        at ast.MemberList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.Class_.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+        at semant.SemanticAnalyzer.analyze(Unknown Source)
+        at Main.main(Unknown Source)
+Internal error within compiler: stopping compilation

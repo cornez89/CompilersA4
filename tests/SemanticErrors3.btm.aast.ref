@@ -1,0 +1,8 @@
+SemanticErrors3.btm:3:semantic error: 'main' method in class 'Main' cannot take arguments
+
+SemanticErrors3.btm:3:semantic error: 'main' method in class 'Main' must be void
+
+SemanticErrors3.btm:5:semantic error: return type 'void' is not compatible with declared return type 'int' in method 'main'
+
+Stopping compilation due to errors
+3 error(s)

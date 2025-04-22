@@ -1,0 +1,75 @@
+// Source file: Strings.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        String s = (/*L3,type:String*/"abcdefghijklmnopqrstuvwxyz");
+        // Source line: 4
+        String s2 = (/*L4,type:String*/"abcdefghijklmnopqrstuvwxyz");
+        // Source line: 5
+        String s3 = (/*L5,type:String*/"0123456789");
+        // Source line: 7
+        (/*L7,type:TextIO*/(/*L7,type:TextIO*/(/*L7,type:TextIO*/(/*L7,type:TextIO*/new TextIO()).putString((/*L7,type:String*/"s: "))).putString((/*L7,type:String*/s))).putString((/*L7,type:String*/"\n")));
+        // Source line: 9
+        (/*L9,type:TextIO*/(/*L9,type:TextIO*/(/*L9,type:TextIO*/(/*L9,type:TextIO*/new TextIO()).putString((/*L9,type:String*/"s.length(): "))).putInt((/*L9,type:int*/(/*L9,type:String*/s).length()))).putString((/*L9,type:String*/"\n")));
+        // Source line: 11
+        (/*L11,type:TextIO*/(/*L11,type:TextIO*/(/*L11,type:TextIO*/(/*L11,type:TextIO*/new TextIO()).putString((/*L11,type:String*/"s2: "))).putString((/*L11,type:String*/s2))).putString((/*L11,type:String*/"\n")));
+        // Source line: 12
+        (/*L12,type:TextIO*/(/*L12,type:TextIO*/(/*L12,type:TextIO*/(/*L12,type:TextIO*/new TextIO()).putString((/*L12,type:String*/"s2.length(): "))).putInt((/*L12,type:int*/(/*L12,type:String*/s2).length()))).putString((/*L12,type:String*/"\n")));
+        // Source line: 14
+        if ((/*L14,type:boolean*/(/*L14,type:String*/s).equals((/*L14,type:String*/s2))))
+            // Source line: 15
+            (/*L15,type:TextIO*/(/*L15,type:TextIO*/new TextIO()).putString((/*L15,type:String*/"s.equals(s2): true\n")));
+        else
+            // Source line: 17
+            (/*L17,type:TextIO*/(/*L17,type:TextIO*/new TextIO()).putString((/*L17,type:String*/"s.equals(s2): false\n")));
+        // Source line: 18
+        if ((/*L18,type:boolean*/(/*L18,type:String*/s2).equals((/*L18,type:String*/s))))
+            // Source line: 19
+            (/*L19,type:TextIO*/(/*L19,type:TextIO*/new TextIO()).putString((/*L19,type:String*/"s2.equals(s): true\n")));
+        else
+            // Source line: 21
+            (/*L21,type:TextIO*/(/*L21,type:TextIO*/new TextIO()).putString((/*L21,type:String*/"s2.equals(s): false\n")));
+        // Source line: 23
+        (/*L23,type:TextIO*/(/*L23,type:TextIO*/(/*L23,type:TextIO*/(/*L23,type:TextIO*/new TextIO()).putString((/*L23,type:String*/"s3: "))).putString((/*L23,type:String*/s3))).putString((/*L23,type:String*/"\n")));
+        // Source line: 24
+        (/*L24,type:TextIO*/(/*L24,type:TextIO*/(/*L24,type:TextIO*/(/*L24,type:TextIO*/new TextIO()).putString((/*L24,type:String*/"s3.length(): "))).putInt((/*L24,type:int*/(/*L24,type:String*/s3).length()))).putString((/*L24,type:String*/"\n")));
+        // Source line: 26
+        if ((/*L26,type:boolean*/(/*L26,type:String*/s).equals((/*L26,type:String*/s3))))
+            // Source line: 27
+            (/*L27,type:TextIO*/(/*L27,type:TextIO*/new TextIO()).putString((/*L27,type:String*/"s.equals(s3): true\n")));
+        else
+            // Source line: 29
+            (/*L29,type:TextIO*/(/*L29,type:TextIO*/new TextIO()).putString((/*L29,type:String*/"s.equals(s3): false\n")));
+        // Source line: 30
+        if ((/*L30,type:boolean*/(/*L30,type:String*/s3).equals((/*L30,type:String*/s))))
+            // Source line: 31
+            (/*L31,type:TextIO*/(/*L31,type:TextIO*/new TextIO()).putString((/*L31,type:String*/"s3.equals(s): true\n")));
+        else
+            // Source line: 33
+            (/*L33,type:TextIO*/(/*L33,type:TextIO*/new TextIO()).putString((/*L33,type:String*/"s3.equals(s): false\n")));
+        // Source line: 35
+        (/*L35,type:TextIO*/(/*L35,type:TextIO*/(/*L35,type:TextIO*/(/*L35,type:TextIO*/new TextIO()).putString((/*L35,type:String*/"s.concat(s2): "))).putString((/*L35,type:String*/(/*L35,type:String*/s).concat((/*L35,type:String*/s2))))).putString((/*L35,type:String*/"\n")));
+        // Source line: 36
+        (/*L36,type:TextIO*/(/*L36,type:TextIO*/(/*L36,type:TextIO*/(/*L36,type:TextIO*/new TextIO()).putString((/*L36,type:String*/"s2.concat(s): "))).putString((/*L36,type:String*/(/*L36,type:String*/s2).concat((/*L36,type:String*/s))))).putString((/*L36,type:String*/"\n")));
+        // Source line: 38
+        (/*L38,type:TextIO*/(/*L38,type:TextIO*/(/*L38,type:TextIO*/(/*L38,type:TextIO*/new TextIO()).putString((/*L38,type:String*/"s.concat(s3): "))).putString((/*L38,type:String*/(/*L38,type:String*/s).concat((/*L38,type:String*/s3))))).putString((/*L38,type:String*/"\n")));
+        // Source line: 39
+        (/*L39,type:TextIO*/(/*L39,type:TextIO*/(/*L39,type:TextIO*/(/*L39,type:TextIO*/new TextIO()).putString((/*L39,type:String*/"s3.concat(s): "))).putString((/*L39,type:String*/(/*L39,type:String*/s3).concat((/*L39,type:String*/s))))).putString((/*L39,type:String*/"\n")));
+        // Source line: 43
+        (/*L43,type:TextIO*/(/*L43,type:TextIO*/(/*L43,type:TextIO*/(/*L43,type:TextIO*/new TextIO()).putString((/*L43,type:String*/"s.substring(0, 0): "))).putString((/*L43,type:String*/(/*L43,type:String*/s).substring((/*L43,type:int*/0), (/*L43,type:int*/0))))).putString((/*L43,type:String*/"\n")));
+        // Source line: 44
+        (/*L44,type:TextIO*/(/*L44,type:TextIO*/(/*L44,type:TextIO*/(/*L44,type:TextIO*/new TextIO()).putString((/*L44,type:String*/"s.substring(2, 8): "))).putString((/*L44,type:String*/(/*L44,type:String*/s).substring((/*L44,type:int*/2), (/*L44,type:int*/8))))).putString((/*L44,type:String*/"\n")));
+        // Source line: 45
+        (/*L45,type:TextIO*/(/*L45,type:TextIO*/(/*L45,type:TextIO*/(/*L45,type:TextIO*/new TextIO()).putString((/*L45,type:String*/"s2.substring(1, 2): "))).putString((/*L45,type:String*/(/*L45,type:String*/s2).substring((/*L45,type:int*/1), (/*L45,type:int*/2))))).putString((/*L45,type:String*/"\n")));
+        // Source line: 46
+        (/*L46,type:TextIO*/(/*L46,type:TextIO*/(/*L46,type:TextIO*/(/*L46,type:TextIO*/new TextIO()).putString((/*L46,type:String*/"s2.substring(1, 7): "))).putString((/*L46,type:String*/(/*L46,type:String*/s2).substring((/*L46,type:int*/1), (/*L46,type:int*/7))))).putString((/*L46,type:String*/"\n")));
+        // Source line: 47
+        (/*L47,type:TextIO*/(/*L47,type:TextIO*/(/*L47,type:TextIO*/(/*L47,type:TextIO*/new TextIO()).putString((/*L47,type:String*/"s3.substring(2, 7): "))).putString((/*L47,type:String*/(/*L47,type:String*/s3).substring((/*L47,type:int*/2), (/*L47,type:int*/7))))).putString((/*L47,type:String*/"\n")));
+        // Source line: 48
+        (/*L48,type:TextIO*/(/*L48,type:TextIO*/(/*L48,type:TextIO*/(/*L48,type:TextIO*/new TextIO()).putString((/*L48,type:String*/"s3.substring(1, 10): "))).putString((/*L48,type:String*/(/*L48,type:String*/s3).substring((/*L48,type:int*/1), (/*L48,type:int*/10))))).putString((/*L48,type:String*/"\n")));
+        // Source line: 50
+        return;
+    }
+}

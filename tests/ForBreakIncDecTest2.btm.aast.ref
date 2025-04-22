@@ -1,0 +1,28 @@
+// Source file: ForBreakIncDecTest2.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        int i = (/*L3,type:int*/0);
+        // Source line: 4
+        for (; ; )
+            // Source line: 4
+            {
+                // Source line: 5
+                if ((/*L5,type:boolean*/(/*L5,type:int*/i) >= (/*L5,type:int*/100)))
+                    // Source line: 6
+                    break;
+                else
+                    // Source line: 5
+                    {
+                    }
+                // Source line: 7
+                (/*L7,type:TextIO*/(/*L7,type:TextIO*/(/*L7,type:TextIO*/new TextIO()).putInt((/*L7,type:int*/++((/*L7,type:int*/i))))).putString((/*L7,type:String*/"\n")));
+                // Source line: 8
+                (/*L8,type:int*/((/*L8,type:int*/i))++);
+            }
+        // Source line: 10
+        return;
+    }
+}

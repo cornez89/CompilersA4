@@ -1,0 +1,153 @@
+1,33c1,118
+< // Source file: Assign.btm
+< // Source line: 4
+< class Main extends Object {
+<     // Source line: 6
+<     void main() {
+<         // Source line: 7
+<         TextIO io = (/*L7,type:TextIO*/new TextIO());
+<         // Source line: 8
+<         int x = (/*L8,type:int*/0);
+<         // Source line: 9
+<         int y = (/*L9,type:int*/1);
+<         // Source line: 10
+<         int z = (/*L10,type:int*/2);
+<         // Source line: 12
+<         (/*L12,type:TextIO*/(/*L12,type:TextIO*/(/*L12,type:TextIO*/(/*L12,type:TextIO*/io).putString((/*L12,type:String*/"x="))).putInt((/*L12,type:int*/x))).putString((/*L12,type:String*/"\n")));
+<         // Source line: 13
+<         (/*L13,type:TextIO*/(/*L13,type:TextIO*/(/*L13,type:TextIO*/(/*L13,type:TextIO*/io).putString((/*L13,type:String*/"y="))).putInt((/*L13,type:int*/y))).putString((/*L13,type:String*/"\n")));
+<         // Source line: 14
+<         (/*L14,type:TextIO*/(/*L14,type:TextIO*/(/*L14,type:TextIO*/(/*L14,type:TextIO*/io).putString((/*L14,type:String*/"z="))).putInt((/*L14,type:int*/z))).putString((/*L14,type:String*/"\n")));
+<         // Source line: 16
+<         (/*L16,type:TextIO*/(/*L16,type:TextIO*/io).putString((/*L16,type:String*/"Executing: x = y = z\n")));
+<         // Source line: 17
+<         (/*L17,type:int*/x = (/*L17,type:int*/y = (/*L17,type:int*/z)));
+<         // Source line: 19
+<         (/*L19,type:TextIO*/(/*L19,type:TextIO*/(/*L19,type:TextIO*/(/*L19,type:TextIO*/io).putString((/*L19,type:String*/"x="))).putInt((/*L19,type:int*/x))).putString((/*L19,type:String*/"\n")));
+<         // Source line: 20
+<         (/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/io).putString((/*L20,type:String*/"y="))).putInt((/*L20,type:int*/y))).putString((/*L20,type:String*/"\n")));
+<         // Source line: 21
+<         (/*L21,type:TextIO*/(/*L21,type:TextIO*/(/*L21,type:TextIO*/(/*L21,type:TextIO*/io).putString((/*L21,type:String*/"z="))).putInt((/*L21,type:int*/z))).putString((/*L21,type:String*/"\n")));
+<         // Source line: 23
+<         return;
+<     }
+< }
+---
+> 
+> C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main Assign.btm 
+> java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
+> class: String value: util.ClassTreeNode@6f496d9f
+> class: Object value: util.ClassTreeNode@723279cf
+>         at java.base/java.util.Hashtable.get(Hashtable.java:381)
+>         at util.ClassTreeNode.lookupClass(Unknown Source)
+>         at visitor.SemantVisitor.typeExists(Unknown Source)
+> class: Sys value: util.ClassTreeNode@10f87f48
+> class: Main value: util.ClassTreeNode@b4c966a
+> class: TextIO value: util.ClassTreeNode@2f4d3709
+> Main
+>         at visitor.SemantVisitor.conformsTo(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+>         at ast.AssignExpr.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.AssignExpr.accept(Unknown Source)
+> Scope level 2, contains:
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.ExprStmt.accept(Unknown Source)Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> 
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.StmtList.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.Method.accept(Unknown Source)
+>         at visitor.Visitor.visit(Unknown Source)
+>         at ast.MemberList.accept(Unknown Source)
+> Entered Scope, scopes = 1
+> Class: Object
+> Entered Scope, scopes = 2
+> Entered Scope, scopes = 2
+> Scope level 3, contains:
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.Class_.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+> Class: Object
+> Exited Scope, scopes = 3
+> Exited Scope, scopes = 3
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+> Class: Object
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+> Curr Class: Object, num of children: 1ClassTreeNode
+> Class: Object
+>         at semant.SemanticAnalyzer.analyze(Unknown Source)
+>         at Main.main(Unknown Source)
+> Internal error within compiler: stopping compilation
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Method
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Curr Class: Main, num of children: 0ClassTreeNode
+> Class: Main
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Main
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Scope level 2, contains:
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: this.io, value TextIO
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: x, value int
+> key: this.io, value TextIO
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: x, value int
+> key: this.x, value int
+> key: this.io, value TextIO
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: x, value int
+> key: this.x, value int
+> key: this.io, value TextIO
+> key: y, value int
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: x, value int
+> key: this.y, value int
+> key: this.x, value int
+> key: this.io, value TextIO
+> key: y, value int
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: x, value int
+> key: this.y, value int
+> key: this.x, value int
+> key: this.io, value TextIO
+> key: z, value int
+> key: y, value int
+> key: io, value TextIO

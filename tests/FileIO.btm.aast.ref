@@ -1,0 +1,391 @@
+// Source file: FileIO.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        TextIO io = (/*L3,type:TextIO*/new TextIO());
+        // Source line: 4
+        Vector fileInput = (/*L4,type:Vector*/new Vector());
+        // Source line: 5
+        Vector stdin = (/*L5,type:Vector*/new Vector());
+        // Source line: 7
+        (/*L7,type:void*/(/*L7,type:TextIO*/io).readFile((/*L7,type:String*/"FileIO-input.txt")));
+        // Source line: 8
+        boolean eof = (/*L8,type:boolean*/false);
+        // Source line: 9
+        while ((/*L9,type:boolean*/!((/*L9,type:boolean*/eof))))
+            // Source line: 9
+            {
+                // Source line: 10
+                String s = (/*L10,type:String*/(/*L10,type:TextIO*/io).getString());
+                // Source line: 11
+                if ((/*L11,type:boolean*/(/*L11,type:String*/s) == (/*L11,type:null*/null)))
+                    // Source line: 12
+                    (/*L12,type:boolean*/eof = (/*L12,type:boolean*/true));
+                else
+                    // Source line: 13
+                    {
+                        // Source line: 14
+                        (/*L14,type:TextIO*/(/*L14,type:TextIO*/(/*L14,type:TextIO*/(/*L14,type:TextIO*/io).putString((/*L14,type:String*/"Read string from FileIO-input.txt: "))).putString((/*L14,type:String*/s))).putString((/*L14,type:String*/"\n")));
+                        // Source line: 15
+                        (/*L15,type:Vector*/(/*L15,type:Vector*/fileInput).addElement((/*L15,type:String*/s)));
+                    }
+            }
+        // Source line: 19
+        (/*L19,type:void*/(/*L19,type:TextIO*/io).readStdin());
+        // Source line: 20
+        (/*L20,type:TextIO*/(/*L20,type:TextIO*/io).putString((/*L20,type:String*/"\nEnter some text to write to file (empty line to end):\n")));
+        // Source line: 21
+        boolean endOfInput = (/*L21,type:boolean*/false);
+        // Source line: 22
+        while ((/*L22,type:boolean*/!((/*L22,type:boolean*/endOfInput))))
+            // Source line: 22
+            {
+                // Source line: 23
+                String s = (/*L23,type:String*/(/*L23,type:TextIO*/io).getString());
+                // Source line: 24
+                if ((/*L24,type:boolean*/(/*L24,type:String*/s).equals((/*L24,type:String*/""))))
+                    // Source line: 25
+                    (/*L25,type:boolean*/endOfInput = (/*L25,type:boolean*/true));
+                else
+                    // Source line: 26
+                    {
+                        // Source line: 27
+                        (/*L27,type:TextIO*/(/*L27,type:TextIO*/(/*L27,type:TextIO*/(/*L27,type:TextIO*/io).putString((/*L27,type:String*/"Read string from FileIO-input.txt: "))).putString((/*L27,type:String*/s))).putString((/*L27,type:String*/"\n")));
+                        // Source line: 28
+                        (/*L28,type:Vector*/(/*L28,type:Vector*/stdin).addElement((/*L28,type:String*/s)));
+                    }
+            }
+        // Source line: 32
+        String s = (/*L32,type:String*/(String)((/*L32,type:Object*/(/*L32,type:Vector*/stdin).elementAt((/*L32,type:int*/0)))));
+        // Source line: 34
+        (/*L34,type:void*/(/*L34,type:TextIO*/io).writeStderr());
+        // Source line: 35
+        (/*L35,type:TextIO*/(/*L35,type:TextIO*/io).putString((/*L35,type:String*/"This string was sent to stderr.\n\n")));
+        // Source line: 37
+        (/*L37,type:void*/(/*L37,type:TextIO*/io).writeStdout());
+        // Source line: 38
+        (/*L38,type:TextIO*/(/*L38,type:TextIO*/io).putString((/*L38,type:String*/"Writing stdin and input file contents to FileIO-output.txt (stdin first)\n\n")));
+        // Source line: 39
+        (/*L39,type:void*/(/*L39,type:TextIO*/io).writeFile((/*L39,type:String*/"FileIO-output.txt")));
+        // Source line: 40
+        int i = (/*L40,type:int*/0);
+        // Source line: 41
+        while ((/*L41,type:boolean*/(/*L41,type:int*/i) < (/*L41,type:int*/(/*L41,type:Vector*/stdin).size())))
+            // Source line: 41
+            {
+                // Source line: 42
+                (/*L42,type:TextIO*/(/*L42,type:TextIO*/(/*L42,type:TextIO*/io).putString((/*L42,type:String*/(String)((/*L42,type:Object*/(/*L42,type:Vector*/stdin).elementAt((/*L42,type:int*/i))))))).putString((/*L42,type:String*/"\n")));
+                // Source line: 43
+                (/*L43,type:int*/i = (/*L43,type:int*/(/*L43,type:int*/i) + (/*L43,type:int*/1)));
+            }
+        // Source line: 45
+        (/*L45,type:int*/i = (/*L45,type:int*/0));
+        // Source line: 46
+        while ((/*L46,type:boolean*/(/*L46,type:int*/i) < (/*L46,type:int*/(/*L46,type:Vector*/fileInput).size())))
+            // Source line: 46
+            {
+                // Source line: 47
+                (/*L47,type:TextIO*/(/*L47,type:TextIO*/(/*L47,type:TextIO*/io).putString((/*L47,type:String*/(String)((/*L47,type:Object*/(/*L47,type:Vector*/fileInput).elementAt((/*L47,type:int*/i))))))).putString((/*L47,type:String*/"\n")));
+                // Source line: 48
+                (/*L48,type:int*/i = (/*L48,type:int*/(/*L48,type:int*/i) + (/*L48,type:int*/1)));
+            }
+        // Source line: 51
+        (/*L51,type:void*/(/*L51,type:TextIO*/io).writeStdout());
+        // Source line: 52
+        (/*L52,type:TextIO*/(/*L52,type:TextIO*/io).putString((/*L52,type:String*/"Contents of FileIO-output.txt:\n")));
+        // Source line: 53
+        (/*L53,type:void*/(/*L53,type:TextIO*/io).readFile((/*L53,type:String*/"FileIO-output.txt")));
+        // Source line: 54
+        (/*L54,type:boolean*/eof = (/*L54,type:boolean*/false));
+        // Source line: 55
+        while ((/*L55,type:boolean*/!((/*L55,type:boolean*/eof))))
+            // Source line: 55
+            {
+                // Source line: 56
+                (/*L56,type:String*/s = (/*L56,type:String*/(/*L56,type:TextIO*/io).getString()));
+                // Source line: 57
+                if ((/*L57,type:boolean*/(/*L57,type:String*/s) == (/*L57,type:null*/null)))
+                    // Source line: 58
+                    (/*L58,type:boolean*/eof = (/*L58,type:boolean*/true));
+                else
+                    // Source line: 60
+                    (/*L60,type:TextIO*/(/*L60,type:TextIO*/(/*L60,type:TextIO*/io).putString((/*L60,type:String*/s))).putString((/*L60,type:String*/"\n")));
+            }
+        // Source line: 63
+        (/*L63,type:TextIO*/(/*L63,type:TextIO*/io).putString((/*L63,type:String*/"\nFinished.\n")));
+        // Source line: 65
+        return;
+    }
+}
+// Source file: Vector.btm
+// Source line: 5
+class Vector extends Object {
+    // Source line: 7
+    TextIO io = 
+(/*L7,type:TextIO*/new TextIO());
+    // Source line: 9
+    Object[] elements = 
+(/*L9,type:Object[]*/new Object[(/*L9,type:int*/10)]);
+    // Source line: 11
+    int size = 
+(/*L11,type:int*/0);
+    // Source line: 17
+    void error(/*line:17*/String message) {
+        // Source line: 18
+        (/*L18,type:TextIO*/(/*L18,type:TextIO*/(/*L18,type:TextIO*/(/*L18,type:TextIO*/io).putString((/*L18,type:String*/"Vector error: "))).putString((/*L18,type:String*/message))).putString((/*L18,type:String*/"\n")));
+        // Source line: 19
+        (/*L19,type:void*/(/*L19,type:Sys*/new Sys()).exit((/*L19,type:int*/1)));
+        // Source line: 20
+        return;
+    }
+    // Source line: 29
+    void checkIndex(/*line:29*/int i, /*line:29*/String method, /*line:29*/boolean isSizeIncluded) {
+        // Source line: 30
+        if ((/*L30,type:boolean*/!((/*L30,type:boolean*/isSizeIncluded))))
+            // Source line: 30
+            {
+                // Source line: 31
+                if ((/*L31,type:boolean*/(/*L31,type:boolean*/(/*L31,type:int*/i) < (/*L31,type:int*/0)) || (/*L31,type:boolean*/(/*L31,type:int*/i) >= (/*L31,type:int*/size))))
+                    // Source line: 31
+                    {
+                        // Source line: 32
+                        (/*L32,type:TextIO*/(/*L32,type:TextIO*/(/*L32,type:TextIO*/(/*L32,type:TextIO*/io).putString((/*L32,type:String*/"Bad index '"))).putInt((/*L32,type:int*/i))).putString((/*L32,type:String*/"'\n")));
+                        // Source line: 33
+                        (/*L33,type:TextIO*/(/*L33,type:TextIO*/io).putString((/*L33,type:String*/"Index must be >= 0 and < size '")));
+                        // Source line: 34
+                        (/*L34,type:TextIO*/(/*L34,type:TextIO*/(/*L34,type:TextIO*/io).putInt((/*L34,type:int*/size))).putString((/*L34,type:String*/"'\n")));
+                        // Source line: 35
+                        (/*L35,type:void*/(/*L35,type:Vector*/this).error((/*L35,type:String*/(/*L35,type:String*/"index out of bounds in method ").concat((/*L35,type:String*/method)))));
+                    }
+                else
+                    // Source line: 31
+                    {
+                    }
+            }
+        else
+            // Source line: 38
+            {
+                // Source line: 39
+                if ((/*L39,type:boolean*/(/*L39,type:boolean*/(/*L39,type:int*/i) < (/*L39,type:int*/0)) || (/*L39,type:boolean*/(/*L39,type:int*/i) > (/*L39,type:int*/size))))
+                    // Source line: 39
+                    {
+                        // Source line: 40
+                        (/*L40,type:TextIO*/(/*L40,type:TextIO*/(/*L40,type:TextIO*/(/*L40,type:TextIO*/io).putString((/*L40,type:String*/"Bad index '"))).putInt((/*L40,type:int*/i))).putString((/*L40,type:String*/"'\n")));
+                        // Source line: 41
+                        (/*L41,type:TextIO*/(/*L41,type:TextIO*/io).putString((/*L41,type:String*/"Index must be >= 0 and <= size '")));
+                        // Source line: 42
+                        (/*L42,type:TextIO*/(/*L42,type:TextIO*/(/*L42,type:TextIO*/io).putInt((/*L42,type:int*/size))).putString((/*L42,type:String*/"'\n")));
+                        // Source line: 43
+                        (/*L43,type:void*/(/*L43,type:Vector*/this).error((/*L43,type:String*/(/*L43,type:String*/"index out of bounds in method ").concat((/*L43,type:String*/method)))));
+                    }
+                else
+                    // Source line: 39
+                    {
+                    }
+            }
+        // Source line: 47
+        return;
+    }
+    // Source line: 53
+    void resize() {
+        // Source line: 54
+        Object[] tmp = (/*L54,type:Object[]*/new Object[(/*L54,type:int*/(/*L54,type:int*/(/*L54,type:Object[]*/elements).length) * (/*L54,type:int*/2))]);
+        // Source line: 55
+        int i = (/*L55,type:int*/0);
+        // Source line: 57
+        while ((/*L57,type:boolean*/(/*L57,type:int*/i) < (/*L57,type:int*/(/*L57,type:Object[]*/elements).length)))
+            // Source line: 57
+            {
+                // Source line: 58
+                (/*L58,type:Object*/tmp[(/*L58,type:int*/i)] = (/*L58,type:Object*/elements[(/*L58,type:int*/i)]));
+                // Source line: 59
+                (/*L59,type:int*/i = (/*L59,type:int*/(/*L59,type:int*/i) + (/*L59,type:int*/1)));
+            }
+        // Source line: 61
+        (/*L61,type:Object[]*/elements = (/*L61,type:Object[]*/tmp));
+        // Source line: 63
+        return;
+    }
+    // Source line: 69
+    int size() {
+        // Source line: 70
+        return (/*L70,type:int*/size);
+    }
+    // Source line: 77
+    boolean contains(/*line:77*/Object o) {
+        // Source line: 78
+        boolean found = (/*L78,type:boolean*/false);
+        // Source line: 79
+        int i = (/*L79,type:int*/0);
+        // Source line: 81
+        while ((/*L81,type:boolean*/(/*L81,type:int*/i) < (/*L81,type:int*/size)))
+            // Source line: 81
+            {
+                // Source line: 82
+                if ((/*L82,type:boolean*/(/*L82,type:Object*/elements[(/*L82,type:int*/i)]) == (/*L82,type:Object*/o)))
+                    // Source line: 83
+                    (/*L83,type:boolean*/found = (/*L83,type:boolean*/true));
+                else
+                    // Source line: 82
+                    {
+                    }
+                // Source line: 84
+                (/*L84,type:int*/i = (/*L84,type:int*/(/*L84,type:int*/i) + (/*L84,type:int*/1)));
+            }
+        // Source line: 87
+        return (/*L87,type:boolean*/found);
+    }
+    // Source line: 94
+    Object elementAt(/*line:94*/int i) {
+        // Source line: 95
+        (/*L95,type:void*/(/*L95,type:Vector*/this).checkIndex((/*L95,type:int*/i), (/*L95,type:String*/"elementAt"), (/*L95,type:boolean*/false)));
+        // Source line: 96
+        return (/*L96,type:Object*/elements[(/*L96,type:int*/i)]);
+    }
+    // Source line: 104
+    Vector addElementAt(/*line:104*/Object o, /*line:104*/int i) {
+        // Source line: 105
+        (/*L105,type:void*/(/*L105,type:Vector*/this).checkIndex((/*L105,type:int*/i), (/*L105,type:String*/"addElementAt"), (/*L105,type:boolean*/true)));
+        // Source line: 107
+        if ((/*L107,type:boolean*/(/*L107,type:int*/size) == (/*L107,type:int*/(/*L107,type:Object[]*/elements).length)))
+            // Source line: 108
+            (/*L108,type:void*/(/*L108,type:Vector*/this).resize());
+        else
+            // Source line: 107
+            {
+            }
+        // Source line: 110
+        int j = (/*L110,type:int*/size);
+        // Source line: 111
+        while ((/*L111,type:boolean*/(/*L111,type:int*/j) > (/*L111,type:int*/i)))
+            // Source line: 111
+            {
+                // Source line: 112
+                (/*L112,type:Object*/elements[(/*L112,type:int*/j)] = (/*L112,type:Object*/elements[(/*L112,type:int*/(/*L112,type:int*/j) - (/*L112,type:int*/1))]));
+                // Source line: 113
+                (/*L113,type:int*/j = (/*L113,type:int*/(/*L113,type:int*/j) - (/*L113,type:int*/1)));
+            }
+        // Source line: 115
+        (/*L115,type:Object*/elements[(/*L115,type:int*/i)] = (/*L115,type:Object*/o));
+        // Source line: 116
+        (/*L116,type:int*/size = (/*L116,type:int*/(/*L116,type:int*/size) + (/*L116,type:int*/1)));
+        // Source line: 118
+        return (/*L118,type:Vector*/this);
+    }
+    // Source line: 126
+    Vector setElementAt(/*line:126*/Object o, /*line:126*/int i) {
+        // Source line: 127
+        (/*L127,type:void*/(/*L127,type:Vector*/this).checkIndex((/*L127,type:int*/i), (/*L127,type:String*/"setElementAt"), (/*L127,type:boolean*/false)));
+        // Source line: 128
+        (/*L128,type:Vector*/(/*L128,type:Vector*/this).addElementAt((/*L128,type:Object*/o), (/*L128,type:int*/i)));
+        // Source line: 129
+        (/*L129,type:Vector*/(/*L129,type:Vector*/this).removeElementAt((/*L129,type:int*/(/*L129,type:int*/i) + (/*L129,type:int*/1))));
+        // Source line: 131
+        return (/*L131,type:Vector*/this);
+    }
+    // Source line: 138
+    Vector removeElementAt(/*line:138*/int i) {
+        // Source line: 139
+        (/*L139,type:void*/(/*L139,type:Vector*/this).checkIndex((/*L139,type:int*/i), (/*L139,type:String*/"removeElementAt"), (/*L139,type:boolean*/false)));
+        // Source line: 141
+        int j = (/*L141,type:int*/i);
+        // Source line: 142
+        while ((/*L142,type:boolean*/(/*L142,type:int*/(/*L142,type:int*/j) + (/*L142,type:int*/1)) < (/*L142,type:int*/size)))
+            // Source line: 142
+            {
+                // Source line: 143
+                (/*L143,type:Object*/elements[(/*L143,type:int*/j)] = (/*L143,type:Object*/elements[(/*L143,type:int*/(/*L143,type:int*/j) + (/*L143,type:int*/1))]));
+                // Source line: 144
+                (/*L144,type:int*/j = (/*L144,type:int*/(/*L144,type:int*/j) + (/*L144,type:int*/1)));
+            }
+        // Source line: 146
+        (/*L146,type:int*/size = (/*L146,type:int*/(/*L146,type:int*/size) - (/*L146,type:int*/1)));
+        // Source line: 148
+        return (/*L148,type:Vector*/this);
+    }
+    // Source line: 155
+    Vector addElement(/*line:155*/Object o) {
+        // Source line: 156
+        return (/*L156,type:Vector*/(/*L156,type:Vector*/this).addElementAt((/*L156,type:Object*/o), (/*L156,type:int*/size)));
+    }
+    // Source line: 163
+    Vector removeElement(/*line:163*/Object o) {
+        // Source line: 164
+        boolean removed = (/*L164,type:boolean*/false);
+        // Source line: 165
+        int i = (/*L165,type:int*/0);
+        // Source line: 167
+        while ((/*L167,type:boolean*/(/*L167,type:boolean*/(/*L167,type:int*/i) < (/*L167,type:int*/size)) && (/*L167,type:boolean*/!((/*L167,type:boolean*/removed)))))
+            // Source line: 167
+            {
+                // Source line: 168
+                if ((/*L168,type:boolean*/(/*L168,type:Object*/elements[(/*L168,type:int*/i)]) == (/*L168,type:Object*/o)))
+                    // Source line: 168
+                    {
+                        // Source line: 169
+                        int j = (/*L169,type:int*/i);
+                        // Source line: 170
+                        while ((/*L170,type:boolean*/(/*L170,type:int*/(/*L170,type:int*/j) + (/*L170,type:int*/1)) < (/*L170,type:int*/size)))
+                            // Source line: 170
+                            {
+                                // Source line: 171
+                                (/*L171,type:Object*/elements[(/*L171,type:int*/j)] = (/*L171,type:Object*/elements[(/*L171,type:int*/(/*L171,type:int*/j) + (/*L171,type:int*/1))]));
+                            }
+                        // Source line: 173
+                        (/*L173,type:int*/size = (/*L173,type:int*/(/*L173,type:int*/size) - (/*L173,type:int*/1)));
+                        // Source line: 174
+                        (/*L174,type:boolean*/removed = (/*L174,type:boolean*/true));
+                    }
+                else
+                    // Source line: 168
+                    {
+                    }
+                // Source line: 176
+                (/*L176,type:int*/i = (/*L176,type:int*/(/*L176,type:int*/i) + (/*L176,type:int*/1)));
+            }
+        // Source line: 179
+        if ((/*L179,type:boolean*/!((/*L179,type:boolean*/removed))))
+            // Source line: 180
+            (/*L180,type:void*/(/*L180,type:Vector*/this).error((/*L180,type:String*/"element not found in vector")));
+        else
+            // Source line: 179
+            {
+            }
+        // Source line: 182
+        return (/*L182,type:Vector*/this);
+    }
+}
+// Source file: Vector.btm
+// Source line: 190
+class VectorElement extends Object {
+    // Source line: 192
+    Object element;
+    // Source line: 194
+    VectorElement next;
+    // Source line: 199
+    Object getElement() {
+        // Source line: 200
+        return (/*L200,type:Object*/element);
+    }
+    // Source line: 206
+    VectorElement setElement(/*line:206*/Object o) {
+        // Source line: 207
+        (/*L207,type:Object*/element = (/*L207,type:Object*/o));
+        // Source line: 208
+        return (/*L208,type:VectorElement*/this);
+    }
+    // Source line: 214
+    VectorElement getNext() {
+        // Source line: 215
+        return (/*L215,type:VectorElement*/next);
+    }
+    // Source line: 221
+    VectorElement setNext(/*line:221*/VectorElement ve) {
+        // Source line: 222
+        (/*L222,type:VectorElement*/next = (/*L222,type:VectorElement*/ve));
+        // Source line: 223
+        return (/*L223,type:VectorElement*/this);
+    }
+}

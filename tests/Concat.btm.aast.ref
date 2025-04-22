@@ -1,0 +1,45 @@
+// Source file: Concat.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        String star = (/*L3,type:String*/"*");
+        // Source line: 4
+        String s1 = (/*L4,type:String*/(/*L4,type:String*/star).substring((/*L4,type:int*/0), (/*L4,type:int*/1)));
+        // Source line: 5
+        String s2 = (/*L5,type:String*/"");
+        // Source line: 6
+        int i = (/*L6,type:int*/1);
+        // Source line: 8
+        while ((/*L8,type:boolean*/(/*L8,type:int*/(/*L8,type:int*/i) * (/*L8,type:int*/2)) < (/*L8,type:int*/5000)))
+            // Source line: 8
+            {
+                // Source line: 9
+                (/*L9,type:String*/s1 = (/*L9,type:String*/(/*L9,type:String*/s1).concat((/*L9,type:String*/s1))));
+                // Source line: 10
+                (/*L10,type:TextIO*/(/*L10,type:TextIO*/(/*L10,type:TextIO*/(/*L10,type:TextIO*/(/*L10,type:TextIO*/(/*L10,type:TextIO*/new TextIO()).putString((/*L10,type:String*/"i: "))).putInt((/*L10,type:int*/i))).putString((/*L10,type:String*/", s1="))).putString((/*L10,type:String*/s1))).putString((/*L10,type:String*/"\n")));
+                // Source line: 11
+                (/*L11,type:int*/i = (/*L11,type:int*/(/*L11,type:int*/i) * (/*L11,type:int*/2)));
+            }
+        // Source line: 14
+        while ((/*L14,type:boolean*/(/*L14,type:int*/i) < (/*L14,type:int*/5000)))
+            // Source line: 14
+            {
+                // Source line: 15
+                (/*L15,type:String*/s2 = (/*L15,type:String*/(/*L15,type:String*/s2).concat((/*L15,type:String*/star))));
+                // Source line: 16
+                (/*L16,type:int*/i = (/*L16,type:int*/(/*L16,type:int*/i) + (/*L16,type:int*/1)));
+            }
+        // Source line: 19
+        (/*L19,type:String*/s1 = (/*L19,type:String*/(/*L19,type:String*/s1).concat((/*L19,type:String*/s2))));
+        // Source line: 20
+        (/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/new TextIO()).putString((/*L20,type:String*/"i: "))).putInt((/*L20,type:int*/i))).putString((/*L20,type:String*/", s1="))).putString((/*L20,type:String*/s1))).putString((/*L20,type:String*/"\n")));
+        // Source line: 22
+        (/*L22,type:String*/s1 = (/*L22,type:String*/(/*L22,type:String*/s1).concat((/*L22,type:String*/star))));
+        // Source line: 23
+        (/*L23,type:TextIO*/(/*L23,type:TextIO*/(/*L23,type:TextIO*/(/*L23,type:TextIO*/(/*L23,type:TextIO*/(/*L23,type:TextIO*/new TextIO()).putString((/*L23,type:String*/"i: "))).putInt((/*L23,type:int*/i))).putString((/*L23,type:String*/", s1="))).putString((/*L23,type:String*/s1))).putString((/*L23,type:String*/"\n")));
+        // Source line: 25
+        return;
+    }
+}

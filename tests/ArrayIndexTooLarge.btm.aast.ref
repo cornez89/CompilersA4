@@ -1,0 +1,15 @@
+// Source file: ArrayIndexTooLarge.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        int[] array = (/*L3,type:int[]*/new int[(/*L3,type:int*/3)]);
+        // Source line: 4
+        (/*L4,type:int*/array[(/*L4,type:int*/2)] = (/*L4,type:int*/0));
+        // Source line: 5
+        (/*L5,type:int*/array[(/*L5,type:int*/3)] = (/*L5,type:int*/1));
+        // Source line: 6
+        return;
+    }
+}

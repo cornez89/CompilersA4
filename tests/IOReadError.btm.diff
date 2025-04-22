@@ -1,0 +1,93 @@
+0a1,80
+> 
+> C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main IOReadError.btm 
+> class: String value: util.ClassTreeNode@31befd9f
+> class: Object value: util.ClassTreeNode@7ef20235
+> class: Sys value: util.ClassTreeNode@27d6c5e0
+> class: Main value: util.ClassTreeNode@4f3f5b24
+> class: TextIO value: util.ClassTreeNode@15aeb7ab
+> Main
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Class: Object
+> Entered Scope, scopes = 2
+> Entered Scope, scopes = 2
+> Scope level 3, contains:
+> Class: Object
+> Exited Scope, scopes = 3
+> Exited Scope, scopes = 3
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+> Curr Class: Object, num of children: 1ClassTreeNode
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Method
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Curr Class: Main, num of children: 0ClassTreeNode
+> Class: Main
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Main
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Scope level 2, contains:
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: this.io, value TextIO
+> key: io, value TextIO
+> Scope level 2, contains:
+> key: s, value String
+> key: this.io, value TextIO
+> key: io, value TextIO
+> Method
+> Class: Main
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Main
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+7c87
+<         TextIO io = (/*L3,type:TextIO*/new TextIO());
+---
+>         TextIO io = (/*L3*/new TextIO());
+9c89
+<         (/*L4,type:void*/(/*L4,type:TextIO*/io).readFile((/*L4,type:String*/"/foo")));
+---
+>         (/*L4*/(/*L4*/io).readFile((/*L4,type:String*/"/foo")));
+11c91
+<         String s = (/*L5,type:String*/(/*L5,type:TextIO*/io).getString());
+---
+>         String s = (/*L5*/(/*L5*/io).getString());

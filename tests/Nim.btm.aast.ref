@@ -1,0 +1,99 @@
+// Source file: Nim.btm
+// Source line: 4
+class Main extends Object {
+    // Source line: 6
+    TextIO io = 
+(/*L6,type:TextIO*/new TextIO());
+    // Source line: 13
+    int turn(/*line:13*/String name, /*line:13*/int numBeansLeft) {
+        // Source line: 14
+        int pickedBeans = (/*L14,type:int*/0);
+        // Source line: 18
+        while ((/*L18,type:boolean*/true))
+            // Source line: 18
+            {
+                // Source line: 20
+                (/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/io).putString((/*L20,type:String*/name))).putString((/*L20,type:String*/", how many beans to pick up? (")));
+                // Source line: 21
+                (/*L21,type:TextIO*/(/*L21,type:TextIO*/(/*L21,type:TextIO*/io).putInt((/*L21,type:int*/numBeansLeft))).putString((/*L21,type:String*/" left) ")));
+                // Source line: 22
+                (/*L22,type:int*/pickedBeans = (/*L22,type:int*/(/*L22,type:TextIO*/io).getInt()));
+                // Source line: 25
+                if ((/*L25,type:boolean*/(/*L25,type:boolean*/(/*L25,type:int*/pickedBeans) < (/*L25,type:int*/1)) || (/*L25,type:boolean*/(/*L25,type:int*/pickedBeans) > (/*L25,type:int*/3))))
+                    // Source line: 26
+                    (/*L26,type:TextIO*/(/*L26,type:TextIO*/io).putString((/*L26,type:String*/"number of beans must be 1, 2, or 3\n")));
+                else
+                    // Source line: 28
+                    if ((/*L28,type:boolean*/(/*L28,type:int*/pickedBeans) > (/*L28,type:int*/numBeansLeft)))
+                        // Source line: 29
+                        (/*L29,type:TextIO*/(/*L29,type:TextIO*/io).putString((/*L29,type:String*/"can't pick up more beans than are left\n")));
+                    else
+                        // Source line: 32
+                        return (/*L32,type:int*/pickedBeans);
+            }
+        // Source line: 36
+        return (/*L36,type:int*/0);
+    }
+    // Source line: 44
+    void main() {
+        // Source line: 46
+        (/*L46,type:TextIO*/(/*L46,type:TextIO*/io).putString((/*L46,type:String*/"Player 1, enter your name: ")));
+        // Source line: 47
+        String player1 = (/*L47,type:String*/(/*L47,type:TextIO*/io).getString());
+        // Source line: 48
+        (/*L48,type:TextIO*/(/*L48,type:TextIO*/io).putString((/*L48,type:String*/"Player 2, enter your name: ")));
+        // Source line: 49
+        String player2 = (/*L49,type:String*/(/*L49,type:TextIO*/io).getString());
+        // Source line: 50
+        (/*L50,type:TextIO*/(/*L50,type:TextIO*/io).putString((/*L50,type:String*/"How many beans to start? ")));
+        // Source line: 51
+        int totalBeans = (/*L51,type:int*/(/*L51,type:TextIO*/io).getInt());
+        // Source line: 54
+        while ((/*L54,type:boolean*/(/*L54,type:int*/totalBeans) < (/*L54,type:int*/1)))
+            // Source line: 54
+            {
+                // Source line: 55
+                (/*L55,type:TextIO*/(/*L55,type:TextIO*/io).putString((/*L55,type:String*/"Total beans must be > 0.  How many beans to start? ")));
+                // Source line: 56
+                (/*L56,type:int*/totalBeans = (/*L56,type:int*/(/*L56,type:TextIO*/io).getInt()));
+            }
+        // Source line: 60
+        int numBeansLeft = (/*L60,type:int*/totalBeans);
+        // Source line: 62
+        String currentPlayer = (/*L62,type:String*/player1);
+        // Source line: 67
+        int i = (/*L67,type:int*/0);
+        // Source line: 68
+        while ((/*L68,type:boolean*/(/*L68,type:int*/numBeansLeft) > (/*L68,type:int*/0)))
+            // Source line: 68
+            {
+                // Source line: 70
+                int pickedBeans = (/*L70,type:int*/(/*L70,type:Main*/this).turn((/*L70,type:String*/currentPlayer), (/*L70,type:int*/numBeansLeft)));
+                // Source line: 72
+                (/*L72,type:int*/numBeansLeft = (/*L72,type:int*/(/*L72,type:int*/numBeansLeft) - (/*L72,type:int*/pickedBeans)));
+                // Source line: 75
+                if ((/*L75,type:boolean*/(/*L75,type:int*/numBeansLeft) > (/*L75,type:int*/0)))
+                    // Source line: 75
+                    {
+                        // Source line: 77
+                        (/*L77,type:String*/currentPlayer = (/*L77,type:String*/player2));
+                        // Source line: 78
+                        if ((/*L78,type:boolean*/(/*L78,type:int*/(/*L78,type:int*/i) % (/*L78,type:int*/2)) == (/*L78,type:int*/1)))
+                            // Source line: 79
+                            (/*L79,type:String*/currentPlayer = (/*L79,type:String*/player1));
+                        else
+                            // Source line: 78
+                            {
+                            }
+                    }
+                else
+                    // Source line: 75
+                    {
+                    }
+                // Source line: 82
+                (/*L82,type:int*/i = (/*L82,type:int*/(/*L82,type:int*/i) + (/*L82,type:int*/1)));
+            }
+        // Source line: 87
+        (/*L87,type:TextIO*/(/*L87,type:TextIO*/(/*L87,type:TextIO*/io).putString((/*L87,type:String*/currentPlayer))).putString((/*L87,type:String*/", you win!\n")));
+    }
+}

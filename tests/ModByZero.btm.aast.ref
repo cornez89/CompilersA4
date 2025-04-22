@@ -1,0 +1,11 @@
+// Source file: ModByZero.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        int x = (/*L3,type:int*/(/*L3,type:int*/3) % (/*L3,type:int*/0));
+        // Source line: 4
+        return;
+    }
+}

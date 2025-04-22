@@ -1,0 +1,72 @@
+SemanticErrors4.btm:8:semantic error: expression type 'boolean' of declaration 'be' does not match declared type 'boolean[]'
+
+SemanticErrors4.btm:11:semantic error: predicate in if-statement does not have type boolean
+
+SemanticErrors4.btm:12:semantic error: predicate in if-statement does not have type boolean
+
+SemanticErrors4.btm:13:semantic error: predicate in if-statement does not have type boolean
+
+SemanticErrors4.btm:15:semantic error: the expression type 'boolean[]' in the unary operation ('++') is incorrect; should have been: int
+
+SemanticErrors4.btm:16:semantic error: predicate in for-statement does not have type boolean
+
+SemanticErrors4.btm:18:semantic error: break statement is not inside a loop
+
+SemanticErrors4.btm:20:semantic error: return type 'boolean' is not compatible with declared return type 'void' in method 'main'
+
+SemanticErrors4.btm:21:semantic error: return type 'boolean[]' is not compatible with declared return type 'void' in method 'main'
+
+SemanticErrors4.btm:22:semantic error: return type 'int' is not compatible with declared return type 'void' in method 'main'
+
+SemanticErrors4.btm:23:semantic error: return type 'int' is not compatible with declared return type 'void' in method 'main'
+
+SemanticErrors4.btm:24:semantic error: return type 'int[]' is not compatible with declared return type 'void' in method 'main'
+
+SemanticErrors4.btm:32:semantic error: inconvertible types ('Object[]'=>'String')
+
+SemanticErrors4.btm:32:semantic error: the righthand type 'String' does not conform to the lefthand type 'String[]' in assignment
+
+SemanticErrors4.btm:33:semantic error: the righthand type 'Object' does not conform to the lefthand type 'Object[]' in assignment
+
+SemanticErrors4.btm:34:semantic error: the base type in the target array type 'string' is undefined
+
+SemanticErrors4.btm:34:semantic error: the righthand type 'Object[]' does not conform to the lefthand type 'String[]' in assignment
+
+SemanticErrors4.btm:35:semantic error: inconvertible types ('boolean[]'=>'String[]')
+
+SemanticErrors4.btm:36:semantic error: inconvertible types ('boolean[]'=>'Object[]')
+
+SemanticErrors4.btm:36:semantic error: the righthand type 'Object[]' does not conform to the lefthand type 'String[]' in assignment
+
+SemanticErrors4.btm:39:semantic error: the base type in the instanceof righthand array type 'string' is undefined
+
+SemanticErrors4.btm:40:semantic error: the instanceof lefthand expression has type 'int', which is primitive and not an object type
+
+SemanticErrors4.btm:41:semantic error: the instanceof lefthand expression has type 'int', which is primitive and not an object type
+
+SemanticErrors4.btm:41:semantic error: the instanceof righthand type 'int' is primitive and not an object type
+
+SemanticErrors4.btm:43:semantic error: type 'integer' of new construction is undefined
+
+SemanticErrors4.btm:43:semantic error: expression type 'Object' of declaration 'ia' does not conform to declared type 'int[]'
+
+SemanticErrors4.btm:44:semantic error: size in the array construction has type 'boolean[]' rather than int
+
+SemanticErrors4.btm:45:semantic error: length field in array 'be': cannot be modified
+
+SemanticErrors4.btm:47:semantic error: the righthand type 'int[]' does not conform to the lefthand type 'boolean[]' in assignment
+
+SemanticErrors4.btm:48:semantic error: the lefthand type 'boolean' and righthand type 'int' are not compatible in assignment
+
+SemanticErrors4.btm:50:semantic error: bad reference to 'i': arrays do not have this field (they only have a 'length' field)
+
+SemanticErrors4.btm:50:semantic error: the lefthand type 'int' and righthand type 'Object' are not compatible in assignment
+
+SemanticErrors4.btm:52:semantic error: the expression type 'boolean' in the unary operation ('++') is incorrect; should have been: int
+
+SemanticErrors4.btm:53:semantic error: the expression type 'boolean' in the unary operation ('--') is incorrect; should have been: int
+
+SemanticErrors4.btm:55:semantic error: variable 'c' in assignment is undeclared
+
+Stopping compilation due to errors
+35 error(s)

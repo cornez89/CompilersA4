@@ -1,0 +1,84 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main SimpleCalc.btm 
+class: String value: util.ClassTreeNode@2f4d3709
+class: Object value: util.ClassTreeNode@4e50df2e
+class: Sys value: util.ClassTreeNode@1d81eb93
+class: Main value: util.ClassTreeNode@7291c18f
+class: TextIO value: util.ClassTreeNode@34a245ab
+Main
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Curr Class: Object, num of children: 1ClassTreeNode
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Method
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Curr Class: Main, num of children: 0ClassTreeNode
+Class: Main
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Main
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+java.lang.RuntimeException: Error in BinaryArithPlusExpr: Left Operand must be of type int, given type: boolean.
+        at visitor.TypeCheckVisitor.binaryArithExpr(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.BinaryArithPlusExpr.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.binaryArithExpr(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.BinaryArithMinusExpr.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.ExprList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.DispatchExpr.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.ExprStmt.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.StmtList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.Method.accept(Unknown Source)
+        at visitor.Visitor.visit(Unknown Source)
+        at ast.MemberList.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at ast.Class_.accept(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at visitor.TypeCheckVisitor.visit(Unknown Source)
+        at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+        at semant.SemanticAnalyzer.analyze(Unknown Source)
+        at Main.main(Unknown Source)
+Internal error within compiler: stopping compilation

@@ -1,0 +1,114 @@
+// Source file: ArrayTest3.btm
+// Source line: 4
+class Main extends Object {
+    // Source line: 5
+    TextIO io = 
+(/*L5,type:TextIO*/new TextIO());
+    // Source line: 7
+    void main() {
+        // Source line: 8
+        int[] array = (/*L8,type:int[]*/new int[(/*L8,type:int*/10)]);
+        // Source line: 9
+        (/*L9,type:TextIO*/(/*L9,type:TextIO*/io).putString((/*L9,type:String*/"Building reverse sorted array...\n")));
+        // Source line: 10
+        (/*L10,type:void*/(/*L10,type:Main*/this).buildArray((/*L10,type:int[]*/array)));
+        // Source line: 11
+        (/*L11,type:TextIO*/(/*L11,type:TextIO*/io).putString((/*L11,type:String*/"Unsorted array:\n")));
+        // Source line: 12
+        (/*L12,type:void*/(/*L12,type:Main*/this).printArray((/*L12,type:int[]*/array)));
+        // Source line: 13
+        (/*L13,type:TextIO*/(/*L13,type:TextIO*/io).putString((/*L13,type:String*/"Sorting array...\n")));
+        // Source line: 14
+        (/*L14,type:void*/(/*L14,type:Main*/this).sortArray((/*L14,type:int[]*/array)));
+        // Source line: 15
+        (/*L15,type:TextIO*/(/*L15,type:TextIO*/io).putString((/*L15,type:String*/"Sorted array:\n")));
+        // Source line: 16
+        (/*L16,type:void*/(/*L16,type:Main*/this).printArray((/*L16,type:int[]*/array)));
+        // Source line: 17
+        (/*L17,type:TextIO*/(/*L17,type:TextIO*/io).putString((/*L17,type:String*/"Cloning array and setting element 5 to -1...\n")));
+        // Source line: 18
+        int[] array2 = (/*L18,type:int[]*/(int[])((/*L18,type:Object*/(/*L18,type:int[]*/array).clone())));
+        // Source line: 19
+        (/*L19,type:int*/array2[(/*L19,type:int*/5)] = (/*L19,type:int*/-((/*L19,type:int*/1))));
+        // Source line: 20
+        (/*L20,type:TextIO*/(/*L20,type:TextIO*/io).putString((/*L20,type:String*/"Cloned array:\n")));
+        // Source line: 21
+        (/*L21,type:void*/(/*L21,type:Main*/this).printArray((/*L21,type:int[]*/array2)));
+        // Source line: 22
+        (/*L22,type:TextIO*/(/*L22,type:TextIO*/io).putString((/*L22,type:String*/"Original array:\n")));
+        // Source line: 23
+        (/*L23,type:void*/(/*L23,type:Main*/this).printArray((/*L23,type:int[]*/array)));
+        // Source line: 24
+        return;
+    }
+    // Source line: 27
+    void buildArray(/*line:27*/int[] array) {
+        // Source line: 28
+        int i = (/*L28,type:int*/0);
+        // Source line: 29
+        while ((/*L29,type:boolean*/(/*L29,type:int*/i) < (/*L29,type:int*/(/*L29,type:int[]*/array).length)))
+            // Source line: 29
+            {
+                // Source line: 30
+                (/*L30,type:int*/array[(/*L30,type:int*/i)] = (/*L30,type:int*/(/*L30,type:int*/(/*L30,type:int*/(/*L30,type:int[]*/array).length) - (/*L30,type:int*/i)) - (/*L30,type:int*/1)));
+                // Source line: 31
+                (/*L31,type:int*/i = (/*L31,type:int*/(/*L31,type:int*/i) + (/*L31,type:int*/1)));
+            }
+        // Source line: 33
+        return;
+    }
+    // Source line: 36
+    void sortArray(/*line:36*/int[] array) {
+        // Source line: 37
+        int i = (/*L37,type:int*/0);
+        // Source line: 38
+        while ((/*L38,type:boolean*/(/*L38,type:int*/i) < (/*L38,type:int*/(/*L38,type:int[]*/array).length)))
+            // Source line: 38
+            {
+                // Source line: 39
+                int j = (/*L39,type:int*/(/*L39,type:int*/i) + (/*L39,type:int*/1));
+                // Source line: 40
+                while ((/*L40,type:boolean*/(/*L40,type:int*/j) < (/*L40,type:int*/(/*L40,type:int[]*/array).length)))
+                    // Source line: 40
+                    {
+                        // Source line: 41
+                        if ((/*L41,type:boolean*/(/*L41,type:int*/array[(/*L41,type:int*/i)]) > (/*L41,type:int*/array[(/*L41,type:int*/j)])))
+                            // Source line: 41
+                            {
+                                // Source line: 42
+                                int tmp = (/*L42,type:int*/array[(/*L42,type:int*/i)]);
+                                // Source line: 43
+                                (/*L43,type:int*/array[(/*L43,type:int*/i)] = (/*L43,type:int*/array[(/*L43,type:int*/j)]));
+                                // Source line: 44
+                                (/*L44,type:int*/array[(/*L44,type:int*/j)] = (/*L44,type:int*/tmp));
+                            }
+                        else
+                            // Source line: 41
+                            {
+                            }
+                        // Source line: 46
+                        (/*L46,type:int*/j = (/*L46,type:int*/(/*L46,type:int*/j) + (/*L46,type:int*/1)));
+                    }
+                // Source line: 48
+                (/*L48,type:int*/i = (/*L48,type:int*/(/*L48,type:int*/i) + (/*L48,type:int*/1)));
+            }
+        // Source line: 50
+        return;
+    }
+    // Source line: 53
+    void printArray(/*line:53*/int[] array) {
+        // Source line: 54
+        int i = (/*L54,type:int*/0);
+        // Source line: 55
+        while ((/*L55,type:boolean*/(/*L55,type:int*/i) < (/*L55,type:int*/(/*L55,type:int[]*/array).length)))
+            // Source line: 55
+            {
+                // Source line: 56
+                (/*L56,type:TextIO*/(/*L56,type:TextIO*/(/*L56,type:TextIO*/io).putInt((/*L56,type:int*/array[(/*L56,type:int*/i)]))).putString((/*L56,type:String*/"\n")));
+                // Source line: 57
+                (/*L57,type:int*/i = (/*L57,type:int*/(/*L57,type:int*/i) + (/*L57,type:int*/1)));
+            }
+        // Source line: 59
+        return;
+    }
+}

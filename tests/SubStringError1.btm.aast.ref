@@ -1,0 +1,13 @@
+// Source file: SubStringError1.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        String s = (/*L3,type:String*/"abcd");
+        // Source line: 4
+        String s2 = (/*L4,type:String*/(/*L4,type:String*/s).substring((/*L4,type:int*/0), (/*L4,type:int*/5)));
+        // Source line: 5
+        return;
+    }
+}

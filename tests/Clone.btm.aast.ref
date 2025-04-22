@@ -1,0 +1,66 @@
+// Source file: Clone.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    TextIO io = 
+(/*L2,type:TextIO*/new TextIO());
+    // Source line: 3
+    int x;
+    // Source line: 4
+    int y;
+    // Source line: 5
+    void setX(/*line:5*/int x) {
+        // Source line: 6
+        (/*L6,type:int*/this.x = (/*L6,type:int*/x));
+        // Source line: 7
+        return;
+    }
+    // Source line: 9
+    int getX() {
+        // Source line: 10
+        return (/*L10,type:int*/x);
+    }
+    // Source line: 12
+    void setY(/*line:12*/int y) {
+        // Source line: 13
+        (/*L13,type:int*/this.y = (/*L13,type:int*/y));
+        // Source line: 14
+        return;
+    }
+    // Source line: 16
+    int getY() {
+        // Source line: 17
+        return (/*L17,type:int*/y);
+    }
+    // Source line: 19
+    void main() {
+        // Source line: 20
+        (/*L20,type:TextIO*/(/*L20,type:TextIO*/io).putString((/*L20,type:String*/"Creating main object (m) and setting X to 5 and Y to 3\n")));
+        // Source line: 21
+        Main m = (/*L21,type:Main*/new Main());
+        // Source line: 22
+        (/*L22,type:void*/(/*L22,type:Main*/m).setX((/*L22,type:int*/5)));
+        // Source line: 23
+        (/*L23,type:void*/(/*L23,type:Main*/m).setY((/*L23,type:int*/3)));
+        // Source line: 24
+        (/*L24,type:TextIO*/(/*L24,type:TextIO*/(/*L24,type:TextIO*/(/*L24,type:TextIO*/io).putString((/*L24,type:String*/"m.x="))).putInt((/*L24,type:int*/(/*L24,type:Main*/m).getX()))).putString((/*L24,type:String*/"\n")));
+        // Source line: 25
+        (/*L25,type:TextIO*/(/*L25,type:TextIO*/(/*L25,type:TextIO*/(/*L25,type:TextIO*/io).putString((/*L25,type:String*/"m.y="))).putInt((/*L25,type:int*/(/*L25,type:Main*/m).getY()))).putString((/*L25,type:String*/"\n")));
+        // Source line: 26
+        (/*L26,type:TextIO*/(/*L26,type:TextIO*/io).putString((/*L26,type:String*/"Cloning main object (m2) and setting X to 6\n")));
+        // Source line: 27
+        Main m2 = (/*L27,type:Main*/(Main)((/*L27,type:Object*/(/*L27,type:Main*/m).clone())));
+        // Source line: 28
+        (/*L28,type:void*/(/*L28,type:Main*/m2).setX((/*L28,type:int*/6)));
+        // Source line: 29
+        (/*L29,type:TextIO*/(/*L29,type:TextIO*/(/*L29,type:TextIO*/(/*L29,type:TextIO*/io).putString((/*L29,type:String*/"m.x="))).putInt((/*L29,type:int*/(/*L29,type:Main*/m).getX()))).putString((/*L29,type:String*/"\n")));
+        // Source line: 30
+        (/*L30,type:TextIO*/(/*L30,type:TextIO*/(/*L30,type:TextIO*/(/*L30,type:TextIO*/io).putString((/*L30,type:String*/"m.y="))).putInt((/*L30,type:int*/(/*L30,type:Main*/m).getY()))).putString((/*L30,type:String*/"\n")));
+        // Source line: 31
+        (/*L31,type:TextIO*/(/*L31,type:TextIO*/(/*L31,type:TextIO*/(/*L31,type:TextIO*/io).putString((/*L31,type:String*/"m2.x="))).putInt((/*L31,type:int*/(/*L31,type:Main*/m2).getX()))).putString((/*L31,type:String*/"\n")));
+        // Source line: 32
+        (/*L32,type:TextIO*/(/*L32,type:TextIO*/(/*L32,type:TextIO*/(/*L32,type:TextIO*/io).putString((/*L32,type:String*/"m2.y="))).putInt((/*L32,type:int*/(/*L32,type:Main*/m2).getY()))).putString((/*L32,type:String*/"\n")));
+        // Source line: 33
+        return;
+    }
+}

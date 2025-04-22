@@ -1,0 +1,82 @@
+// Source file: ForBreakIncDecTest1.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        int[] array = (/*L3,type:int[]*/new int[(/*L3,type:int*/10)]);
+        // Source line: 4
+        int n = (/*L4,type:int*/100);
+        // Source line: 5
+        int i = (/*L5,type:int*/0);
+        // Source line: 6
+        for ((/*L6,type:int*/i = (/*L6,type:int*/0)); (/*L6,type:boolean*/(/*L6,type:int*/i) < (/*L6,type:int*/100)); (/*L6,type:int*/++((/*L6,type:int*/i))))
+            // Source line: 6
+            {
+                // Source line: 7
+                (/*L7,type:int*/((/*L7,type:int*/array[(/*L7,type:int*/0)]))--);
+                // Source line: 8
+                (/*L8,type:int*/--((/*L8,type:int*/array[(/*L8,type:int*/1)])));
+                // Source line: 9
+                (/*L9,type:void*/(/*L9,type:Main*/this).print((/*L9,type:int*/++((/*L9,type:int*/i)))));
+                // Source line: 10
+                (/*L10,type:void*/(/*L10,type:Main*/this).print((/*L10,type:int*/((/*L10,type:int*/n))++)));
+                // Source line: 11
+                int z = (/*L11,type:int*/10);
+                // Source line: 12
+                int j = (/*L12,type:int*/0);
+                // Source line: 13
+                int w = (/*L13,type:int*/5);
+                // Source line: 14
+                while ((/*L14,type:boolean*/(/*L14,type:int*/j) < (/*L14,type:int*/10)))
+                    // Source line: 14
+                    {
+                        // Source line: 15
+                        int a = (/*L15,type:int*/2);
+                        // Source line: 16
+                        int b = (/*L16,type:int*/3);
+                        // Source line: 17
+                        if ((/*L17,type:boolean*/(/*L17,type:int*/i) >= (/*L17,type:int*/24)))
+                            // Source line: 17
+                            {
+                                // Source line: 18
+                                int c = (/*L18,type:int*/5);
+                                // Source line: 19
+                                break;
+                            }
+                        else
+                            // Source line: 17
+                            {
+                            }
+                        // Source line: 21
+                        (/*L21,type:int*/j = (/*L21,type:int*/(/*L21,type:int*/j) + (/*L21,type:int*/1)));
+                    }
+                // Source line: 23
+                if ((/*L23,type:boolean*/(/*L23,type:int*/i) >= (/*L23,type:int*/49)))
+                    // Source line: 23
+                    {
+                        // Source line: 24
+                        int c = (/*L24,type:int*/4);
+                        // Source line: 25
+                        break;
+                    }
+                else
+                    // Source line: 23
+                    {
+                    }
+            }
+        // Source line: 28
+        (/*L28,type:TextIO*/(/*L28,type:TextIO*/(/*L28,type:TextIO*/new TextIO()).putInt((/*L28,type:int*/array[(/*L28,type:int*/0)]))).putString((/*L28,type:String*/"\n")));
+        // Source line: 29
+        (/*L29,type:TextIO*/(/*L29,type:TextIO*/(/*L29,type:TextIO*/new TextIO()).putInt((/*L29,type:int*/array[(/*L29,type:int*/1)]))).putString((/*L29,type:String*/"\n")));
+        // Source line: 30
+        return;
+    }
+    // Source line: 33
+    void print(/*line:33*/int n) {
+        // Source line: 34
+        (/*L34,type:TextIO*/(/*L34,type:TextIO*/(/*L34,type:TextIO*/new TextIO()).putInt((/*L34,type:int*/n))).putString((/*L34,type:String*/"\n")));
+        // Source line: 35
+        return;
+    }
+}

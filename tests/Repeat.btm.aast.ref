@@ -1,0 +1,15 @@
+// Source file: Repeat.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        TextIO io = (/*L3,type:TextIO*/new TextIO());
+        // Source line: 4
+        String s = (/*L4,type:String*/(/*L4,type:TextIO*/(/*L4,type:TextIO*/io).putString((/*L4,type:String*/"Enter some text: "))).getString());
+        // Source line: 5
+        (/*L5,type:TextIO*/(/*L5,type:TextIO*/(/*L5,type:TextIO*/(/*L5,type:TextIO*/io).putString((/*L5,type:String*/"You entered: "))).putString((/*L5,type:String*/s))).putString((/*L5,type:String*/"\n")));
+        // Source line: 6
+        return;
+    }
+}

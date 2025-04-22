@@ -1,0 +1,59 @@
+// Source file: Fib.btm
+// Source line: 5
+class Main extends Object {
+    // Source line: 7
+    TextIO io = 
+(/*L7,type:TextIO*/new TextIO());
+    // Source line: 11
+    void main() {
+        // Source line: 13
+        int n = (/*L13,type:int*/(/*L13,type:TextIO*/(/*L13,type:TextIO*/io).putString((/*L13,type:String*/"Enter a non-negative number:  "))).getInt());
+        // Source line: 16
+        if ((/*L16,type:boolean*/(/*L16,type:int*/n) < (/*L16,type:int*/0)))
+            // Source line: 16
+            {
+                // Source line: 18
+                (/*L18,type:TextIO*/(/*L18,type:TextIO*/io).putString((/*L18,type:String*/"Number cannot be negative\n")));
+                // Source line: 19
+                (/*L19,type:void*/(/*L19,type:Sys*/new Sys()).exit((/*L19,type:int*/1)));
+            }
+        else
+            // Source line: 16
+            {
+            }
+        // Source line: 23
+        int i = (/*L23,type:int*/0);
+        // Source line: 24
+        while ((/*L24,type:boolean*/(/*L24,type:int*/i) < (/*L24,type:int*/n)))
+            // Source line: 24
+            {
+                // Source line: 26
+                (/*L26,type:TextIO*/(/*L26,type:TextIO*/(/*L26,type:TextIO*/(/*L26,type:TextIO*/io).putString((/*L26,type:String*/"Fibonacci number "))).putInt((/*L26,type:int*/i))).putString((/*L26,type:String*/": ")));
+                // Source line: 27
+                (/*L27,type:TextIO*/(/*L27,type:TextIO*/(/*L27,type:TextIO*/io).putInt((/*L27,type:int*/(/*L27,type:Main*/this).fib((/*L27,type:int*/i))))).putString((/*L27,type:String*/"\n")));
+                // Source line: 28
+                (/*L28,type:int*/i = (/*L28,type:int*/(/*L28,type:int*/i) + (/*L28,type:int*/1)));
+            }
+        // Source line: 31
+        return;
+    }
+    // Source line: 38
+    int fib(/*line:38*/int n) {
+        // Source line: 39
+        int result = (/*L39,type:int*/0);
+        // Source line: 42
+        if ((/*L42,type:boolean*/(/*L42,type:int*/n) == (/*L42,type:int*/0)))
+            // Source line: 43
+            (/*L43,type:int*/result = (/*L43,type:int*/0));
+        else
+            // Source line: 45
+            if ((/*L45,type:boolean*/(/*L45,type:int*/n) == (/*L45,type:int*/1)))
+                // Source line: 46
+                (/*L46,type:int*/result = (/*L46,type:int*/1));
+            else
+                // Source line: 50
+                (/*L50,type:int*/result = (/*L50,type:int*/(/*L50,type:int*/(/*L50,type:Main*/this).fib((/*L50,type:int*/(/*L50,type:int*/n) - (/*L50,type:int*/1)))) + (/*L50,type:int*/(/*L50,type:Main*/this).fib((/*L50,type:int*/(/*L50,type:int*/n) - (/*L50,type:int*/2))))));
+        // Source line: 52
+        return (/*L52,type:int*/result);
+    }
+}

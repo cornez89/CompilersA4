@@ -1,0 +1,1338 @@
+// Source file: GCTest.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        TextIO io = (/*L3,type:TextIO*/new TextIO());
+        // Source line: 4
+        Vector v = (/*L4,type:Vector*/new Vector());
+        // Source line: 5
+        int i = (/*L5,type:int*/0);
+        // Source line: 6
+        while ((/*L6,type:boolean*/(/*L6,type:int*/i) < (/*L6,type:int*/1000)))
+            // Source line: 6
+            {
+                // Source line: 7
+                (/*L7,type:TextIO*/(/*L7,type:TextIO*/(/*L7,type:TextIO*/io).putInt((/*L7,type:int*/i))).putString((/*L7,type:String*/"-1\n")));
+                // Source line: 8
+                if ((/*L8,type:boolean*/(/*L8,type:int*/(/*L8,type:int*/i) % (/*L8,type:int*/100)) == (/*L8,type:int*/0)))
+                    // Source line: 9
+                    (/*L9,type:Vector*/(/*L9,type:Vector*/v).addElement((/*L9,type:A*/new A())));
+                else
+                    // Source line: 8
+                    {
+                    }
+                // Source line: 10
+                (/*L10,type:TextIO*/(/*L10,type:TextIO*/(/*L10,type:TextIO*/io).putInt((/*L10,type:int*/i))).putString((/*L10,type:String*/"-2\n")));
+                // Source line: 11
+                (/*L11,type:TextIO*/(/*L11,type:TextIO*/(/*L11,type:TextIO*/new TextIO()).putInt((/*L11,type:int*/i))).putString((/*L11,type:String*/"-3\n")));
+                // Source line: 12
+                String s = (/*L12,type:String*/"abcdefhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+                // Source line: 13
+                (/*L13,type:TextIO*/(/*L13,type:TextIO*/(/*L13,type:TextIO*/io).putInt((/*L13,type:int*/i))).putString((/*L13,type:String*/"-4\n")));
+                // Source line: 14
+                (/*L14,type:Sys*/new Sys());
+                // Source line: 15
+                (/*L15,type:TextIO*/(/*L15,type:TextIO*/(/*L15,type:TextIO*/io).putInt((/*L15,type:int*/i))).putString((/*L15,type:String*/"-5\n")));
+                // Source line: 16
+                (/*L16,type:A*/new A());
+                // Source line: 17
+                (/*L17,type:TextIO*/(/*L17,type:TextIO*/(/*L17,type:TextIO*/io).putInt((/*L17,type:int*/i))).putString((/*L17,type:String*/"-6\n")));
+                // Source line: 18
+                (/*L18,type:Vector*/(/*L18,type:Vector*/v).addElement((/*L18,type:TextIO*/new TextIO())));
+                // Source line: 19
+                (/*L19,type:TextIO*/(/*L19,type:TextIO*/(/*L19,type:TextIO*/io).putInt((/*L19,type:int*/i))).putString((/*L19,type:String*/"-7\n")));
+                // Source line: 20
+                (/*L20,type:TextIO*/(/*L20,type:TextIO*/(/*L20,type:TextIO*/new TextIO()).putInt((/*L20,type:int*/i))).putString((/*L20,type:String*/"-8\n")));
+                // Source line: 21
+                (/*L21,type:Sys*/new Sys());
+                // Source line: 22
+                (/*L22,type:TextIO*/(/*L22,type:TextIO*/(/*L22,type:TextIO*/io).putInt((/*L22,type:int*/i))).putString((/*L22,type:String*/"-9\n")));
+                // Source line: 23
+                (/*L23,type:Vector*/(/*L23,type:Vector*/v).addElement((/*L23,type:Sys*/new Sys())));
+                // Source line: 24
+                (/*L24,type:TextIO*/(/*L24,type:TextIO*/(/*L24,type:TextIO*/io).putInt((/*L24,type:int*/i))).putString((/*L24,type:String*/"-10\n")));
+                // Source line: 25
+                (/*L25,type:Vector*/(/*L25,type:Vector*/v).addElement((/*L25,type:String*/"abc")));
+                // Source line: 26
+                (/*L26,type:int*/i = (/*L26,type:int*/(/*L26,type:int*/i) + (/*L26,type:int*/1)));
+            }
+        // Source line: 28
+        return;
+    }
+}
+// Source file: GCTest.btm
+// Source line: 32
+class A extends Object {
+    // Source line: 33
+    int a0;
+    // Source line: 34
+    int a1;
+    // Source line: 35
+    int a2;
+    // Source line: 36
+    int a3;
+    // Source line: 37
+    int a4;
+    // Source line: 38
+    int a5;
+    // Source line: 39
+    int a6;
+    // Source line: 40
+    int a7;
+    // Source line: 41
+    int a8;
+    // Source line: 42
+    int a9;
+    // Source line: 43
+    int a10;
+    // Source line: 44
+    int a11;
+    // Source line: 45
+    int a12;
+    // Source line: 46
+    int a13;
+    // Source line: 47
+    int a14;
+    // Source line: 48
+    int a15;
+    // Source line: 49
+    int a16;
+    // Source line: 50
+    int a17;
+    // Source line: 51
+    int a18;
+    // Source line: 52
+    int a19;
+    // Source line: 53
+    int a20;
+    // Source line: 54
+    int a21;
+    // Source line: 55
+    int a22;
+    // Source line: 56
+    int a23;
+    // Source line: 57
+    int a24;
+    // Source line: 58
+    int a25;
+    // Source line: 59
+    int a26;
+    // Source line: 60
+    int a27;
+    // Source line: 61
+    int a28;
+    // Source line: 62
+    int a29;
+    // Source line: 63
+    int a30;
+    // Source line: 64
+    int a31;
+    // Source line: 65
+    int a32;
+    // Source line: 66
+    int a33;
+    // Source line: 67
+    int a34;
+    // Source line: 68
+    int a35;
+    // Source line: 69
+    int a36;
+    // Source line: 70
+    int a37;
+    // Source line: 71
+    int a38;
+    // Source line: 72
+    int a39;
+    // Source line: 73
+    int a40;
+    // Source line: 74
+    int a41;
+    // Source line: 75
+    int a42;
+    // Source line: 76
+    int a43;
+    // Source line: 77
+    int a44;
+    // Source line: 78
+    int a45;
+    // Source line: 79
+    int a46;
+    // Source line: 80
+    int a47;
+    // Source line: 81
+    int a48;
+    // Source line: 82
+    int a49;
+    // Source line: 83
+    int a50;
+    // Source line: 84
+    int a51;
+    // Source line: 85
+    int a52;
+    // Source line: 86
+    int a53;
+    // Source line: 87
+    int a54;
+    // Source line: 88
+    int a55;
+    // Source line: 89
+    int a56;
+    // Source line: 90
+    int a57;
+    // Source line: 91
+    int a58;
+    // Source line: 92
+    int a59;
+    // Source line: 93
+    int a60;
+    // Source line: 94
+    int a61;
+    // Source line: 95
+    int a62;
+    // Source line: 96
+    int a63;
+    // Source line: 97
+    int a64;
+    // Source line: 98
+    int a65;
+    // Source line: 99
+    int a66;
+    // Source line: 100
+    int a67;
+    // Source line: 101
+    int a68;
+    // Source line: 102
+    int a69;
+    // Source line: 103
+    int a70;
+    // Source line: 104
+    int a71;
+    // Source line: 105
+    int a72;
+    // Source line: 106
+    int a73;
+    // Source line: 107
+    int a74;
+    // Source line: 108
+    int a75;
+    // Source line: 109
+    int a76;
+    // Source line: 110
+    int a77;
+    // Source line: 111
+    int a78;
+    // Source line: 112
+    int a79;
+    // Source line: 113
+    int a80;
+    // Source line: 114
+    int a81;
+    // Source line: 115
+    int a82;
+    // Source line: 116
+    int a83;
+    // Source line: 117
+    int a84;
+    // Source line: 118
+    int a85;
+    // Source line: 119
+    int a86;
+    // Source line: 120
+    int a87;
+    // Source line: 121
+    int a88;
+    // Source line: 122
+    int a89;
+    // Source line: 123
+    int a90;
+    // Source line: 124
+    int a91;
+    // Source line: 125
+    int a92;
+    // Source line: 126
+    int a93;
+    // Source line: 127
+    int a94;
+    // Source line: 128
+    int a95;
+    // Source line: 129
+    int a96;
+    // Source line: 130
+    int a97;
+    // Source line: 131
+    int a98;
+    // Source line: 132
+    int a99;
+    // Source line: 133
+    int a100;
+    // Source line: 134
+    int a101;
+    // Source line: 135
+    int a102;
+    // Source line: 136
+    int a103;
+    // Source line: 137
+    int a104;
+    // Source line: 138
+    int a105;
+    // Source line: 139
+    int a106;
+    // Source line: 140
+    int a107;
+    // Source line: 141
+    int a108;
+    // Source line: 142
+    int a109;
+    // Source line: 143
+    int a110;
+    // Source line: 144
+    int a111;
+    // Source line: 145
+    int a112;
+    // Source line: 146
+    int a113;
+    // Source line: 147
+    int a114;
+    // Source line: 148
+    int a115;
+    // Source line: 149
+    int a116;
+    // Source line: 150
+    int a117;
+    // Source line: 151
+    int a118;
+    // Source line: 152
+    int a119;
+    // Source line: 153
+    int a120;
+    // Source line: 154
+    int a121;
+    // Source line: 155
+    int a122;
+    // Source line: 156
+    int a123;
+    // Source line: 157
+    int a124;
+    // Source line: 158
+    int a125;
+    // Source line: 159
+    int a126;
+    // Source line: 160
+    int a127;
+    // Source line: 161
+    int a128;
+    // Source line: 162
+    int a129;
+    // Source line: 163
+    int a130;
+    // Source line: 164
+    int a131;
+    // Source line: 165
+    int a132;
+    // Source line: 166
+    int a133;
+    // Source line: 167
+    int a134;
+    // Source line: 168
+    int a135;
+    // Source line: 169
+    int a136;
+    // Source line: 170
+    int a137;
+    // Source line: 171
+    int a138;
+    // Source line: 172
+    int a139;
+    // Source line: 173
+    int a140;
+    // Source line: 174
+    int a141;
+    // Source line: 175
+    int a142;
+    // Source line: 176
+    int a143;
+    // Source line: 177
+    int a144;
+    // Source line: 178
+    int a145;
+    // Source line: 179
+    int a146;
+    // Source line: 180
+    int a147;
+    // Source line: 181
+    int a148;
+    // Source line: 182
+    int a149;
+    // Source line: 183
+    int a150;
+    // Source line: 184
+    int a151;
+    // Source line: 185
+    int a152;
+    // Source line: 186
+    int a153;
+    // Source line: 187
+    int a154;
+    // Source line: 188
+    int a155;
+    // Source line: 189
+    int a156;
+    // Source line: 190
+    int a157;
+    // Source line: 191
+    int a158;
+    // Source line: 192
+    int a159;
+    // Source line: 193
+    int a160;
+    // Source line: 194
+    int a161;
+    // Source line: 195
+    int a162;
+    // Source line: 196
+    int a163;
+    // Source line: 197
+    int a164;
+    // Source line: 198
+    int a165;
+    // Source line: 199
+    int a166;
+    // Source line: 200
+    int a167;
+    // Source line: 201
+    int a168;
+    // Source line: 202
+    int a169;
+    // Source line: 203
+    int a170;
+    // Source line: 204
+    int a171;
+    // Source line: 205
+    int a172;
+    // Source line: 206
+    int a173;
+    // Source line: 207
+    int a174;
+    // Source line: 208
+    int a175;
+    // Source line: 209
+    int a176;
+    // Source line: 210
+    int a177;
+    // Source line: 211
+    int a178;
+    // Source line: 212
+    int a179;
+    // Source line: 213
+    int a180;
+    // Source line: 214
+    int a181;
+    // Source line: 215
+    int a182;
+    // Source line: 216
+    int a183;
+    // Source line: 217
+    int a184;
+    // Source line: 218
+    int a185;
+    // Source line: 219
+    int a186;
+    // Source line: 220
+    int a187;
+    // Source line: 221
+    int a188;
+    // Source line: 222
+    int a189;
+    // Source line: 223
+    int a190;
+    // Source line: 224
+    int a191;
+    // Source line: 225
+    int a192;
+    // Source line: 226
+    int a193;
+    // Source line: 227
+    int a194;
+    // Source line: 228
+    int a195;
+    // Source line: 229
+    int a196;
+    // Source line: 230
+    int a197;
+    // Source line: 231
+    int a198;
+    // Source line: 232
+    int a199;
+    // Source line: 233
+    int a200;
+    // Source line: 234
+    int a201;
+    // Source line: 235
+    int a202;
+    // Source line: 236
+    int a203;
+    // Source line: 237
+    int a204;
+    // Source line: 238
+    int a205;
+    // Source line: 239
+    int a206;
+    // Source line: 240
+    int a207;
+    // Source line: 241
+    int a208;
+    // Source line: 242
+    int a209;
+    // Source line: 243
+    int a210;
+    // Source line: 244
+    int a211;
+    // Source line: 245
+    int a212;
+    // Source line: 246
+    int a213;
+    // Source line: 247
+    int a214;
+    // Source line: 248
+    int a215;
+    // Source line: 249
+    int a216;
+    // Source line: 250
+    int a217;
+    // Source line: 251
+    int a218;
+    // Source line: 252
+    int a219;
+    // Source line: 253
+    int a220;
+    // Source line: 254
+    int a221;
+    // Source line: 255
+    int a222;
+    // Source line: 256
+    int a223;
+    // Source line: 257
+    int a224;
+    // Source line: 258
+    int a225;
+    // Source line: 259
+    int a226;
+    // Source line: 260
+    int a227;
+    // Source line: 261
+    int a228;
+    // Source line: 262
+    int a229;
+    // Source line: 263
+    int a230;
+    // Source line: 264
+    int a231;
+    // Source line: 265
+    int a232;
+    // Source line: 266
+    int a233;
+    // Source line: 267
+    int a234;
+    // Source line: 268
+    int a235;
+    // Source line: 269
+    int a236;
+    // Source line: 270
+    int a237;
+    // Source line: 271
+    int a238;
+    // Source line: 272
+    int a239;
+    // Source line: 273
+    int a240;
+    // Source line: 274
+    int a241;
+    // Source line: 275
+    int a242;
+    // Source line: 276
+    int a243;
+    // Source line: 277
+    int a244;
+    // Source line: 278
+    int a245;
+    // Source line: 279
+    int a246;
+    // Source line: 280
+    int a247;
+    // Source line: 281
+    int a248;
+    // Source line: 282
+    int a249;
+    // Source line: 283
+    int a250;
+    // Source line: 284
+    int a251;
+    // Source line: 285
+    int a252;
+    // Source line: 286
+    int a253;
+    // Source line: 287
+    int a254;
+    // Source line: 288
+    int a255;
+    // Source line: 289
+    int a256;
+    // Source line: 290
+    int a257;
+    // Source line: 291
+    int a258;
+    // Source line: 292
+    int a259;
+    // Source line: 293
+    int a260;
+    // Source line: 294
+    int a261;
+    // Source line: 295
+    int a262;
+    // Source line: 296
+    int a263;
+    // Source line: 297
+    int a264;
+    // Source line: 298
+    int a265;
+    // Source line: 299
+    int a266;
+    // Source line: 300
+    int a267;
+    // Source line: 301
+    int a268;
+    // Source line: 302
+    int a269;
+    // Source line: 303
+    int a270;
+    // Source line: 304
+    int a271;
+    // Source line: 305
+    int a272;
+    // Source line: 306
+    int a273;
+    // Source line: 307
+    int a274;
+    // Source line: 308
+    int a275;
+    // Source line: 309
+    int a276;
+    // Source line: 310
+    int a277;
+    // Source line: 311
+    int a278;
+    // Source line: 312
+    int a279;
+    // Source line: 313
+    int a280;
+    // Source line: 314
+    int a281;
+    // Source line: 315
+    int a282;
+    // Source line: 316
+    int a283;
+    // Source line: 317
+    int a284;
+    // Source line: 318
+    int a285;
+    // Source line: 319
+    int a286;
+    // Source line: 320
+    int a287;
+    // Source line: 321
+    int a288;
+    // Source line: 322
+    int a289;
+    // Source line: 323
+    int a290;
+    // Source line: 324
+    int a291;
+    // Source line: 325
+    int a292;
+    // Source line: 326
+    int a293;
+    // Source line: 327
+    int a294;
+    // Source line: 328
+    int a295;
+    // Source line: 329
+    int a296;
+    // Source line: 330
+    int a297;
+    // Source line: 331
+    int a298;
+    // Source line: 332
+    int a299;
+    // Source line: 333
+    int a300;
+    // Source line: 334
+    int a301;
+    // Source line: 335
+    int a302;
+    // Source line: 336
+    int a303;
+    // Source line: 337
+    int a304;
+    // Source line: 338
+    int a305;
+    // Source line: 339
+    int a306;
+    // Source line: 340
+    int a307;
+    // Source line: 341
+    int a308;
+    // Source line: 342
+    int a309;
+    // Source line: 343
+    int a310;
+    // Source line: 344
+    int a311;
+    // Source line: 345
+    int a312;
+    // Source line: 346
+    int a313;
+    // Source line: 347
+    int a314;
+    // Source line: 348
+    int a315;
+    // Source line: 349
+    int a316;
+    // Source line: 350
+    int a317;
+    // Source line: 351
+    int a318;
+    // Source line: 352
+    int a319;
+    // Source line: 353
+    int a320;
+    // Source line: 354
+    int a321;
+    // Source line: 355
+    int a322;
+    // Source line: 356
+    int a323;
+    // Source line: 357
+    int a324;
+    // Source line: 358
+    int a325;
+    // Source line: 359
+    int a326;
+    // Source line: 360
+    int a327;
+    // Source line: 361
+    int a328;
+    // Source line: 362
+    int a329;
+    // Source line: 363
+    int a330;
+    // Source line: 364
+    int a331;
+    // Source line: 365
+    int a332;
+    // Source line: 366
+    int a333;
+    // Source line: 367
+    int a334;
+    // Source line: 368
+    int a335;
+    // Source line: 369
+    int a336;
+    // Source line: 370
+    int a337;
+    // Source line: 371
+    int a338;
+    // Source line: 372
+    int a339;
+    // Source line: 373
+    int a340;
+    // Source line: 374
+    int a341;
+    // Source line: 375
+    int a342;
+    // Source line: 376
+    int a343;
+    // Source line: 377
+    int a344;
+    // Source line: 378
+    int a345;
+    // Source line: 379
+    int a346;
+    // Source line: 380
+    int a347;
+    // Source line: 381
+    int a348;
+    // Source line: 382
+    int a349;
+    // Source line: 383
+    int a350;
+    // Source line: 384
+    int a351;
+    // Source line: 385
+    int a352;
+    // Source line: 386
+    int a353;
+    // Source line: 387
+    int a354;
+    // Source line: 388
+    int a355;
+    // Source line: 389
+    int a356;
+    // Source line: 390
+    int a357;
+    // Source line: 391
+    int a358;
+    // Source line: 392
+    int a359;
+    // Source line: 393
+    int a360;
+    // Source line: 394
+    int a361;
+    // Source line: 395
+    int a362;
+    // Source line: 396
+    int a363;
+    // Source line: 397
+    int a364;
+    // Source line: 398
+    int a365;
+    // Source line: 399
+    int a366;
+    // Source line: 400
+    int a367;
+    // Source line: 401
+    int a368;
+    // Source line: 402
+    int a369;
+    // Source line: 403
+    int a370;
+    // Source line: 404
+    int a371;
+    // Source line: 405
+    int a372;
+    // Source line: 406
+    int a373;
+    // Source line: 407
+    int a374;
+    // Source line: 408
+    int a375;
+    // Source line: 409
+    int a376;
+    // Source line: 410
+    int a377;
+    // Source line: 411
+    int a378;
+    // Source line: 412
+    int a379;
+    // Source line: 413
+    int a380;
+    // Source line: 414
+    int a381;
+    // Source line: 415
+    int a382;
+    // Source line: 416
+    int a383;
+    // Source line: 417
+    int a384;
+    // Source line: 418
+    int a385;
+    // Source line: 419
+    int a386;
+    // Source line: 420
+    int a387;
+    // Source line: 421
+    int a388;
+    // Source line: 422
+    int a389;
+    // Source line: 423
+    int a390;
+    // Source line: 424
+    int a391;
+    // Source line: 425
+    int a392;
+    // Source line: 426
+    int a393;
+    // Source line: 427
+    int a394;
+    // Source line: 428
+    int a395;
+    // Source line: 429
+    int a396;
+    // Source line: 430
+    int a397;
+    // Source line: 431
+    int a398;
+    // Source line: 432
+    int a399;
+    // Source line: 433
+    int a400;
+    // Source line: 434
+    int a401;
+    // Source line: 435
+    int a402;
+    // Source line: 436
+    int a403;
+    // Source line: 437
+    int a404;
+    // Source line: 438
+    int a405;
+    // Source line: 439
+    int a406;
+    // Source line: 440
+    int a407;
+    // Source line: 441
+    int a408;
+    // Source line: 442
+    int a409;
+    // Source line: 443
+    int a410;
+    // Source line: 444
+    int a411;
+    // Source line: 445
+    int a412;
+    // Source line: 446
+    int a413;
+    // Source line: 447
+    int a414;
+    // Source line: 448
+    int a415;
+    // Source line: 449
+    int a416;
+    // Source line: 450
+    int a417;
+    // Source line: 451
+    int a418;
+    // Source line: 452
+    int a419;
+    // Source line: 453
+    int a420;
+    // Source line: 454
+    int a421;
+    // Source line: 455
+    int a422;
+    // Source line: 456
+    int a423;
+    // Source line: 457
+    int a424;
+    // Source line: 458
+    int a425;
+    // Source line: 459
+    int a426;
+    // Source line: 460
+    int a427;
+    // Source line: 461
+    int a428;
+    // Source line: 462
+    int a429;
+    // Source line: 463
+    int a430;
+    // Source line: 464
+    int a431;
+    // Source line: 465
+    int a432;
+    // Source line: 466
+    int a433;
+    // Source line: 467
+    int a434;
+    // Source line: 468
+    int a435;
+    // Source line: 469
+    int a436;
+    // Source line: 470
+    int a437;
+    // Source line: 471
+    int a438;
+    // Source line: 472
+    int a439;
+    // Source line: 473
+    int a440;
+    // Source line: 474
+    int a441;
+    // Source line: 475
+    int a442;
+    // Source line: 476
+    int a443;
+    // Source line: 477
+    int a444;
+    // Source line: 478
+    int a445;
+    // Source line: 479
+    int a446;
+    // Source line: 480
+    int a447;
+    // Source line: 481
+    int a448;
+    // Source line: 482
+    int a449;
+    // Source line: 483
+    int a450;
+    // Source line: 484
+    int a451;
+    // Source line: 485
+    int a452;
+    // Source line: 486
+    int a453;
+    // Source line: 487
+    int a454;
+    // Source line: 488
+    int a455;
+    // Source line: 489
+    int a456;
+    // Source line: 490
+    int a457;
+    // Source line: 491
+    int a458;
+    // Source line: 492
+    int a459;
+    // Source line: 493
+    int a460;
+    // Source line: 494
+    int a461;
+    // Source line: 495
+    int a462;
+    // Source line: 496
+    int a463;
+    // Source line: 497
+    int a464;
+    // Source line: 498
+    int a465;
+    // Source line: 499
+    int a466;
+    // Source line: 500
+    int a467;
+    // Source line: 501
+    int a468;
+    // Source line: 502
+    int a469;
+    // Source line: 503
+    int a470;
+    // Source line: 504
+    int a471;
+    // Source line: 505
+    int a472;
+    // Source line: 506
+    int a473;
+    // Source line: 507
+    int a474;
+    // Source line: 508
+    int a475;
+    // Source line: 509
+    int a476;
+    // Source line: 510
+    int a477;
+    // Source line: 511
+    int a478;
+    // Source line: 512
+    int a479;
+    // Source line: 513
+    int a480;
+    // Source line: 514
+    int a481;
+    // Source line: 515
+    int a482;
+    // Source line: 516
+    int a483;
+    // Source line: 517
+    int a484;
+    // Source line: 518
+    int a485;
+    // Source line: 519
+    int a486;
+    // Source line: 520
+    int a487;
+    // Source line: 521
+    int a488;
+    // Source line: 522
+    int a489;
+    // Source line: 523
+    int a490;
+    // Source line: 524
+    int a491;
+    // Source line: 525
+    int a492;
+    // Source line: 526
+    int a493;
+    // Source line: 527
+    int a494;
+    // Source line: 528
+    int a495;
+    // Source line: 529
+    int a496;
+    // Source line: 530
+    int a497;
+    // Source line: 531
+    int a498;
+    // Source line: 532
+    int a499;
+}
+// Source file: Vector.btm
+// Source line: 5
+class Vector extends Object {
+    // Source line: 7
+    TextIO io = 
+(/*L7,type:TextIO*/new TextIO());
+    // Source line: 9
+    Object[] elements = 
+(/*L9,type:Object[]*/new Object[(/*L9,type:int*/10)]);
+    // Source line: 11
+    int size = 
+(/*L11,type:int*/0);
+    // Source line: 17
+    void error(/*line:17*/String message) {
+        // Source line: 18
+        (/*L18,type:TextIO*/(/*L18,type:TextIO*/(/*L18,type:TextIO*/(/*L18,type:TextIO*/io).putString((/*L18,type:String*/"Vector error: "))).putString((/*L18,type:String*/message))).putString((/*L18,type:String*/"\n")));
+        // Source line: 19
+        (/*L19,type:void*/(/*L19,type:Sys*/new Sys()).exit((/*L19,type:int*/1)));
+        // Source line: 20
+        return;
+    }
+    // Source line: 29
+    void checkIndex(/*line:29*/int i, /*line:29*/String method, /*line:29*/boolean isSizeIncluded) {
+        // Source line: 30
+        if ((/*L30,type:boolean*/!((/*L30,type:boolean*/isSizeIncluded))))
+            // Source line: 30
+            {
+                // Source line: 31
+                if ((/*L31,type:boolean*/(/*L31,type:boolean*/(/*L31,type:int*/i) < (/*L31,type:int*/0)) || (/*L31,type:boolean*/(/*L31,type:int*/i) >= (/*L31,type:int*/size))))
+                    // Source line: 31
+                    {
+                        // Source line: 32
+                        (/*L32,type:TextIO*/(/*L32,type:TextIO*/(/*L32,type:TextIO*/(/*L32,type:TextIO*/io).putString((/*L32,type:String*/"Bad index '"))).putInt((/*L32,type:int*/i))).putString((/*L32,type:String*/"'\n")));
+                        // Source line: 33
+                        (/*L33,type:TextIO*/(/*L33,type:TextIO*/io).putString((/*L33,type:String*/"Index must be >= 0 and < size '")));
+                        // Source line: 34
+                        (/*L34,type:TextIO*/(/*L34,type:TextIO*/(/*L34,type:TextIO*/io).putInt((/*L34,type:int*/size))).putString((/*L34,type:String*/"'\n")));
+                        // Source line: 35
+                        (/*L35,type:void*/(/*L35,type:Vector*/this).error((/*L35,type:String*/(/*L35,type:String*/"index out of bounds in method ").concat((/*L35,type:String*/method)))));
+                    }
+                else
+                    // Source line: 31
+                    {
+                    }
+            }
+        else
+            // Source line: 38
+            {
+                // Source line: 39
+                if ((/*L39,type:boolean*/(/*L39,type:boolean*/(/*L39,type:int*/i) < (/*L39,type:int*/0)) || (/*L39,type:boolean*/(/*L39,type:int*/i) > (/*L39,type:int*/size))))
+                    // Source line: 39
+                    {
+                        // Source line: 40
+                        (/*L40,type:TextIO*/(/*L40,type:TextIO*/(/*L40,type:TextIO*/(/*L40,type:TextIO*/io).putString((/*L40,type:String*/"Bad index '"))).putInt((/*L40,type:int*/i))).putString((/*L40,type:String*/"'\n")));
+                        // Source line: 41
+                        (/*L41,type:TextIO*/(/*L41,type:TextIO*/io).putString((/*L41,type:String*/"Index must be >= 0 and <= size '")));
+                        // Source line: 42
+                        (/*L42,type:TextIO*/(/*L42,type:TextIO*/(/*L42,type:TextIO*/io).putInt((/*L42,type:int*/size))).putString((/*L42,type:String*/"'\n")));
+                        // Source line: 43
+                        (/*L43,type:void*/(/*L43,type:Vector*/this).error((/*L43,type:String*/(/*L43,type:String*/"index out of bounds in method ").concat((/*L43,type:String*/method)))));
+                    }
+                else
+                    // Source line: 39
+                    {
+                    }
+            }
+        // Source line: 47
+        return;
+    }
+    // Source line: 53
+    void resize() {
+        // Source line: 54
+        Object[] tmp = (/*L54,type:Object[]*/new Object[(/*L54,type:int*/(/*L54,type:int*/(/*L54,type:Object[]*/elements).length) * (/*L54,type:int*/2))]);
+        // Source line: 55
+        int i = (/*L55,type:int*/0);
+        // Source line: 57
+        while ((/*L57,type:boolean*/(/*L57,type:int*/i) < (/*L57,type:int*/(/*L57,type:Object[]*/elements).length)))
+            // Source line: 57
+            {
+                // Source line: 58
+                (/*L58,type:Object*/tmp[(/*L58,type:int*/i)] = (/*L58,type:Object*/elements[(/*L58,type:int*/i)]));
+                // Source line: 59
+                (/*L59,type:int*/i = (/*L59,type:int*/(/*L59,type:int*/i) + (/*L59,type:int*/1)));
+            }
+        // Source line: 61
+        (/*L61,type:Object[]*/elements = (/*L61,type:Object[]*/tmp));
+        // Source line: 63
+        return;
+    }
+    // Source line: 69
+    int size() {
+        // Source line: 70
+        return (/*L70,type:int*/size);
+    }
+    // Source line: 77
+    boolean contains(/*line:77*/Object o) {
+        // Source line: 78
+        boolean found = (/*L78,type:boolean*/false);
+        // Source line: 79
+        int i = (/*L79,type:int*/0);
+        // Source line: 81
+        while ((/*L81,type:boolean*/(/*L81,type:int*/i) < (/*L81,type:int*/size)))
+            // Source line: 81
+            {
+                // Source line: 82
+                if ((/*L82,type:boolean*/(/*L82,type:Object*/elements[(/*L82,type:int*/i)]) == (/*L82,type:Object*/o)))
+                    // Source line: 83
+                    (/*L83,type:boolean*/found = (/*L83,type:boolean*/true));
+                else
+                    // Source line: 82
+                    {
+                    }
+                // Source line: 84
+                (/*L84,type:int*/i = (/*L84,type:int*/(/*L84,type:int*/i) + (/*L84,type:int*/1)));
+            }
+        // Source line: 87
+        return (/*L87,type:boolean*/found);
+    }
+    // Source line: 94
+    Object elementAt(/*line:94*/int i) {
+        // Source line: 95
+        (/*L95,type:void*/(/*L95,type:Vector*/this).checkIndex((/*L95,type:int*/i), (/*L95,type:String*/"elementAt"), (/*L95,type:boolean*/false)));
+        // Source line: 96
+        return (/*L96,type:Object*/elements[(/*L96,type:int*/i)]);
+    }
+    // Source line: 104
+    Vector addElementAt(/*line:104*/Object o, /*line:104*/int i) {
+        // Source line: 105
+        (/*L105,type:void*/(/*L105,type:Vector*/this).checkIndex((/*L105,type:int*/i), (/*L105,type:String*/"addElementAt"), (/*L105,type:boolean*/true)));
+        // Source line: 107
+        if ((/*L107,type:boolean*/(/*L107,type:int*/size) == (/*L107,type:int*/(/*L107,type:Object[]*/elements).length)))
+            // Source line: 108
+            (/*L108,type:void*/(/*L108,type:Vector*/this).resize());
+        else
+            // Source line: 107
+            {
+            }
+        // Source line: 110
+        int j = (/*L110,type:int*/size);
+        // Source line: 111
+        while ((/*L111,type:boolean*/(/*L111,type:int*/j) > (/*L111,type:int*/i)))
+            // Source line: 111
+            {
+                // Source line: 112
+                (/*L112,type:Object*/elements[(/*L112,type:int*/j)] = (/*L112,type:Object*/elements[(/*L112,type:int*/(/*L112,type:int*/j) - (/*L112,type:int*/1))]));
+                // Source line: 113
+                (/*L113,type:int*/j = (/*L113,type:int*/(/*L113,type:int*/j) - (/*L113,type:int*/1)));
+            }
+        // Source line: 115
+        (/*L115,type:Object*/elements[(/*L115,type:int*/i)] = (/*L115,type:Object*/o));
+        // Source line: 116
+        (/*L116,type:int*/size = (/*L116,type:int*/(/*L116,type:int*/size) + (/*L116,type:int*/1)));
+        // Source line: 118
+        return (/*L118,type:Vector*/this);
+    }
+    // Source line: 126
+    Vector setElementAt(/*line:126*/Object o, /*line:126*/int i) {
+        // Source line: 127
+        (/*L127,type:void*/(/*L127,type:Vector*/this).checkIndex((/*L127,type:int*/i), (/*L127,type:String*/"setElementAt"), (/*L127,type:boolean*/false)));
+        // Source line: 128
+        (/*L128,type:Vector*/(/*L128,type:Vector*/this).addElementAt((/*L128,type:Object*/o), (/*L128,type:int*/i)));
+        // Source line: 129
+        (/*L129,type:Vector*/(/*L129,type:Vector*/this).removeElementAt((/*L129,type:int*/(/*L129,type:int*/i) + (/*L129,type:int*/1))));
+        // Source line: 131
+        return (/*L131,type:Vector*/this);
+    }
+    // Source line: 138
+    Vector removeElementAt(/*line:138*/int i) {
+        // Source line: 139
+        (/*L139,type:void*/(/*L139,type:Vector*/this).checkIndex((/*L139,type:int*/i), (/*L139,type:String*/"removeElementAt"), (/*L139,type:boolean*/false)));
+        // Source line: 141
+        int j = (/*L141,type:int*/i);
+        // Source line: 142
+        while ((/*L142,type:boolean*/(/*L142,type:int*/(/*L142,type:int*/j) + (/*L142,type:int*/1)) < (/*L142,type:int*/size)))
+            // Source line: 142
+            {
+                // Source line: 143
+                (/*L143,type:Object*/elements[(/*L143,type:int*/j)] = (/*L143,type:Object*/elements[(/*L143,type:int*/(/*L143,type:int*/j) + (/*L143,type:int*/1))]));
+                // Source line: 144
+                (/*L144,type:int*/j = (/*L144,type:int*/(/*L144,type:int*/j) + (/*L144,type:int*/1)));
+            }
+        // Source line: 146
+        (/*L146,type:int*/size = (/*L146,type:int*/(/*L146,type:int*/size) - (/*L146,type:int*/1)));
+        // Source line: 148
+        return (/*L148,type:Vector*/this);
+    }
+    // Source line: 155
+    Vector addElement(/*line:155*/Object o) {
+        // Source line: 156
+        return (/*L156,type:Vector*/(/*L156,type:Vector*/this).addElementAt((/*L156,type:Object*/o), (/*L156,type:int*/size)));
+    }
+    // Source line: 163
+    Vector removeElement(/*line:163*/Object o) {
+        // Source line: 164
+        boolean removed = (/*L164,type:boolean*/false);
+        // Source line: 165
+        int i = (/*L165,type:int*/0);
+        // Source line: 167
+        while ((/*L167,type:boolean*/(/*L167,type:boolean*/(/*L167,type:int*/i) < (/*L167,type:int*/size)) && (/*L167,type:boolean*/!((/*L167,type:boolean*/removed)))))
+            // Source line: 167
+            {
+                // Source line: 168
+                if ((/*L168,type:boolean*/(/*L168,type:Object*/elements[(/*L168,type:int*/i)]) == (/*L168,type:Object*/o)))
+                    // Source line: 168
+                    {
+                        // Source line: 169
+                        int j = (/*L169,type:int*/i);
+                        // Source line: 170
+                        while ((/*L170,type:boolean*/(/*L170,type:int*/(/*L170,type:int*/j) + (/*L170,type:int*/1)) < (/*L170,type:int*/size)))
+                            // Source line: 170
+                            {
+                                // Source line: 171
+                                (/*L171,type:Object*/elements[(/*L171,type:int*/j)] = (/*L171,type:Object*/elements[(/*L171,type:int*/(/*L171,type:int*/j) + (/*L171,type:int*/1))]));
+                            }
+                        // Source line: 173
+                        (/*L173,type:int*/size = (/*L173,type:int*/(/*L173,type:int*/size) - (/*L173,type:int*/1)));
+                        // Source line: 174
+                        (/*L174,type:boolean*/removed = (/*L174,type:boolean*/true));
+                    }
+                else
+                    // Source line: 168
+                    {
+                    }
+                // Source line: 176
+                (/*L176,type:int*/i = (/*L176,type:int*/(/*L176,type:int*/i) + (/*L176,type:int*/1)));
+            }
+        // Source line: 179
+        if ((/*L179,type:boolean*/!((/*L179,type:boolean*/removed))))
+            // Source line: 180
+            (/*L180,type:void*/(/*L180,type:Vector*/this).error((/*L180,type:String*/"element not found in vector")));
+        else
+            // Source line: 179
+            {
+            }
+        // Source line: 182
+        return (/*L182,type:Vector*/this);
+    }
+}
+// Source file: Vector.btm
+// Source line: 190
+class VectorElement extends Object {
+    // Source line: 192
+    Object element;
+    // Source line: 194
+    VectorElement next;
+    // Source line: 199
+    Object getElement() {
+        // Source line: 200
+        return (/*L200,type:Object*/element);
+    }
+    // Source line: 206
+    VectorElement setElement(/*line:206*/Object o) {
+        // Source line: 207
+        (/*L207,type:Object*/element = (/*L207,type:Object*/o));
+        // Source line: 208
+        return (/*L208,type:VectorElement*/this);
+    }
+    // Source line: 214
+    VectorElement getNext() {
+        // Source line: 215
+        return (/*L215,type:VectorElement*/next);
+    }
+    // Source line: 221
+    VectorElement setNext(/*line:221*/VectorElement ve) {
+        // Source line: 222
+        (/*L222,type:VectorElement*/next = (/*L222,type:VectorElement*/ve));
+        // Source line: 223
+        return (/*L223,type:VectorElement*/this);
+    }
+}

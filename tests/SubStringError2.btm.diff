@@ -1,0 +1,89 @@
+0a1,80
+> 
+> C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main SubStringError2.btm 
+> class: String value: util.ClassTreeNode@53d8d10a
+> class: Object value: util.ClassTreeNode@6f496d9f
+> class: Sys value: util.ClassTreeNode@723279cf
+> class: Main value: util.ClassTreeNode@10f87f48
+> class: TextIO value: util.ClassTreeNode@b4c966a
+> Main
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Class: Object
+> Entered Scope, scopes = 2
+> Entered Scope, scopes = 2
+> Scope level 3, contains:
+> Class: Object
+> Exited Scope, scopes = 3
+> Exited Scope, scopes = 3
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+> Curr Class: Object, num of children: 1ClassTreeNode
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Method
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Curr Class: Main, num of children: 0ClassTreeNode
+> Class: Main
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Main
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Scope level 2, contains:
+> key: s, value String
+> Scope level 2, contains:
+> key: s, value String
+> key: this.s, value String
+> Scope level 2, contains:
+> key: s2, value String
+> key: s, value String
+> key: this.s, value String
+> Method
+> Class: Main
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Main
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+7c87
+<         String s = (/*L3,type:String*/"abcd");
+---
+>         String s = (/*L3*/"abcd");
+9c89
+<         String s2 = (/*L4,type:String*/(/*L4,type:String*/s).substring((/*L4,type:int*/-((/*L4,type:int*/1))), (/*L4,type:int*/4)));
+---
+>         String s2 = (/*L4*/(/*L4*/s).substring((/*L4*/-((/*L4*/1))), (/*L4*/4)));

@@ -1,0 +1,46 @@
+// Source file: Fact.btm
+// Source line: 5
+class Main extends Object {
+    // Source line: 7
+    TextIO io = 
+(/*L7,type:TextIO*/new TextIO());
+    // Source line: 11
+    void main() {
+        // Source line: 13
+        (/*L13,type:TextIO*/(/*L13,type:TextIO*/io).putString((/*L13,type:String*/"Enter a non-negative number: ")));
+        // Source line: 14
+        int x = (/*L14,type:int*/(/*L14,type:TextIO*/io).getInt());
+        // Source line: 16
+        if ((/*L16,type:boolean*/(/*L16,type:int*/x) < (/*L16,type:int*/0)))
+            // Source line: 16
+            {
+                // Source line: 17
+                (/*L17,type:TextIO*/(/*L17,type:TextIO*/io).putString((/*L17,type:String*/"Error: number must be > 0\n")));
+                // Source line: 18
+                (/*L18,type:void*/(/*L18,type:Sys*/new Sys()).exit((/*L18,type:int*/1)));
+            }
+        else
+            // Source line: 20
+            {
+                // Source line: 23
+                (/*L23,type:TextIO*/(/*L23,type:TextIO*/(/*L23,type:TextIO*/io).putInt((/*L23,type:int*/(/*L23,type:Main*/this).fact((/*L23,type:int*/x))))).putString((/*L23,type:String*/"\n")));
+            }
+        // Source line: 25
+        return;
+    }
+    // Source line: 32
+    int fact(/*line:32*/int n) {
+        // Source line: 34
+        int result = (/*L34,type:int*/1);
+        // Source line: 37
+        if ((/*L37,type:boolean*/(/*L37,type:int*/n) > (/*L37,type:int*/1)))
+            // Source line: 38
+            (/*L38,type:int*/result = (/*L38,type:int*/(/*L38,type:int*/n) * (/*L38,type:int*/(/*L38,type:Main*/this).fact((/*L38,type:int*/(/*L38,type:int*/n) - (/*L38,type:int*/1))))));
+        else
+            // Source line: 37
+            {
+            }
+        // Source line: 39
+        return (/*L39,type:int*/result);
+    }
+}

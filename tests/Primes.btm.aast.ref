@@ -1,0 +1,70 @@
+// Source file: Primes.btm
+// Source line: 4
+class Main extends Object {
+    // Source line: 6
+    TextIO io = 
+(/*L6,type:TextIO*/new TextIO());
+    // Source line: 10
+    void main() {
+        // Source line: 12
+        (/*L12,type:TextIO*/(/*L12,type:TextIO*/io).putString((/*L12,type:String*/"Enter a positive number greater than 1: ")));
+        // Source line: 13
+        int max = (/*L13,type:int*/(/*L13,type:TextIO*/io).getInt());
+        // Source line: 15
+        if ((/*L15,type:boolean*/(/*L15,type:int*/max) < (/*L15,type:int*/2)))
+            // Source line: 15
+            {
+                // Source line: 16
+                (/*L16,type:TextIO*/(/*L16,type:TextIO*/io).putString((/*L16,type:String*/"number must be > 1\n")));
+                // Source line: 17
+                (/*L17,type:void*/(/*L17,type:Sys*/new Sys()).exit((/*L17,type:int*/1)));
+            }
+        else
+            // Source line: 19
+            {
+                // Source line: 21
+                int i = (/*L21,type:int*/2);
+                // Source line: 22
+                while ((/*L22,type:boolean*/(/*L22,type:int*/i) <= (/*L22,type:int*/max)))
+                    // Source line: 22
+                    {
+                        // Source line: 24
+                        if ((/*L24,type:boolean*/(/*L24,type:Main*/this).isPrime((/*L24,type:int*/i))))
+                            // Source line: 25
+                            (/*L25,type:TextIO*/(/*L25,type:TextIO*/(/*L25,type:TextIO*/io).putInt((/*L25,type:int*/i))).putString((/*L25,type:String*/" is prime.\n")));
+                        else
+                            // Source line: 24
+                            {
+                            }
+                        // Source line: 26
+                        (/*L26,type:int*/i = (/*L26,type:int*/(/*L26,type:int*/i) + (/*L26,type:int*/1)));
+                    }
+            }
+        // Source line: 29
+        return;
+    }
+    // Source line: 36
+    boolean isPrime(/*line:36*/int n) {
+        // Source line: 37
+        boolean isPrime = (/*L37,type:boolean*/true);
+        // Source line: 38
+        int i = (/*L38,type:int*/2);
+        // Source line: 39
+        while ((/*L39,type:boolean*/(/*L39,type:boolean*/(/*L39,type:int*/i) < (/*L39,type:int*/(/*L39,type:int*/n) - (/*L39,type:int*/1))) && (/*L39,type:boolean*/isPrime)))
+            // Source line: 39
+            {
+                // Source line: 40
+                if ((/*L40,type:boolean*/(/*L40,type:int*/(/*L40,type:int*/n) % (/*L40,type:int*/i)) == (/*L40,type:int*/0)))
+                    // Source line: 41
+                    (/*L41,type:boolean*/isPrime = (/*L41,type:boolean*/false));
+                else
+                    // Source line: 40
+                    {
+                    }
+                // Source line: 42
+                (/*L42,type:int*/i = (/*L42,type:int*/(/*L42,type:int*/i) + (/*L42,type:int*/1)));
+            }
+        // Source line: 44
+        return (/*L44,type:boolean*/isPrime);
+    }
+}

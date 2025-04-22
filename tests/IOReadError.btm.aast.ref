@@ -1,0 +1,15 @@
+// Source file: IOReadError.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        TextIO io = (/*L3,type:TextIO*/new TextIO());
+        // Source line: 4
+        (/*L4,type:void*/(/*L4,type:TextIO*/io).readFile((/*L4,type:String*/"/foo")));
+        // Source line: 5
+        String s = (/*L5,type:String*/(/*L5,type:TextIO*/io).getString());
+        // Source line: 6
+        return;
+    }
+}

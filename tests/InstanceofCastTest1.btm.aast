@@ -1,0 +1,553 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main InstanceofCastTest1.btm 
+class: String value: util.ClassTreeNode@15aeb7ab
+class: Object value: util.ClassTreeNode@7b23ec81
+class: Sys value: util.ClassTreeNode@6acbcfc0
+class: Main value: util.ClassTreeNode@5f184fc6
+class: TextIO value: util.ClassTreeNode@3feba861
+Main
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Curr Class: Object, num of children: 1ClassTreeNode
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Method
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Curr Class: Main, num of children: 0ClassTreeNode
+Class: Main
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Main
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Scope level 2, contains:
+key: o, value Object
+Scope level 2, contains:
+key: this.o, value Object
+key: o, value Object
+Scope level 2, contains:
+key: this.o, value Object
+key: o, value Object
+key: io, value TextIO
+Scope level 2, contains:
+key: this.o, value Object
+key: this.io, value TextIO
+key: o, value Object
+key: io, value TextIO
+Scope level 2, contains:
+key: this.o, value Object
+key: s, value String
+key: this.io, value TextIO
+key: o, value Object
+key: io, value TextIO
+Scope level 2, contains:
+key: this.o, value Object
+key: s, value String
+key: this.io, value TextIO
+key: this.s, value String
+key: o, value Object
+key: io, value TextIO
+Scope level 2, contains:
+key: this.o, value Object
+key: s, value String
+key: sys, value Sys
+key: this.io, value TextIO
+key: this.s, value String
+key: o, value Object
+key: io, value TextIO
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value Object
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value TextIO
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value String
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value Sys
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value Object
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value TextIO
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value Object
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value String
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value Object
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Block 
+Class: Main
+Entered Scope, scopes = 3
+Entered Scope, scopes = 3
+Scope level 4, contains:
+Scope level 4, contains:
+key: x, value Sys
+Block
+Class: Main
+Exited Scope, scopes = 4
+Exited Scope, scopes = 4
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Method
+Class: Main
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Main
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+// Source file: InstanceofCastTest1.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        Object o = (/*L3*/new Object());
+        // Source line: 4
+        TextIO io = (/*L4*/new TextIO());
+        // Source line: 5
+        String s = (/*L5*/"abc");
+        // Source line: 6
+        Sys sys = (/*L6*/new Sys());
+        // Source line: 8
+        if ((/*L8*/(/*L8*/o) instanceof Object))
+            // Source line: 8
+            {
+                // Source line: 9
+                (/*L9*/(/*L9*/io).putString((/*L9,type:String*/"Object object instance of Object\n")));
+                // Source line: 10
+                (/*L10*/(/*L10*/io).putString((/*L10,type:String*/"Casting Object object to Object object...")));
+                // Source line: 11
+                Object x = (/*L11*/(Object)((/*L11*/o)));
+                // Source line: 12
+                (/*L12*/(/*L12*/io).putString((/*L12,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 15
+            (/*L15*/(/*L15*/io).putString((/*L15,type:String*/"Object object not instance of Object\n")));
+        // Source line: 16
+        if ((/*L16*/(/*L16*/o) instanceof TextIO))
+            // Source line: 16
+            {
+                // Source line: 17
+                (/*L17*/(/*L17*/io).putString((/*L17,type:String*/"Object object instance of TextIO\n")));
+                // Source line: 18
+                (/*L18*/(/*L18*/io).putString((/*L18,type:String*/"Casting Object object to TextIO object...")));
+                // Source line: 19
+                TextIO x = (/*L19*/(TextIO)((/*L19*/o)));
+                // Source line: 20
+                (/*L20*/(/*L20*/io).putString((/*L20,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 23
+            (/*L23*/(/*L23*/io).putString((/*L23,type:String*/"Object object not instance of TextIO\n")));
+        // Source line: 24
+        if ((/*L24*/(/*L24*/o) instanceof String))
+            // Source line: 24
+            {
+                // Source line: 25
+                (/*L25*/(/*L25*/io).putString((/*L25,type:String*/"Object object instance of String\n")));
+                // Source line: 26
+                (/*L26*/(/*L26*/io).putString((/*L26,type:String*/"Casting Object object to String object...")));
+                // Source line: 27
+                String x = (/*L27*/(String)((/*L27*/o)));
+                // Source line: 28
+                (/*L28*/(/*L28*/io).putString((/*L28,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 31
+            (/*L31*/(/*L31*/io).putString((/*L31,type:String*/"Object object not instance of String\n")));
+        // Source line: 32
+        if ((/*L32*/(/*L32*/o) instanceof Sys))
+            // Source line: 32
+            {
+                // Source line: 33
+                (/*L33*/(/*L33*/io).putString((/*L33,type:String*/"Object object instance of Sys\n")));
+                // Source line: 34
+                (/*L34*/(/*L34*/io).putString((/*L34,type:String*/"Casting Object object to Sys object...")));
+                // Source line: 35
+                Sys x = (/*L35*/(Sys)((/*L35*/o)));
+                // Source line: 36
+                (/*L36*/(/*L36*/io).putString((/*L36,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 39
+            (/*L39*/(/*L39*/io).putString((/*L39,type:String*/"Object object not instance of Sys\n")));
+        // Source line: 43
+        if ((/*L43*/(/*L43*/io) instanceof Object))
+            // Source line: 43
+            {
+                // Source line: 44
+                (/*L44*/(/*L44*/io).putString((/*L44,type:String*/"TextIO object instance of Object\n")));
+                // Source line: 45
+                (/*L45*/(/*L45*/io).putString((/*L45,type:String*/"Casting TextIO object to Object object...")));
+                // Source line: 46
+                Object x = (/*L46*/(Object)((/*L46*/io)));
+                // Source line: 47
+                (/*L47*/(/*L47*/io).putString((/*L47,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 50
+            (/*L50*/(/*L50*/io).putString((/*L50,type:String*/"TextIO object not instance of Object\n")));
+        // Source line: 51
+        if ((/*L51*/(/*L51*/io) instanceof TextIO))
+            // Source line: 51
+            {
+                // Source line: 52
+                (/*L52*/(/*L52*/io).putString((/*L52,type:String*/"TextIO object instance of TextIO\n")));
+                // Source line: 53
+                (/*L53*/(/*L53*/io).putString((/*L53,type:String*/"Casting TextIO object to TextIO object...")));
+                // Source line: 54
+                TextIO x = (/*L54*/(TextIO)((/*L54*/io)));
+                // Source line: 55
+                (/*L55*/(/*L55*/io).putString((/*L55,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 58
+            (/*L58*/(/*L58*/io).putString((/*L58,type:String*/"TextIO object not instance of TextIO\n")));
+        // Source line: 62
+        if ((/*L62*/(/*L62*/s) instanceof Object))
+            // Source line: 62
+            {
+                // Source line: 63
+                (/*L63*/(/*L63*/io).putString((/*L63,type:String*/"String object instance of Object\n")));
+                // Source line: 64
+                (/*L64*/(/*L64*/io).putString((/*L64,type:String*/"Casting String object to Object object...")));
+                // Source line: 65
+                Object x = (/*L65*/(Object)((/*L65*/s)));
+                // Source line: 66
+                (/*L66*/(/*L66*/io).putString((/*L66,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 69
+            (/*L69*/(/*L69*/io).putString((/*L69,type:String*/"String object not instance of Object\n")));
+        // Source line: 70
+        if ((/*L70*/(/*L70*/s) instanceof String))
+            // Source line: 70
+            {
+                // Source line: 71
+                (/*L71*/(/*L71*/io).putString((/*L71,type:String*/"String object instance of String\n")));
+                // Source line: 72
+                (/*L72*/(/*L72*/io).putString((/*L72,type:String*/"Casting String object to String object...")));
+                // Source line: 73
+                String x = (/*L73*/(String)((/*L73*/s)));
+                // Source line: 74
+                (/*L74*/(/*L74*/io).putString((/*L74,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 77
+            (/*L77*/(/*L77*/io).putString((/*L77,type:String*/"String object not instance of String\n")));
+        // Source line: 81
+        if ((/*L81*/(/*L81*/sys) instanceof Object))
+            // Source line: 81
+            {
+                // Source line: 82
+                (/*L82*/(/*L82*/io).putString((/*L82,type:String*/"Sys object instance of Object\n")));
+                // Source line: 83
+                (/*L83*/(/*L83*/io).putString((/*L83,type:String*/"Casting Sys object to Object object...")));
+                // Source line: 84
+                Object x = (/*L84*/(Object)((/*L84*/sys)));
+                // Source line: 85
+                (/*L85*/(/*L85*/io).putString((/*L85,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 88
+            (/*L88*/(/*L88*/io).putString((/*L88,type:String*/"Sys object not instance of Object\n")));
+        // Source line: 89
+        if ((/*L89*/(/*L89*/sys) instanceof Sys))
+            // Source line: 89
+            {
+                // Source line: 90
+                (/*L90*/(/*L90*/io).putString((/*L90,type:String*/"Sys object instance of Sys\n")));
+                // Source line: 91
+                (/*L91*/(/*L91*/io).putString((/*L91,type:String*/"Casting Sys object to Sys object...")));
+                // Source line: 92
+                Sys x = (/*L92*/(Sys)((/*L92*/sys)));
+                // Source line: 93
+                (/*L93*/(/*L93*/io).putString((/*L93,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 96
+            (/*L96*/(/*L96*/io).putString((/*L96,type:String*/"Sys object not instance of Sys\n")));
+        // Source line: 98
+        return;
+    }
+}

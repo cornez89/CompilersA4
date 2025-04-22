@@ -1,0 +1,15 @@
+// Source file: ClassCastError.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        String s = (/*L3,type:String*/"abc");
+        // Source line: 4
+        Object o = (/*L4,type:Object*/(Object)((/*L4,type:String*/s)));
+        // Source line: 5
+        TextIO io = (/*L5,type:TextIO*/(TextIO)((/*L5,type:Object*/o)));
+        // Source line: 6
+        return;
+    }
+}

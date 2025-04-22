@@ -1,0 +1,96 @@
+// Source file: ArrayTest1.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    boolean[] goo = 
+(/*L2,type:null*/null);
+    // Source line: 4
+    void printElement(/*line:4*/Object o, /*line:4*/int i) {
+        // Source line: 5
+        (/*L5,type:TextIO*/(/*L5,type:TextIO*/(/*L5,type:TextIO*/(/*L5,type:TextIO*/new TextIO()).putString((/*L5,type:String*/"array["))).putInt((/*L5,type:int*/i))).putString((/*L5,type:String*/"] is ")));
+        // Source line: 6
+        if ((/*L6,type:boolean*/(/*L6,type:Object*/o) == (/*L6,type:null*/null)))
+            // Source line: 7
+            (/*L7,type:TextIO*/(/*L7,type:TextIO*/new TextIO()).putString((/*L7,type:String*/"null (error)\n")));
+        else
+            // Source line: 8
+            if ((/*L8,type:boolean*/!((/*L8,type:boolean*/(/*L8,type:Object*/o) instanceof String))))
+                // Source line: 9
+                (/*L9,type:TextIO*/(/*L9,type:TextIO*/new TextIO()).putString((/*L9,type:String*/"not a string (error)\n")));
+            else
+                // Source line: 11
+                (/*L11,type:TextIO*/(/*L11,type:TextIO*/(/*L11,type:TextIO*/new TextIO()).putString((/*L11,type:String*/(String)((/*L11,type:Object*/o))))).putString((/*L11,type:String*/"\n")));
+        // Source line: 12
+        return;
+    }
+    // Source line: 15
+    void main() {
+        // Source line: 16
+        Object[] array = (/*L17,type:Object[]*/new Object[(/*L17,type:int*/(/*L17,type:int*/5) * (/*L17,type:int*/2))]);
+        // Source line: 18
+        (/*L18,type:Object*/array[(/*L18,type:int*/(/*L18,type:int*/0) + (/*L18,type:int*/5))] = (/*L18,type:Object*/new Object()));
+        // Source line: 19
+        String s = (/*L19,type:String*/"abc");
+        // Source line: 20
+        (/*L20,type:String*/array[(/*L20,type:int*/0)] = (/*L20,type:String*/array[(/*L20,type:int*/1)] = (/*L20,type:String*/array[(/*L20,type:int*/2)] = (/*L20,type:String*/s))));
+        // Source line: 21
+        (/*L21,type:void*/(/*L21,type:Main*/this).printElement((/*L21,type:Object*/array[(/*L21,type:int*/0)]), (/*L21,type:int*/0)));
+        // Source line: 22
+        (/*L22,type:void*/(/*L22,type:Main*/this).printElement((/*L22,type:Object*/array[(/*L22,type:int*/1)]), (/*L22,type:int*/1)));
+        // Source line: 23
+        (/*L23,type:void*/(/*L23,type:Main*/this).printElement((/*L23,type:Object*/array[(/*L23,type:int*/2)]), (/*L23,type:int*/2)));
+        // Source line: 24
+        Object o = (/*L24,type:Object*/array[(/*L24,type:int*/0)]);
+        // Source line: 25
+        (/*L25,type:boolean[]*/goo = (/*L25,type:boolean[]*/new boolean[(/*L25,type:int*/(/*L25,type:int*/5) * (/*L25,type:int*/2))]));
+        // Source line: 26
+        (/*L26,type:String[]*/(/*L26,type:Main*/this).foo((/*L26,type:int[]*/new int[(/*L26,type:int*/10)])));
+        // Source line: 27
+        String[] strings = (/*L27,type:String[]*/(/*L27,type:Main*/this).foo((/*L27,type:null*/null)));
+        // Source line: 28
+        int[] array2 = (/*L28,type:null*/null);
+        // Source line: 29
+        int x = (/*L29,type:int*/(/*L29,type:Object[]*/array).length);
+        // Source line: 30
+        (/*L30,type:String[]*/strings = (/*L30,type:String[]*/new String[(/*L30,type:int*/10)]));
+        // Source line: 31
+        int i = (/*L31,type:int*/0);
+        // Source line: 32
+        while ((/*L32,type:boolean*/(/*L32,type:int*/i) < (/*L32,type:int*/10)))
+            // Source line: 32
+            {
+                // Source line: 33
+                (/*L33,type:String*/strings[(/*L33,type:int*/i)] = (/*L33,type:String*/"abc"));
+                // Source line: 34
+                (/*L34,type:int*/i = (/*L34,type:int*/(/*L34,type:int*/i) + (/*L34,type:int*/1)));
+            }
+        // Source line: 36
+        (/*L36,type:String*/strings[(/*L36,type:int*/2)] = (/*L36,type:String*/(/*L36,type:String*/(/*L36,type:String*/strings[(/*L36,type:int*/0)]).concat((/*L36,type:String*/strings[(/*L36,type:int*/1)]))).substring((/*L36,type:int*/1), (/*L36,type:int*/4))));
+        // Source line: 37
+        (/*L37,type:TextIO*/(/*L37,type:TextIO*/(/*L37,type:TextIO*/new TextIO()).putString((/*L37,type:String*/strings[(/*L37,type:int*/2)]))).putString((/*L37,type:String*/"\n")));
+        // Source line: 38
+        (/*L39,type:TextIO*/(/*L39,type:TextIO*/(/*L38,type:TextIO*/(/*L38,type:TextIO*/new TextIO()).putString((/*L38,type:String*/"(new int[10]).length="))).putInt((/*L39,type:int*/(/*L39,type:int[]*/new int[(/*L39,type:int*/10)]).length))).putString((/*L39,type:String*/"\n")));
+        // Source line: 40
+        return;
+    }
+    // Source line: 42
+    String[] foo(/*line:42*/int[] array) {
+        // Source line: 43
+        if ((/*L43,type:boolean*/(/*L43,type:int[]*/array) != (/*L43,type:null*/null)))
+            // Source line: 43
+            {
+                // Source line: 44
+                (/*L44,type:int*/array[(/*L44,type:int*/(/*L44,type:int*/3) * (/*L44,type:int*/2))] = (/*L44,type:int*/array[(/*L44,type:int*/array[(/*L44,type:int*/2)])]));
+                // Source line: 45
+                (/*L45,type:int*/array[(/*L45,type:int*/array[(/*L45,type:int*/1)])] = (/*L45,type:int*/array[(/*L45,type:int*/(/*L45,type:int*/3) * (/*L45,type:int*/2))]));
+                // Source line: 46
+                (/*L46,type:int*/array[(/*L46,type:int*/array[(/*L46,type:int*/1)])] = (/*L46,type:int*/array[(/*L46,type:int*/array[(/*L46,type:int*/2)])]));
+            }
+        else
+            // Source line: 43
+            {
+            }
+        // Source line: 48
+        return (/*L48,type:null*/null);
+    }
+}

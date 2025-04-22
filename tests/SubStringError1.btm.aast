@@ -1,0 +1,93 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main SubStringError1.btm 
+class: String value: util.ClassTreeNode@3e3abc88
+class: Object value: util.ClassTreeNode@3feba861
+class: Sys value: util.ClassTreeNode@5b480cf9
+class: Main value: util.ClassTreeNode@6f496d9f
+class: TextIO value: util.ClassTreeNode@723279cf
+Main
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Curr Class: Object, num of children: 1ClassTreeNode
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Method
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Curr Class: Main, num of children: 0ClassTreeNode
+Class: Main
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Main
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Scope level 2, contains:
+key: s, value String
+Scope level 2, contains:
+key: s, value String
+key: this.s, value String
+Scope level 2, contains:
+key: s2, value String
+key: s, value String
+key: this.s, value String
+Method
+Class: Main
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Main
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+// Source file: SubStringError1.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        String s = (/*L3*/"abcd");
+        // Source line: 4
+        String s2 = (/*L4*/(/*L4*/s).substring((/*L4*/0), (/*L4*/5)));
+        // Source line: 5
+        return;
+    }
+}

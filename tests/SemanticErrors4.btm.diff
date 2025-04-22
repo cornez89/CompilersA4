@@ -1,0 +1,181 @@
+1d0
+< SemanticErrors4.btm:8:semantic error: expression type 'boolean' of declaration 'be' does not match declared type 'boolean[]'
+3,72c2,108
+< SemanticErrors4.btm:11:semantic error: predicate in if-statement does not have type boolean
+< 
+< SemanticErrors4.btm:12:semantic error: predicate in if-statement does not have type boolean
+< 
+< SemanticErrors4.btm:13:semantic error: predicate in if-statement does not have type boolean
+< 
+< SemanticErrors4.btm:15:semantic error: the expression type 'boolean[]' in the unary operation ('++') is incorrect; should have been: int
+< 
+< SemanticErrors4.btm:16:semantic error: predicate in for-statement does not have type boolean
+< 
+< SemanticErrors4.btm:18:semantic error: break statement is not inside a loop
+< 
+< SemanticErrors4.btm:20:semantic error: return type 'boolean' is not compatible with declared return type 'void' in method 'main'
+< 
+< SemanticErrors4.btm:21:semantic error: return type 'boolean[]' is not compatible with declared return type 'void' in method 'main'
+< 
+< SemanticErrors4.btm:22:semantic error: return type 'int' is not compatible with declared return type 'void' in method 'main'
+< 
+< SemanticErrors4.btm:23:semantic error: return type 'int' is not compatible with declared return type 'void' in method 'main'
+< 
+< SemanticErrors4.btm:24:semantic error: return type 'int[]' is not compatible with declared return type 'void' in method 'main'
+< 
+< SemanticErrors4.btm:32:semantic error: inconvertible types ('Object[]'=>'String')
+< 
+< SemanticErrors4.btm:32:semantic error: the righthand type 'String' does not conform to the lefthand type 'String[]' in assignment
+< 
+< SemanticErrors4.btm:33:semantic error: the righthand type 'Object' does not conform to the lefthand type 'Object[]' in assignment
+< 
+< SemanticErrors4.btm:34:semantic error: the base type in the target array type 'string' is undefined
+< 
+< SemanticErrors4.btm:34:semantic error: the righthand type 'Object[]' does not conform to the lefthand type 'String[]' in assignment
+< 
+< SemanticErrors4.btm:35:semantic error: inconvertible types ('boolean[]'=>'String[]')
+< 
+< SemanticErrors4.btm:36:semantic error: inconvertible types ('boolean[]'=>'Object[]')
+< 
+< SemanticErrors4.btm:36:semantic error: the righthand type 'Object[]' does not conform to the lefthand type 'String[]' in assignment
+< 
+< SemanticErrors4.btm:39:semantic error: the base type in the instanceof righthand array type 'string' is undefined
+< 
+< SemanticErrors4.btm:40:semantic error: the instanceof lefthand expression has type 'int', which is primitive and not an object type
+< 
+< SemanticErrors4.btm:41:semantic error: the instanceof lefthand expression has type 'int', which is primitive and not an object type
+< 
+< SemanticErrors4.btm:41:semantic error: the instanceof righthand type 'int' is primitive and not an object type
+< 
+< SemanticErrors4.btm:43:semantic error: type 'integer' of new construction is undefined
+< 
+< SemanticErrors4.btm:43:semantic error: expression type 'Object' of declaration 'ia' does not conform to declared type 'int[]'
+< 
+< SemanticErrors4.btm:44:semantic error: size in the array construction has type 'boolean[]' rather than int
+< 
+< SemanticErrors4.btm:45:semantic error: length field in array 'be': cannot be modified
+< 
+< SemanticErrors4.btm:47:semantic error: the righthand type 'int[]' does not conform to the lefthand type 'boolean[]' in assignment
+< 
+< SemanticErrors4.btm:48:semantic error: the lefthand type 'boolean' and righthand type 'int' are not compatible in assignment
+< 
+< SemanticErrors4.btm:50:semantic error: bad reference to 'i': arrays do not have this field (they only have a 'length' field)
+< 
+< SemanticErrors4.btm:50:semantic error: the lefthand type 'int' and righthand type 'Object' are not compatible in assignment
+< 
+< SemanticErrors4.btm:52:semantic error: the expression type 'boolean' in the unary operation ('++') is incorrect; should have been: int
+< 
+< SemanticErrors4.btm:53:semantic error: the expression type 'boolean' in the unary operation ('--') is incorrect; should have been: int
+< 
+< SemanticErrors4.btm:55:semantic error: variable 'c' in assignment is undeclared
+< 
+< Stopping compilation due to errors
+< 35 error(s)
+---
+> C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main SemanticErrors4.btm 
+> class: String value: util.ClassTreeNode@7b23ec81
+> class: Object value: util.ClassTreeNode@5b6f7412
+> class: Sys value: util.ClassTreeNode@27973e9b
+> class: Main value: util.ClassTreeNode@312b1dae
+> class: TextIO value: util.ClassTreeNode@7530d0a
+> Main
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Class: Object
+> Entered Scope, scopes = 2
+> Entered Scope, scopes = 2
+> Scope level 3, contains:
+> Scope level 3, contains:
+> Scope level 3, contains:
+> key: m, value ast.Method@1d56ce6a
+> Class: Object
+> Exited Scope, scopes = 3
+> Exited Scope, scopes = 3
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Exited Scope, scopes = 1
+> Exited Scope, scopes = 1
+> Curr Class: Object, num of children: 1ClassTreeNode
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Method
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Curr Class: Main, num of children: 0ClassTreeNode
+> Class: Main
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Main
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> got to NewArrayExayMethod
+> Class: Main
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Method
+> Class: Main
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Scope level 2, contains:
+> Scope level 2, contains:
+> key: i, value int
+> Scope level 2, contains:
+> key: i, value int
+> key: this.i, value int
+> Scope level 2, contains:
+> key: i, value int
+> key: be, value boolean[]
+> key: this.i, value int
+> Scope level 2, contains:
+> key: this.be, value boolean[]
+> key: i, value int
+> key: be, value boolean[]
+> key: this.i, value int
+> Scope level 2, contains:
+> key: b, value boolean[]
+> key: this.be, value boolean[]
+> key: i, value int
+> key: be, value boolean[]
+> key: this.i, value int
+> java.lang.NullPointerException: Cannot invoke "String.equals(Object)" because the return value of "ast.Expr.getExprType()" is null
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.UnaryIncrExpr.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.IfStmt.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.StmtList.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.Method.accept(Unknown Source)
+>         at visitor.Visitor.visit(Unknown Source)
+>         at ast.MemberList.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.Class_.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+>         at semant.SemanticAnalyzer.analyze(Unknown Source)
+>         at Main.main(Unknown Source)
+> Internal error within compiler: stopping compilation

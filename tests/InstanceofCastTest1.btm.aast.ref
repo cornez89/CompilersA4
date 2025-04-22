@@ -1,0 +1,177 @@
+// Source file: InstanceofCastTest1.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        Object o = (/*L3,type:Object*/new Object());
+        // Source line: 4
+        TextIO io = (/*L4,type:TextIO*/new TextIO());
+        // Source line: 5
+        String s = (/*L5,type:String*/"abc");
+        // Source line: 6
+        Sys sys = (/*L6,type:Sys*/new Sys());
+        // Source line: 8
+        if ((/*L8,type:boolean*/(/*L8,type:Object*/o) instanceof Object))
+            // Source line: 8
+            {
+                // Source line: 9
+                (/*L9,type:TextIO*/(/*L9,type:TextIO*/io).putString((/*L9,type:String*/"Object object instance of Object\n")));
+                // Source line: 10
+                (/*L10,type:TextIO*/(/*L10,type:TextIO*/io).putString((/*L10,type:String*/"Casting Object object to Object object...")));
+                // Source line: 11
+                Object x = (/*L11,type:Object*/(Object)((/*L11,type:Object*/o)));
+                // Source line: 12
+                (/*L12,type:TextIO*/(/*L12,type:TextIO*/io).putString((/*L12,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 15
+            (/*L15,type:TextIO*/(/*L15,type:TextIO*/io).putString((/*L15,type:String*/"Object object not instance of Object\n")));
+        // Source line: 16
+        if ((/*L16,type:boolean*/(/*L16,type:Object*/o) instanceof TextIO))
+            // Source line: 16
+            {
+                // Source line: 17
+                (/*L17,type:TextIO*/(/*L17,type:TextIO*/io).putString((/*L17,type:String*/"Object object instance of TextIO\n")));
+                // Source line: 18
+                (/*L18,type:TextIO*/(/*L18,type:TextIO*/io).putString((/*L18,type:String*/"Casting Object object to TextIO object...")));
+                // Source line: 19
+                TextIO x = (/*L19,type:TextIO*/(TextIO)((/*L19,type:Object*/o)));
+                // Source line: 20
+                (/*L20,type:TextIO*/(/*L20,type:TextIO*/io).putString((/*L20,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 23
+            (/*L23,type:TextIO*/(/*L23,type:TextIO*/io).putString((/*L23,type:String*/"Object object not instance of TextIO\n")));
+        // Source line: 24
+        if ((/*L24,type:boolean*/(/*L24,type:Object*/o) instanceof String))
+            // Source line: 24
+            {
+                // Source line: 25
+                (/*L25,type:TextIO*/(/*L25,type:TextIO*/io).putString((/*L25,type:String*/"Object object instance of String\n")));
+                // Source line: 26
+                (/*L26,type:TextIO*/(/*L26,type:TextIO*/io).putString((/*L26,type:String*/"Casting Object object to String object...")));
+                // Source line: 27
+                String x = (/*L27,type:String*/(String)((/*L27,type:Object*/o)));
+                // Source line: 28
+                (/*L28,type:TextIO*/(/*L28,type:TextIO*/io).putString((/*L28,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 31
+            (/*L31,type:TextIO*/(/*L31,type:TextIO*/io).putString((/*L31,type:String*/"Object object not instance of String\n")));
+        // Source line: 32
+        if ((/*L32,type:boolean*/(/*L32,type:Object*/o) instanceof Sys))
+            // Source line: 32
+            {
+                // Source line: 33
+                (/*L33,type:TextIO*/(/*L33,type:TextIO*/io).putString((/*L33,type:String*/"Object object instance of Sys\n")));
+                // Source line: 34
+                (/*L34,type:TextIO*/(/*L34,type:TextIO*/io).putString((/*L34,type:String*/"Casting Object object to Sys object...")));
+                // Source line: 35
+                Sys x = (/*L35,type:Sys*/(Sys)((/*L35,type:Object*/o)));
+                // Source line: 36
+                (/*L36,type:TextIO*/(/*L36,type:TextIO*/io).putString((/*L36,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 39
+            (/*L39,type:TextIO*/(/*L39,type:TextIO*/io).putString((/*L39,type:String*/"Object object not instance of Sys\n")));
+        // Source line: 43
+        if ((/*L43,type:boolean*/(/*L43,type:TextIO*/io) instanceof Object))
+            // Source line: 43
+            {
+                // Source line: 44
+                (/*L44,type:TextIO*/(/*L44,type:TextIO*/io).putString((/*L44,type:String*/"TextIO object instance of Object\n")));
+                // Source line: 45
+                (/*L45,type:TextIO*/(/*L45,type:TextIO*/io).putString((/*L45,type:String*/"Casting TextIO object to Object object...")));
+                // Source line: 46
+                Object x = (/*L46,type:Object*/(Object)((/*L46,type:TextIO*/io)));
+                // Source line: 47
+                (/*L47,type:TextIO*/(/*L47,type:TextIO*/io).putString((/*L47,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 50
+            (/*L50,type:TextIO*/(/*L50,type:TextIO*/io).putString((/*L50,type:String*/"TextIO object not instance of Object\n")));
+        // Source line: 51
+        if ((/*L51,type:boolean*/(/*L51,type:TextIO*/io) instanceof TextIO))
+            // Source line: 51
+            {
+                // Source line: 52
+                (/*L52,type:TextIO*/(/*L52,type:TextIO*/io).putString((/*L52,type:String*/"TextIO object instance of TextIO\n")));
+                // Source line: 53
+                (/*L53,type:TextIO*/(/*L53,type:TextIO*/io).putString((/*L53,type:String*/"Casting TextIO object to TextIO object...")));
+                // Source line: 54
+                TextIO x = (/*L54,type:TextIO*/(TextIO)((/*L54,type:TextIO*/io)));
+                // Source line: 55
+                (/*L55,type:TextIO*/(/*L55,type:TextIO*/io).putString((/*L55,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 58
+            (/*L58,type:TextIO*/(/*L58,type:TextIO*/io).putString((/*L58,type:String*/"TextIO object not instance of TextIO\n")));
+        // Source line: 62
+        if ((/*L62,type:boolean*/(/*L62,type:String*/s) instanceof Object))
+            // Source line: 62
+            {
+                // Source line: 63
+                (/*L63,type:TextIO*/(/*L63,type:TextIO*/io).putString((/*L63,type:String*/"String object instance of Object\n")));
+                // Source line: 64
+                (/*L64,type:TextIO*/(/*L64,type:TextIO*/io).putString((/*L64,type:String*/"Casting String object to Object object...")));
+                // Source line: 65
+                Object x = (/*L65,type:Object*/(Object)((/*L65,type:String*/s)));
+                // Source line: 66
+                (/*L66,type:TextIO*/(/*L66,type:TextIO*/io).putString((/*L66,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 69
+            (/*L69,type:TextIO*/(/*L69,type:TextIO*/io).putString((/*L69,type:String*/"String object not instance of Object\n")));
+        // Source line: 70
+        if ((/*L70,type:boolean*/(/*L70,type:String*/s) instanceof String))
+            // Source line: 70
+            {
+                // Source line: 71
+                (/*L71,type:TextIO*/(/*L71,type:TextIO*/io).putString((/*L71,type:String*/"String object instance of String\n")));
+                // Source line: 72
+                (/*L72,type:TextIO*/(/*L72,type:TextIO*/io).putString((/*L72,type:String*/"Casting String object to String object...")));
+                // Source line: 73
+                String x = (/*L73,type:String*/(String)((/*L73,type:String*/s)));
+                // Source line: 74
+                (/*L74,type:TextIO*/(/*L74,type:TextIO*/io).putString((/*L74,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 77
+            (/*L77,type:TextIO*/(/*L77,type:TextIO*/io).putString((/*L77,type:String*/"String object not instance of String\n")));
+        // Source line: 81
+        if ((/*L81,type:boolean*/(/*L81,type:Sys*/sys) instanceof Object))
+            // Source line: 81
+            {
+                // Source line: 82
+                (/*L82,type:TextIO*/(/*L82,type:TextIO*/io).putString((/*L82,type:String*/"Sys object instance of Object\n")));
+                // Source line: 83
+                (/*L83,type:TextIO*/(/*L83,type:TextIO*/io).putString((/*L83,type:String*/"Casting Sys object to Object object...")));
+                // Source line: 84
+                Object x = (/*L84,type:Object*/(Object)((/*L84,type:Sys*/sys)));
+                // Source line: 85
+                (/*L85,type:TextIO*/(/*L85,type:TextIO*/io).putString((/*L85,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 88
+            (/*L88,type:TextIO*/(/*L88,type:TextIO*/io).putString((/*L88,type:String*/"Sys object not instance of Object\n")));
+        // Source line: 89
+        if ((/*L89,type:boolean*/(/*L89,type:Sys*/sys) instanceof Sys))
+            // Source line: 89
+            {
+                // Source line: 90
+                (/*L90,type:TextIO*/(/*L90,type:TextIO*/io).putString((/*L90,type:String*/"Sys object instance of Sys\n")));
+                // Source line: 91
+                (/*L91,type:TextIO*/(/*L91,type:TextIO*/io).putString((/*L91,type:String*/"Casting Sys object to Sys object...")));
+                // Source line: 92
+                Sys x = (/*L92,type:Sys*/(Sys)((/*L92,type:Sys*/sys)));
+                // Source line: 93
+                (/*L93,type:TextIO*/(/*L93,type:TextIO*/io).putString((/*L93,type:String*/" successful\n")));
+            }
+        else
+            // Source line: 96
+            (/*L96,type:TextIO*/(/*L96,type:TextIO*/io).putString((/*L96,type:String*/"Sys object not instance of Sys\n")));
+        // Source line: 98
+        return;
+    }
+}

@@ -1,0 +1,218 @@
+// Source file: TicTacToe.btm
+// Source line: 3
+class Main extends Object {
+    // Source line: 4
+    TextIO io = 
+(/*L4,type:TextIO*/new TextIO());
+    // Source line: 5
+    int player = 
+(/*L5,type:int*/1);
+    // Source line: 6
+    int[] board = 
+(/*L6,type:int[]*/new int[(/*L6,type:int*/9)]);
+    // Source line: 9
+    void main() {
+        // Source line: 11
+        (/*L11,type:TextIO*/(/*L11,type:TextIO*/io).putString((/*L11,type:String*/"*** Tic Tac Toe ***\n")));
+        // Source line: 14
+        while ((/*L14,type:boolean*/true))
+            // Source line: 14
+            {
+                // Source line: 16
+                (/*L16,type:void*/(/*L16,type:Main*/this).printBoard());
+                // Source line: 19
+                (/*L19,type:void*/(/*L19,type:Main*/this).getMove());
+                // Source line: 22
+                if ((/*L22,type:boolean*/(/*L22,type:Main*/this).isGameOver()))
+                    // Source line: 22
+                    {
+                        // Source line: 24
+                        if ((/*L24,type:boolean*/(/*L24,type:Main*/this).isDraw()))
+                            // Source line: 24
+                            {
+                                // Source line: 25
+                                (/*L25,type:void*/(/*L25,type:Main*/this).printBoard());
+                                // Source line: 26
+                                (/*L26,type:TextIO*/(/*L26,type:TextIO*/io).putString((/*L26,type:String*/"Game is a draw\n")));
+                                // Source line: 27
+                                break;
+                            }
+                        else
+                            // Source line: 29
+                            {
+                                // Source line: 30
+                                (/*L30,type:void*/(/*L30,type:Main*/this).printBoard());
+                                // Source line: 31
+                                (/*L31,type:TextIO*/(/*L31,type:TextIO*/(/*L31,type:TextIO*/(/*L31,type:TextIO*/io).putString((/*L31,type:String*/"Player "))).putInt((/*L31,type:int*/player))).putString((/*L31,type:String*/" wins!\n")));
+                                // Source line: 32
+                                break;
+                            }
+                    }
+                else
+                    // Source line: 22
+                    {
+                    }
+                // Source line: 37
+                if ((/*L37,type:boolean*/(/*L37,type:int*/player) == (/*L37,type:int*/1)))
+                    // Source line: 38
+                    (/*L38,type:int*/player = (/*L38,type:int*/2));
+                else
+                    // Source line: 40
+                    (/*L40,type:int*/player = (/*L40,type:int*/1));
+            }
+    }
+    // Source line: 46
+    boolean isGameOver() {
+        // Source line: 48
+        if ((/*L48,type:boolean*/(/*L48,type:Main*/this).wasGameWon()))
+            // Source line: 49
+            return (/*L49,type:boolean*/true);
+        else
+            // Source line: 51
+            if ((/*L51,type:boolean*/(/*L51,type:Main*/this).isDraw()))
+                // Source line: 52
+                return (/*L52,type:boolean*/true);
+            else
+                // Source line: 51
+                {
+                }
+        // Source line: 54
+        return (/*L54,type:boolean*/false);
+    }
+    // Source line: 60
+    boolean wasGameWon() {
+        // Source line: 62
+        if ((/*L63,type:boolean*/(/*L62,type:boolean*/(/*L62,type:boolean*/(/*L62,type:boolean*/(/*L62,type:boolean*/(/*L62,type:int*/board[(/*L62,type:int*/0)]) == (/*L62,type:int*/board[(/*L62,type:int*/1)])) && (/*L62,type:boolean*/(/*L62,type:int*/board[(/*L62,type:int*/1)]) == (/*L62,type:int*/board[(/*L62,type:int*/2)]))) && (/*L62,type:boolean*/(/*L62,type:int*/board[(/*L62,type:int*/0)]) != (/*L62,type:int*/0))) || (/*L63,type:boolean*/(/*L63,type:boolean*/(/*L63,type:boolean*/(/*L63,type:int*/board[(/*L63,type:int*/3)]) == (/*L63,type:int*/board[(/*L63,type:int*/4)])) && (/*L63,type:boolean*/(/*L63,type:int*/board[(/*L63,type:int*/4)]) == (/*L63,type:int*/board[(/*L63,type:int*/5)]))) && (/*L63,type:boolean*/(/*L63,type:int*/board[(/*L63,type:int*/3)]) != (/*L63,type:int*/0)))) || (/*L64,type:boolean*/(/*L64,type:boolean*/(/*L64,type:boolean*/(/*L64,type:int*/board[(/*L64,type:int*/6)]) == (/*L64,type:int*/board[(/*L64,type:int*/7)])) && (/*L64,type:boolean*/(/*L64,type:int*/board[(/*L64,type:int*/7)]) == (/*L64,type:int*/board[(/*L64,type:int*/8)]))) && (/*L64,type:boolean*/(/*L64,type:int*/board[(/*L64,type:int*/6)]) != (/*L64,type:int*/0)))))
+            // Source line: 64
+            {
+                // Source line: 65
+                return (/*L65,type:boolean*/true);
+            }
+        else
+            // Source line: 68
+            if ((/*L69,type:boolean*/(/*L68,type:boolean*/(/*L68,type:boolean*/(/*L68,type:boolean*/(/*L68,type:boolean*/(/*L68,type:int*/board[(/*L68,type:int*/0)]) == (/*L68,type:int*/board[(/*L68,type:int*/3)])) && (/*L68,type:boolean*/(/*L68,type:int*/board[(/*L68,type:int*/3)]) == (/*L68,type:int*/board[(/*L68,type:int*/6)]))) && (/*L68,type:boolean*/(/*L68,type:int*/board[(/*L68,type:int*/0)]) != (/*L68,type:int*/0))) || (/*L69,type:boolean*/(/*L69,type:boolean*/(/*L69,type:boolean*/(/*L69,type:int*/board[(/*L69,type:int*/1)]) == (/*L69,type:int*/board[(/*L69,type:int*/4)])) && (/*L69,type:boolean*/(/*L69,type:int*/board[(/*L69,type:int*/4)]) == (/*L69,type:int*/board[(/*L69,type:int*/7)]))) && (/*L69,type:boolean*/(/*L69,type:int*/board[(/*L69,type:int*/1)]) != (/*L69,type:int*/0)))) || (/*L70,type:boolean*/(/*L70,type:boolean*/(/*L70,type:boolean*/(/*L70,type:int*/board[(/*L70,type:int*/2)]) == (/*L70,type:int*/board[(/*L70,type:int*/5)])) && (/*L70,type:boolean*/(/*L70,type:int*/board[(/*L70,type:int*/5)]) == (/*L70,type:int*/board[(/*L70,type:int*/8)]))) && (/*L70,type:boolean*/(/*L70,type:int*/board[(/*L70,type:int*/2)]) != (/*L70,type:int*/0)))))
+                // Source line: 70
+                {
+                    // Source line: 71
+                    return (/*L71,type:boolean*/true);
+                }
+            else
+                // Source line: 74
+                if ((/*L74,type:boolean*/(/*L74,type:boolean*/(/*L74,type:boolean*/(/*L74,type:boolean*/(/*L74,type:int*/board[(/*L74,type:int*/0)]) == (/*L74,type:int*/board[(/*L74,type:int*/4)])) && (/*L74,type:boolean*/(/*L74,type:int*/board[(/*L74,type:int*/4)]) == (/*L74,type:int*/board[(/*L74,type:int*/8)]))) && (/*L74,type:boolean*/(/*L74,type:int*/board[(/*L74,type:int*/0)]) != (/*L74,type:int*/0))) || (/*L75,type:boolean*/(/*L75,type:boolean*/(/*L75,type:boolean*/(/*L75,type:int*/board[(/*L75,type:int*/2)]) == (/*L75,type:int*/board[(/*L75,type:int*/4)])) && (/*L75,type:boolean*/(/*L75,type:int*/board[(/*L75,type:int*/4)]) == (/*L75,type:int*/board[(/*L75,type:int*/6)]))) && (/*L75,type:boolean*/(/*L75,type:int*/board[(/*L75,type:int*/2)]) != (/*L75,type:int*/0)))))
+                    // Source line: 75
+                    {
+                        // Source line: 76
+                        return (/*L76,type:boolean*/true);
+                    }
+                else
+                    // Source line: 74
+                    {
+                    }
+        // Source line: 79
+        return (/*L79,type:boolean*/false);
+    }
+    // Source line: 85
+    boolean isDraw() {
+        // Source line: 86
+        int i = (/*L86,type:int*/0);
+        // Source line: 88
+        if ((/*L88,type:boolean*/(/*L88,type:Main*/this).wasGameWon()))
+            // Source line: 89
+            return (/*L89,type:boolean*/false);
+        else
+            // Source line: 88
+            {
+            }
+        // Source line: 91
+        for ((/*L91,type:int*/i = (/*L91,type:int*/0)); (/*L91,type:boolean*/(/*L91,type:int*/i) < (/*L91,type:int*/9)); (/*L91,type:int*/((/*L91,type:int*/i))++))
+            // Source line: 91
+            {
+                // Source line: 93
+                if ((/*L93,type:boolean*/(/*L93,type:int*/board[(/*L93,type:int*/i)]) == (/*L93,type:int*/0)))
+                    // Source line: 94
+                    return (/*L94,type:boolean*/false);
+                else
+                    // Source line: 93
+                    {
+                    }
+            }
+        // Source line: 97
+        return (/*L97,type:boolean*/true);
+    }
+    // Source line: 101
+    void printBoard() {
+        // Source line: 102
+        int i = (/*L102,type:int*/0);
+        // Source line: 103
+        (/*L103,type:TextIO*/(/*L103,type:TextIO*/io).putString((/*L103,type:String*/"\n")));
+        // Source line: 104
+        for ((/*L104,type:int*/i = (/*L104,type:int*/0)); (/*L104,type:boolean*/(/*L104,type:int*/i) < (/*L104,type:int*/9)); (/*L104,type:int*/((/*L104,type:int*/i))++))
+            // Source line: 104
+            {
+                // Source line: 105
+                (/*L105,type:void*/(/*L105,type:Main*/this).printSquare((/*L105,type:int*/i)));
+                // Source line: 106
+                (/*L106,type:TextIO*/(/*L106,type:TextIO*/io).putString((/*L106,type:String*/" ")));
+                // Source line: 107
+                if ((/*L107,type:boolean*/(/*L107,type:int*/(/*L107,type:int*/i) % (/*L107,type:int*/3)) == (/*L107,type:int*/2)))
+                    // Source line: 108
+                    (/*L108,type:TextIO*/(/*L108,type:TextIO*/io).putString((/*L108,type:String*/"\n")));
+                else
+                    // Source line: 107
+                    {
+                    }
+            }
+        // Source line: 110
+        (/*L110,type:TextIO*/(/*L110,type:TextIO*/io).putString((/*L110,type:String*/"\n")));
+    }
+    // Source line: 115
+    void printSquare(/*line:115*/int position) {
+        // Source line: 117
+        if ((/*L117,type:boolean*/(/*L117,type:int*/board[(/*L117,type:int*/position)]) == (/*L117,type:int*/0)))
+            // Source line: 118
+            (/*L118,type:TextIO*/(/*L118,type:TextIO*/io).putInt((/*L118,type:int*/(/*L118,type:int*/position) + (/*L118,type:int*/1))));
+        else
+            // Source line: 120
+            if ((/*L120,type:boolean*/(/*L120,type:int*/board[(/*L120,type:int*/position)]) == (/*L120,type:int*/1)))
+                // Source line: 121
+                (/*L121,type:TextIO*/(/*L121,type:TextIO*/io).putString((/*L121,type:String*/"X")));
+            else
+                // Source line: 124
+                (/*L124,type:TextIO*/(/*L124,type:TextIO*/io).putString((/*L124,type:String*/"O")));
+    }
+    // Source line: 130
+    void getMove() {
+        // Source line: 132
+        while ((/*L132,type:boolean*/true))
+            // Source line: 132
+            {
+                // Source line: 134
+                (/*L134,type:TextIO*/(/*L134,type:TextIO*/(/*L134,type:TextIO*/(/*L134,type:TextIO*/io).putString((/*L134,type:String*/"Player "))).putInt((/*L134,type:int*/player))).putString((/*L134,type:String*/", enter a position (1-9): ")));
+                // Source line: 136
+                int position = (/*L136,type:int*/(/*L136,type:TextIO*/io).getInt());
+                // Source line: 138
+                if ((/*L138,type:boolean*/(/*L138,type:boolean*/(/*L138,type:int*/position) < (/*L138,type:int*/1)) || (/*L138,type:boolean*/(/*L138,type:int*/position) > (/*L138,type:int*/9))))
+                    // Source line: 138
+                    {
+                        // Source line: 140
+                        (/*L140,type:TextIO*/(/*L140,type:TextIO*/io).putString((/*L140,type:String*/"Position must be between 1 and 9.\n")));
+                    }
+                else
+                    // Source line: 143
+                    if ((/*L143,type:boolean*/(/*L143,type:int*/board[(/*L143,type:int*/(/*L143,type:int*/position) - (/*L143,type:int*/1))]) != (/*L143,type:int*/0)))
+                        // Source line: 143
+                        {
+                            // Source line: 145
+                            (/*L145,type:TextIO*/(/*L145,type:TextIO*/io).putString((/*L145,type:String*/"Position already taken.\n")));
+                        }
+                    else
+                        // Source line: 148
+                        {
+                            // Source line: 149
+                            (/*L149,type:int*/board[(/*L149,type:int*/(/*L149,type:int*/position) - (/*L149,type:int*/1))] = (/*L149,type:int*/player));
+                            // Source line: 151
+                            break;
+                        }
+            }
+    }
+}

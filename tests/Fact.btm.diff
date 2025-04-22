@@ -1,0 +1,121 @@
+1,46c1,73
+< // Source file: Fact.btm
+< // Source line: 5
+< class Main extends Object {
+<     // Source line: 7
+<     TextIO io = 
+< (/*L7,type:TextIO*/new TextIO());
+<     // Source line: 11
+<     void main() {
+<         // Source line: 13
+<         (/*L13,type:TextIO*/(/*L13,type:TextIO*/io).putString((/*L13,type:String*/"Enter a non-negative number: ")));
+<         // Source line: 14
+<         int x = (/*L14,type:int*/(/*L14,type:TextIO*/io).getInt());
+<         // Source line: 16
+<         if ((/*L16,type:boolean*/(/*L16,type:int*/x) < (/*L16,type:int*/0)))
+<             // Source line: 16
+<             {
+<                 // Source line: 17
+<                 (/*L17,type:TextIO*/(/*L17,type:TextIO*/io).putString((/*L17,type:String*/"Error: number must be > 0\n")));
+<                 // Source line: 18
+<                 (/*L18,type:void*/(/*L18,type:Sys*/new Sys()).exit((/*L18,type:int*/1)));
+<             }
+<         else
+<             // Source line: 20
+<             {
+<                 // Source line: 23
+<                 (/*L23,type:TextIO*/(/*L23,type:TextIO*/(/*L23,type:TextIO*/io).putInt((/*L23,type:int*/(/*L23,type:Main*/this).fact((/*L23,type:int*/x))))).putString((/*L23,type:String*/"\n")));
+<             }
+<         // Source line: 25
+<         return;
+<     }
+<     // Source line: 32
+<     int fact(/*line:32*/int n) {
+<         // Source line: 34
+<         int result = (/*L34,type:int*/1);
+<         // Source line: 37
+<         if ((/*L37,type:boolean*/(/*L37,type:int*/n) > (/*L37,type:int*/1)))
+<             // Source line: 38
+<             (/*L38,type:int*/result = (/*L38,type:int*/(/*L38,type:int*/n) * (/*L38,type:int*/(/*L38,type:Main*/this).fact((/*L38,type:int*/(/*L38,type:int*/n) - (/*L38,type:int*/1))))));
+<         else
+<             // Source line: 37
+<             {
+<             }
+<         // Source line: 39
+<         return (/*L39,type:int*/result);
+<     }
+< }
+---
+> 
+> C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main Fact.btm 
+> java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
+> class: String value: util.ClassTreeNode@6e8cf4c6
+> class: Object value: util.ClassTreeNode@12edcd21
+>         at java.base/java.util.Hashtable.get(Hashtable.java:381)
+>         at util.ClassTreeNode.lookupClass(Unknown Source)
+>         at visitor.SemantVisitor.typeExists(Unknown Source)
+> class: Sys value: util.ClassTreeNode@34c45dca
+> class: Main value: util.ClassTreeNode@52cc8049
+> class: TextIO value: util.ClassTreeNode@5b6f7412
+> Main
+>         at visitor.SemantVisitor.conformsTo(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+>         at ast.Field.accept(Unknown Source)
+> Scope level 2, contains:
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Class: Object
+> Entered Scope, scopes = 2
+> Entered Scope, scopes = 2
+> Scope level 3, contains:
+>         at visitor.Visitor.visit(Unknown Source)
+>         at ast.MemberList.accept(Unknown Source)
+> Scope level 3, contains:
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at ast.Class_.accept(Unknown Source)
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)Scope level 3, contains:
+> key: main, value ast.Method@20ad9418
+> Class: Object
+> Exited Scope, scopes = 3
+> Exited Scope, scopes = 3
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Exited Scope, scopes = 1
+> 
+>         at visitor.TypeCheckVisitor.visit(Unknown Source)
+>         at semant.SemanticAnalyzer.typeCheck(Unknown Source)
+> Exited Scope, scopes = 1
+>         at semant.SemanticAnalyzer.analyze(Unknown Source)
+>         at Main.main(Unknown Source)
+> Internal error within compiler: stopping compilation
+> Curr Class: Object, num of children: 1ClassTreeNode
+> Class: Object
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0
+> Method
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Method
+> Class: Object
+> Exited Scope, scopes = 2
+> Exited Scope, scopes = 2
+> Class: Object
+> Entered Scope, scopes = 1
+> Entered Scope, scopes = 1
+> Curr Class: Main, num of children: 0ClassTreeNode
+> Class: Main
+> Entered Scope, scopes = 0
+> Entered Scope, scopes = 0

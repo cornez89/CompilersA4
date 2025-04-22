@@ -1,0 +1,230 @@
+
+C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\tests>java -classpath "C:\Users\ZachA\OneDrive - University of Wisconsin Oshkosh\Spring 2025\CS 431\a4\src" Main Strings.btm 
+class: String value: util.ClassTreeNode@6f496d9f
+class: Object value: util.ClassTreeNode@723279cf
+class: Sys value: util.ClassTreeNode@10f87f48
+class: Main value: util.ClassTreeNode@b4c966a
+class: TextIO value: util.ClassTreeNode@2f4d3709
+Main
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Class: Object
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Scope level 3, contains:
+Class: Object
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Curr Class: Object, num of children: 1ClassTreeNode
+Class: Object
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Method
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Curr Class: Main, num of children: 0ClassTreeNode
+Class: Main
+Entered Scope, scopes = 0
+Entered Scope, scopes = 0
+Method
+Class: Main
+Entered Scope, scopes = 1
+Entered Scope, scopes = 1
+Scope level 2, contains:
+Scope level 2, contains:
+key: s, value String
+Scope level 2, contains:
+key: s, value String
+key: this.s, value String
+Scope level 2, contains:
+key: s2, value String
+key: s, value String
+key: this.s, value String
+Scope level 2, contains:
+key: this.s2, value String
+key: s2, value String
+key: s, value String
+key: this.s, value String
+Scope level 2, contains:
+key: this.s2, value String
+key: s3, value String
+key: s2, value String
+key: s, value String
+key: this.s, value String
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Then Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Then Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Else Block
+Class: Main
+Entered Scope, scopes = 2
+Entered Scope, scopes = 2
+Else Block
+Class: Main
+Exited Scope, scopes = 3
+Exited Scope, scopes = 3
+Method
+Class: Main
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Main
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+Class: Object
+Exited Scope, scopes = 2
+Exited Scope, scopes = 2
+Class: Object
+Exited Scope, scopes = 1
+Exited Scope, scopes = 1
+// Source file: Strings.btm
+// Source line: 1
+class Main extends Object {
+    // Source line: 2
+    void main() {
+        // Source line: 3
+        String s = (/*L3*/"abcdefghijklmnopqrstuvwxyz");
+        // Source line: 4
+        String s2 = (/*L4*/"abcdefghijklmnopqrstuvwxyz");
+        // Source line: 5
+        String s3 = (/*L5*/"0123456789");
+        // Source line: 7
+        (/*L7*/(/*L7*/(/*L7*/(/*L7*/new TextIO()).putString((/*L7,type:String*/"s: "))).putString((/*L7*/s))).putString((/*L7,type:String*/"\n")));
+        // Source line: 9
+        (/*L9*/(/*L9*/(/*L9*/(/*L9*/new TextIO()).putString((/*L9,type:String*/"s.length(): "))).putInt((/*L9*/(/*L9*/s).length()))).putString((/*L9,type:String*/"\n")));
+        // Source line: 11
+        (/*L11*/(/*L11*/(/*L11*/(/*L11*/new TextIO()).putString((/*L11,type:String*/"s2: "))).putString((/*L11*/s2))).putString((/*L11,type:String*/"\n")));
+        // Source line: 12
+        (/*L12*/(/*L12*/(/*L12*/(/*L12*/new TextIO()).putString((/*L12,type:String*/"s2.length(): "))).putInt((/*L12*/(/*L12*/s2).length()))).putString((/*L12,type:String*/"\n")));
+        // Source line: 14
+        if ((/*L14*/(/*L14*/s).equals((/*L14*/s2))))
+            // Source line: 15
+            (/*L15*/(/*L15*/new TextIO()).putString((/*L15,type:String*/"s.equals(s2): true\n")));
+        else
+            // Source line: 17
+            (/*L17*/(/*L17*/new TextIO()).putString((/*L17,type:String*/"s.equals(s2): false\n")));
+        // Source line: 18
+        if ((/*L18*/(/*L18*/s2).equals((/*L18*/s))))
+            // Source line: 19
+            (/*L19*/(/*L19*/new TextIO()).putString((/*L19,type:String*/"s2.equals(s): true\n")));
+        else
+            // Source line: 21
+            (/*L21*/(/*L21*/new TextIO()).putString((/*L21,type:String*/"s2.equals(s): false\n")));
+        // Source line: 23
+        (/*L23*/(/*L23*/(/*L23*/(/*L23*/new TextIO()).putString((/*L23,type:String*/"s3: "))).putString((/*L23*/s3))).putString((/*L23,type:String*/"\n")));
+        // Source line: 24
+        (/*L24*/(/*L24*/(/*L24*/(/*L24*/new TextIO()).putString((/*L24,type:String*/"s3.length(): "))).putInt((/*L24*/(/*L24*/s3).length()))).putString((/*L24,type:String*/"\n")));
+        // Source line: 26
+        if ((/*L26*/(/*L26*/s).equals((/*L26*/s3))))
+            // Source line: 27
+            (/*L27*/(/*L27*/new TextIO()).putString((/*L27,type:String*/"s.equals(s3): true\n")));
+        else
+            // Source line: 29
+            (/*L29*/(/*L29*/new TextIO()).putString((/*L29,type:String*/"s.equals(s3): false\n")));
+        // Source line: 30
+        if ((/*L30*/(/*L30*/s3).equals((/*L30*/s))))
+            // Source line: 31
+            (/*L31*/(/*L31*/new TextIO()).putString((/*L31,type:String*/"s3.equals(s): true\n")));
+        else
+            // Source line: 33
+            (/*L33*/(/*L33*/new TextIO()).putString((/*L33,type:String*/"s3.equals(s): false\n")));
+        // Source line: 35
+        (/*L35*/(/*L35*/(/*L35*/(/*L35*/new TextIO()).putString((/*L35,type:String*/"s.concat(s2): "))).putString((/*L35*/(/*L35*/s).concat((/*L35*/s2))))).putString((/*L35,type:String*/"\n")));
+        // Source line: 36
+        (/*L36*/(/*L36*/(/*L36*/(/*L36*/new TextIO()).putString((/*L36,type:String*/"s2.concat(s): "))).putString((/*L36*/(/*L36*/s2).concat((/*L36*/s))))).putString((/*L36,type:String*/"\n")));
+        // Source line: 38
+        (/*L38*/(/*L38*/(/*L38*/(/*L38*/new TextIO()).putString((/*L38,type:String*/"s.concat(s3): "))).putString((/*L38*/(/*L38*/s).concat((/*L38*/s3))))).putString((/*L38,type:String*/"\n")));
+        // Source line: 39
+        (/*L39*/(/*L39*/(/*L39*/(/*L39*/new TextIO()).putString((/*L39,type:String*/"s3.concat(s): "))).putString((/*L39*/(/*L39*/s3).concat((/*L39*/s))))).putString((/*L39,type:String*/"\n")));
+        // Source line: 43
+        (/*L43*/(/*L43*/(/*L43*/(/*L43*/new TextIO()).putString((/*L43,type:String*/"s.substring(0, 0): "))).putString((/*L43*/(/*L43*/s).substring((/*L43,type:int*/0), (/*L43,type:int*/0))))).putString((/*L43,type:String*/"\n")));
+        // Source line: 44
+        (/*L44*/(/*L44*/(/*L44*/(/*L44*/new TextIO()).putString((/*L44,type:String*/"s.substring(2, 8): "))).putString((/*L44*/(/*L44*/s).substring((/*L44,type:int*/2), (/*L44,type:int*/8))))).putString((/*L44,type:String*/"\n")));
+        // Source line: 45
+        (/*L45*/(/*L45*/(/*L45*/(/*L45*/new TextIO()).putString((/*L45,type:String*/"s2.substring(1, 2): "))).putString((/*L45*/(/*L45*/s2).substring((/*L45,type:int*/1), (/*L45,type:int*/2))))).putString((/*L45,type:String*/"\n")));
+        // Source line: 46
+        (/*L46*/(/*L46*/(/*L46*/(/*L46*/new TextIO()).putString((/*L46,type:String*/"s2.substring(1, 7): "))).putString((/*L46*/(/*L46*/s2).substring((/*L46,type:int*/1), (/*L46,type:int*/7))))).putString((/*L46,type:String*/"\n")));
+        // Source line: 47
+        (/*L47*/(/*L47*/(/*L47*/(/*L47*/new TextIO()).putString((/*L47,type:String*/"s3.substring(2, 7): "))).putString((/*L47*/(/*L47*/s3).substring((/*L47,type:int*/2), (/*L47,type:int*/7))))).putString((/*L47,type:String*/"\n")));
+        // Source line: 48
+        (/*L48*/(/*L48*/(/*L48*/(/*L48*/new TextIO()).putString((/*L48,type:String*/"s3.substring(1, 10): "))).putString((/*L48*/(/*L48*/s3).substring((/*L48,type:int*/1), (/*L48,type:int*/10))))).putString((/*L48,type:String*/"\n")));
+        // Source line: 50
+        return;
+    }
+}
