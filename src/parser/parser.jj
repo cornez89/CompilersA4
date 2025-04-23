@@ -275,7 +275,7 @@ TOKEN : /* EOF */
 
 SKIP : /* WHITESPACE, NEWLINES, and COMMENTS */
 {
-  < " " | "\n" | "\t" | "\f" >
+  < " " | "\n" | "\t" | "\f" | "\r" >
 |//LINE COMMENT
   < "//" (~["\n"])* "\n" >
 |//MULTI_LINE COMMENT
