@@ -263,21 +263,25 @@ public class SemanticAnalyzer {
     private void buildClassTree(ClassList classList) {
         updateBuiltins();
 
-        // complete this method
         Iterator<ASTNode> iterator = classList.getIterator();
         ArrayList<ASTNode> classNodes = new ArrayList<>();
+
+        for (ClassTreeNode classTreeNode : classMap.values()) {
+            if (!classTreeNode.getName().equals("Object")) {
+                classTreeNode.setParent(classMap.get("Object"));
+            }
+        }
 
         while (iterator.hasNext()) {
             classNodes.add(iterator.next());
         }
-
         int initialNumOfClasses = classNodes.size();
         boolean classesChanged = true;
 
-        // Cycle through the list multiple times because parent classes may not be in
+        //cycle through classNodes and add it to the map if its parent exists
         while (!classNodes.isEmpty() && classesChanged) {
-            for (int i = 0; i < classNodes.size();) {
 
+            for (int i = 0; i < classNodes.size();) {
                 // make class tree node
                 Class_ classNode = (Class_) classNodes.get(i);
                 ClassTreeNode classTreeNode = new ClassTreeNode(
@@ -305,6 +309,7 @@ public class SemanticAnalyzer {
                                 "Parent class not added yet for " + classNode.getName() + ".");
                         i++;
                     } else if (!classMap.get(classNode.getParent()).isExtendable()) {
+                        
                         errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0,
                                 "Parent class: " + classNode.getParent() + " is not extendable.");
                         classNodes.remove(i);
@@ -341,10 +346,6 @@ public class SemanticAnalyzer {
                 }
             }
             classesChanged = initialNumOfClasses != classNodes.size();
-        }
-        for (String className : classMap.keySet()) {
-        }
-        for (ClassTreeNode node : orderedClassList) {
         }
         // The remaining nodes do not have a parent class
         for (ASTNode node : classNodes) {

@@ -165,10 +165,6 @@ abstract public class SemantVisitor extends Visitor {
         return classTreeNode.getVarSymbolTable().peek(name);
     }
 
-    protected Object methodExistsInClass(String name) {
-        return classTreeNode.getMethodSymbolTable().lookup(name);
-    }
-
     protected void enterScope() {
         classTreeNode.getVarSymbolTable().enterScope();
         classTreeNode.getMethodSymbolTable().enterScope();

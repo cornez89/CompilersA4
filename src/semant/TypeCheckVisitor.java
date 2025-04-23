@@ -404,6 +404,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         //
         //
         //
+        System.out.println("Class " + refExpr.getExprType() + " symbol table size = " + classTreeNode.lookupClass(refExpr.getExprType()).getMethodSymbolTable().getCurrScopeSize());
         Method method = (Method) lookupMethodInClass(refExpr.getExprType(), node.getMethodName());
 
         // check if method exists
