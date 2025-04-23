@@ -210,6 +210,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         if (existsInCurrentVarScope(name)) {
             registerSemanticError(node, nodeType + " '" + name + "' is multiply defined");
         }
+
         return type;
     }
 
@@ -273,7 +274,6 @@ public class TypeCheckVisitor extends SemantVisitor {
                 expr instanceof UnaryDecrExpr)) {
             registerSemanticError(node, "not a statement");
         }
-
         return null;
     }
 
@@ -645,7 +645,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             child.getVarSymbolTable().setParent(classTreeNode.getVarSymbolTable());
             child.getMethodSymbolTable().setParent(classTreeNode.getMethodSymbolTable());
             super.classTreeNode = child;
-
+            visit(child);
         }
         return null;
     }
@@ -984,6 +984,10 @@ public class TypeCheckVisitor extends SemantVisitor {
                 }
             }
         }
+        if (type == null) {
+            registerSemanticError(node, "var in getTypeOfVarExp is null");
+            type = OBJECT;
+        }
 
         return type;
     }
@@ -1010,6 +1014,7 @@ public class TypeCheckVisitor extends SemantVisitor {
 
     public Object visit(ConstIntExpr node) {
         node.setExprType(INT);
+        System.out.println("int const expr " + node.getExprType());
         return null;
     }
 

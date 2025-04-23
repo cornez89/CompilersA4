@@ -275,7 +275,6 @@ public class SemanticAnalyzer {
         boolean classesChanged = true;
 
         // Cycle through the list multiple times because parent classes may not be in
-        // order
         while (!classNodes.isEmpty() && classesChanged) {
             for (int i = 0; i < classNodes.size();) {
 
@@ -291,8 +290,8 @@ public class SemanticAnalyzer {
                 if (classMap.keySet().contains((classNode.getName()))) {
                     // Error duplicate class name
                     errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0,
-                            "Error in BuildClassTree: Duplicate name: " + classNode.getName()
-                                    + " found in class hiearchy.");
+                        "Error in BuildClassTree: Duplicate name: " + classNode.getName() + 
+                        " found in class hiearchy.");
 
                     // disregard
                     classNodes.remove(i);
