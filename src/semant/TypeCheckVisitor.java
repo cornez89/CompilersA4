@@ -194,7 +194,7 @@ public class TypeCheckVisitor extends SemantVisitor {
     }
 
     protected Object checkFormal(String name, String type, ASTNode node, String nodeType) {
-      if (typeExists(type)) {
+      if (!typeExists(type)) {
         registerSemanticError(node, "type '" + type + "' of " + nodeType +" '" + name + "' is undefined");
         type = "Object";
       }
@@ -237,6 +237,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         String type = node.getInit().getExprType();
         if (!conformsTo(type, declaredType)) {
           registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName() + "' does not match declared type '" + declaredType + "'");
+        } else {
+          addVar(name, type);
         }
         
           return null;
@@ -328,8 +330,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getIndex().accept(this);
         String indexType = node.getIndex().getExprType();
         if (!indexType.equals(INT)) {
-           registerSemanticError(node, "invalid index expression of type '" + 
-           indexType + "' expression must be type 'int'");
+          registerSemanticError(node, "invalid index expression of type '" + 
+          indexType + "' expression must be type 'int'");
         } 
 
         //Check that the var is defined

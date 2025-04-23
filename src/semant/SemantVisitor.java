@@ -8,7 +8,7 @@ import visitor.Visitor;
 abstract public class SemantVisitor extends Visitor {
     
     protected ClassTreeNode classTreeNode;
-        protected ErrorHandler errorHandler;
+    protected ErrorHandler errorHandler;
 
     protected static String STRING = "String";
     protected static String INT = "int";
@@ -55,28 +55,30 @@ abstract public class SemantVisitor extends Visitor {
      * Checks if type 1 conforms to type 2 (type 1 is a subclass of type 2)
      * or if they are primitive, checks if they are equal.
      * Gives error messages if either are false
-     * @param type1 
-     * @param type2
+     * @param trimmedType1 
+     * @param trimmedType2
      * @return true if no errors are found
      * @throws RuntimeException
      */
     public boolean conformsTo(String type1, String type2) throws RuntimeException{
+        String trimmedType1 = removeArray(type1);
+        String trimmedType2 = removeArray(type2);
         ClassTreeNode node1; 
         ClassTreeNode node2;
-        if (type1 == null || type2 == null) {
-            System.out.println("Null type inputted in conformsTo() type1: " + type1 + ", type2: " + type2);
+        if (trimmedType1 == null || trimmedType2 == null) {
+            System.out.println("Null type inputted in conformsTo() type1: " + trimmedType1 + ", type2: " + trimmedType2);
             return false;
-        } else if (type1.equals(VOID) && type2.equals(VOID)) {
+        } else if (trimmedType1.equals(VOID) && trimmedType2.equals(VOID)) {
             return true;
-        } else if (!typeExists(type1) || !typeExists(type2)) {
+        } else if (!typeExists(trimmedType1) || !typeExists(trimmedType2)) {
             return false;
-        } else if (isPrimitiveOrArray(type1) ^ isPrimitiveOrArray(type2)) {
+        } else if (isPrimitiveOrArray(trimmedType1) ^ isPrimitiveOrArray(trimmedType2)) {
             return false;
-        } else if (isPrimitiveOrArray(type1) && isPrimitiveOrArray(type2) && !type1.equals(type2)) {
+        } else if (isPrimitiveOrArray(trimmedType1) && isPrimitiveOrArray(trimmedType2) && !trimmedType1.equals(trimmedType2)) {
             return false;
-        } else if (!isPrimitiveOrArray(type1) && !isPrimitiveOrArray(type2)) {
-            node1 = classTreeNode.lookupClass(type1);
-            node2 = classTreeNode.lookupClass(type2);
+        } else if (!isPrimitiveOrArray(trimmedType1) && !isPrimitiveOrArray(trimmedType2)) {
+            node1 = classTreeNode.lookupClass(trimmedType1);
+            node2 = classTreeNode.lookupClass(trimmedType2);
             
             System.out.println(node1.getName());
             System.out.println(node2.getName());
@@ -94,9 +96,14 @@ abstract public class SemantVisitor extends Visitor {
     }   
 
     protected boolean typeExists(String type) {
-        type = removeArray(type);
-        System.out.println(type+ ".");
-        return classTreeNode.lookupClass(type) != null || isPrimitive(type);
+        String trimmedType = removeArray(type);
+        System.out.println(trimmedType + ".");
+        if (classTreeNode.lookupClass(trimmedType) != null || isPrimitive(trimmedType)) {
+            return true;
+        } else {
+            System.out.println("Invalid type of " + trimmedType);
+            return false; 
+        }
     }
 
     protected String removeArray(String type) {
