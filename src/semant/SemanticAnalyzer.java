@@ -129,7 +129,8 @@ public class SemanticAnalyzer {
                         .addElement(new Method(-1, "Object", "clone",
                                 new FormalList(-1),
                                 (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null)))));
+                                        .addElement(new ReturnStmt(-1,
+                                                null)))));
         // create a class tree node for object, save in variable root
         root = new ClassTreeNode(astNode,
                 /* built-in? */true, /* extendable? */true, classMap);
@@ -168,7 +169,8 @@ public class SemanticAnalyzer {
                                         .addElement(new Formal(-1, "String",
                                                 "str")),
                                 (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null)))));
+                                        .addElement(new ReturnStmt(-1,
+                                                null)))));
         // create class tree node for String, add it to the mapping
         classMap.put("String", new ClassTreeNode(astNode, /* built-in? */true,
                 /* extendable? */false, classMap));
@@ -220,7 +222,8 @@ public class SemanticAnalyzer {
                                         .addElement(new Formal(-1, "int",
                                                 "n")),
                                 (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null)))));
+                                        .addElement(new ReturnStmt(-1,
+                                                null)))));
         // create class tree node for TextIO, add it to the mapping
         classMap.put("TextIO", new ClassTreeNode(astNode, /* built-in? */true,
                 /* extendable? */false, classMap));
@@ -294,8 +297,9 @@ public class SemanticAnalyzer {
                 if (classMap.keySet().contains((classNode.getName()))) {
                     // Error duplicate class name
                     errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0,
-                        "Error in BuildClassTree: Duplicate name: " + classNode.getName() + 
-                        " found in class hiearchy.");
+                            "Error in BuildClassTree: Duplicate name: "
+                                    + classNode.getName() +
+                                    " found in class hiearchy.");
 
                     // disregard
                     classNodes.remove(i);
@@ -305,13 +309,16 @@ public class SemanticAnalyzer {
                     if (!classMap.keySet().contains(classNode.getParent())) {
                         // No parent class found
                         // do not put into map just yet
-                        errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0,
-                                "Parent class not added yet for " + classNode.getName() + ".");
+                        errorHandler.register(errorHandler.SEMANT_ERROR,
+                                classNode.getFilename(), 0,
+                                "Parent class not added yet for " + classNode.getName()
+                                        + ".");
                         i++;
                     } else if (!classMap.get(classNode.getParent()).isExtendable()) {
-                        
-                        errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0,
-                                "Parent class: " + classNode.getParent() + " is not extendable.");
+                        errorHandler.register(errorHandler.SEMANT_ERROR,
+                                classNode.getFilename(), 0,
+                                "Parent class: " + classNode.getParent()
+                                        + " is not extendable.");
                         classNodes.remove(i);
                     } else {
                         // update parent link
@@ -333,10 +340,12 @@ public class SemanticAnalyzer {
                         boolean isCycle = nodesTraversed > numOfNodes;
 
                         if (isCycle) {
-                            errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0,
+                            errorHandler.register(errorHandler.SEMANT_ERROR,
+                                    classNode.getFilename(), 0,
                                     "Error in BuildClassTree: Cycle found in class hiearchy after adding class: "
                                             + classNode.getName() +
-                                            " with parent: " + classNode.getParent() + ".");
+                                            " with parent: "
+                                            + classNode.getParent() + ".");
                         }
 
                         // add to ordered list
@@ -398,7 +407,8 @@ public class SemanticAnalyzer {
                     errorHandler.register(errorHandler.SEMANT_ERROR,
                             mainClass.getASTNode().getFilename(), 0,
                             "Error: Main method is not defined correctly." +
-                                    "Main should have a return type of void and no" +
+                                    "Main should have a return type of void and no"
+                                    +
                                     " params. Ex. void main().");
                 }
             } else {
