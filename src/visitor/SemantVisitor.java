@@ -23,6 +23,9 @@ abstract public class SemantVisitor extends Visitor {
     protected static String BOOL = "boolean";
     protected static String VOID = "void";
     protected static String OBJECT = "Object";
+    protected static String SUPER = "super";
+    protected static String THIS = "this";
+    protected static String NULL = "null";
     static private String[] reservedWordsArray = {
         "this", "super", "null", "class", "extends", "for", 
         "while", "if", "else", "return", "break", "new"
@@ -185,6 +188,11 @@ abstract public class SemantVisitor extends Visitor {
     protected Object superLookupVar(String name) {
         System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(), classTreeNode.getVarSymbolTable().getCurrScopeLevel(), classTreeNode.getVarSymbolTable().getCurrScopeSize());
        return classTreeNode.getParent().getVarSymbolTable().lookup(name);
+    }
+
+    protected Object lookupMethodInClass(String className, String name) {
+        ClassTreeNode classTreeNode = this.classTreeNode.lookupClass(className);
+        return classTreeNode.getMethodSymbolTable().lookup(name);
     }
     
     protected Object lookupMethod(String name) {

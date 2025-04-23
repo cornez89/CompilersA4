@@ -150,7 +150,7 @@ public class TypeCheckVisitor extends SemantVisitor {
           Stmt stmt = (Stmt) bodyStmts.next();
           if (stmt instanceof ReturnStmt) {
             returnStmt = (ReturnStmt) stmt;
-            returnType = returnStmt.getExpr().getExprType();
+            returnType = (String) returnStmt.accept(this);
             break;
           }
         }
@@ -282,14 +282,16 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
       public Object visit(AssignExpr node) { 
-        String exprType;
+        
+        node.getExpr().accept(this);
+
         String name = node.getName();
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
 
+        
         //check that expr type conforms to the type of the variable
-        node.getExpr().accept(this);
-        exprType = node.getExpr().getExprType();
+        String exprType = node.getExpr().getExprType();
         if (!conformsTo(exprType, declaredType)) {
             registerSemanticError(node, "the lefthand type '" + declaredType + 
             "' and righthand type '" + exprType + "' are not compatible in assignment");
@@ -312,10 +314,10 @@ public class TypeCheckVisitor extends SemantVisitor {
         if (ref == null) {
           declaredType = (String) lookupVar(name);
           //lookup from current scope
-        } else if (ref.equals("this")) {
+        } else if (ref.equals(THIS)) {
           declaredType = (String) thisLookupVar(name);
           //lookup from first scope of curr class
-        } else if (ref.equals("super")) {
+        } else if (ref.equals(SUPER)) {
           declaredType = (String) superLookupVar(name);
           //lookup from first scope in super class
         } else {
@@ -324,6 +326,7 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         return declaredType;
     }
+
 
     /** Visit an array assignment expression node
       * @param node the array assignment expression node
@@ -391,8 +394,12 @@ public class TypeCheckVisitor extends SemantVisitor {
         //
         //
         //
-        Method method = (Method) lookupMethod(refExpr.getExprType() + 
-          "." + node.getMethodName()); 
+        Method method = (Method) lookupMethodInClass(refExpr.getExprType(), node.getMethodName()); 
+
+        //check if method exists
+        if (method == null) {
+          registerSemanticError(node, "dispatch to unknown method '" + node.getMethodName() + "'");
+        }
 
 
         //type check formals
@@ -421,6 +428,7 @@ public class TypeCheckVisitor extends SemantVisitor {
           }
         }
 
+        node.setExprType(method.getReturnType());
         return null; 
     }
 
@@ -438,6 +446,156 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
 
+      /** Visit a unary increment expression node
+      * @param node the unary increment expression node
+      * @return result of the visit 
+      * */
+
+    protected Object typeCheckUnary(UnaryExpr unaryExpr, String type) {
+      
+      if (!type.equals(unaryExpr.getOperandType())) {
+        registerSemanticError(unaryExpr, "the expression type '" + type + "' in the unary operation ('" + unaryExpr.getOpName() +"') is incorrect; should have been: " + unaryExpr.getOperandType());
+      }
+      unaryExpr.setExprType(unaryExpr.getOpType());
+      return null;
+    }
+    public Object visit(UnaryIncrExpr node) { 
+      node.getExpr().accept(this);
+      String type = node.getExpr().getExprType();
+      typeCheckUnary(node, type);
+  
+      return null; 
+  }
+
+  /** Visit a unary decrement expression node
+    * @param node the unary decrement expression node
+    * @return result of the visit 
+    * */
+  public Object visit(UnaryDecrExpr node) { 
+    node.getExpr().accept(this);
+    String type = node.getExpr().getExprType();
+    typeCheckUnary(node, type);
+
+    return null; 
+  }
+
+  
+  /** Visit a unary negation expression node
+    * @param node the unary negation expression node
+    * @return result of the visit 
+    * */
+    public Object visit(UnaryNegExpr node) { 
+      node.getExpr().accept(this);
+      String type = node.getExpr().getExprType();
+      typeCheckUnary(node, type);
+
+      return null; 
+    }
+
+    /** Visit a unary NOT expression node
+      * @param node the unary NOT expression node
+      * @return result of the visit 
+      * */
+    public Object visit(UnaryNotExpr node) { 
+      node.getExpr().accept(this);
+      String type = node.getExpr().getExprType();
+      typeCheckUnary(node, type);
+  
+      return null; 
+    }
+  /** Visit an if statement node
+      * @param node the if statement node
+      * @return result of the visit 
+      * */
+      public Object visit(IfStmt node) { 
+        node.getPredExpr().accept(this);
+        String predType = node.getPredExpr().getExprType();
+        if (!predType.equals(BOOL)) {
+          registerSemanticError(node, "predicate in if-statement does not have type boolean");
+        }
+        enterScope();
+        node.getThenStmt().accept(this);
+  
+        exitScope();
+  
+        enterScope();
+        node.getElseStmt().accept(this);
+  
+        exitScope();
+        return null; 
+    }
+
+    /** Visit a while statement node
+      * @param node the while statement node
+      * @return result of the visit 
+      * */
+      public Object visit(WhileStmt node) { 
+        Expr predExpr = node.getPredExpr();
+        predExpr.accept(this);
+        if (!predExpr.getExprType().equals(BOOL)) {
+            throw new RuntimeException(errorMessagePrefix(node) 
+                + "Predicate must be of type boolean, given type: " 
+                + predExpr.getExprType() + ".");
+        }
+        
+  System.out.printf("While Block\n");
+      enterScope();
+            node.getBodyStmt().accept(this);
+      
+  System.out.printf("While Block\n");
+      exitScope();
+        return null; 
+    }
+
+    /** Visit a for statement node
+      * @param node the for statement node
+      * @return result of the visit 
+      * */
+    public Object visit(ForStmt node) { 
+      
+        if (node.getInitExpr() != null)
+            node.getInitExpr().accept(this);
+        if (node.getPredExpr() != null) {
+          node.getPredExpr().accept(this);
+          if (!node.getPredExpr().getExprType().equals(BOOL)) {
+            registerSemanticError(node, "predicate in while-statement does not have type boolean");
+          }
+        }
+        if (node.getUpdateExpr() != null) {
+          node.getUpdateExpr().accept(this);
+        }
+          
+        enterScope();
+        node.getBodyStmt().accept(this);
+
+        exitScope();
+        return null; 
+    }
+
+    /** Visit a block statement node
+      * @param node the block statement node
+      * @return result of the visit 
+      * */
+      public Object visit(BlockStmt node) { 
+      
+        enterScope();
+        node.getStmtList().accept(this);
+        exitScope();
+        return null; 
+      }
+      
+      /** Visit a return statement node
+      * @param node the return statement node
+      * @return result of the visit 
+      * */
+    public Object visit(ReturnStmt node) { 
+      if (node.getExpr() != null) {
+        node.getExpr().accept(this);
+        return node.getExpr().getExprType();
+      }
+        
+      return VOID; 
+  }
       public Object visit(ClassTreeNode classTreeNode) {
         System.out.printf("Curr Class: %s, num of children: %d", classTreeNode.getName(), classTreeNode.getNumChildren());
         Iterator<ClassTreeNode> children = classTreeNode.getChildrenList();
@@ -469,13 +627,11 @@ public class TypeCheckVisitor extends SemantVisitor {
 
     
 
-    
-
     /** Visit a binary comparison expression node (should never be called)
       * @param node the binary comparison expression node
       * @return result of the visit 
       * */
-      public Object binaryCompExpr(BinaryCompExpr node) { 
+      public Object binaryExpr(BinaryExpr node) { 
         //check that both operands conform to each other
         
         node.getLeftExpr().accept(this);
@@ -483,17 +639,19 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         Expr leftOperand = (Expr) node.getLeftExpr();
         Expr rightOperand = (Expr) node.getRightExpr();
-        
-        
+        if (!leftOperand.equals(node.getOperandType())) {
+          registerSemanticError(node, "the lefthand type '" + leftOperand.getExprType() + "' in the binary operation ('" + node.getOpName() +"') is incorrect; should have been: " + node.getOperandType() );
+        }
+        if (!rightOperand.equals(node.getOperandType())) {
+          registerSemanticError(node, "the righthand type '" + rightOperand.getExprType() + "' in the binary operation ('" + node.getOpName() +"') is incorrect; should have been: " + node.getOperandType() );
+        }
+
         if(!conformsTo(leftOperand.getExprType(), rightOperand.getExprType()) && 
             !conformsTo(rightOperand.getExprType(), leftOperand.getExprType())) {
-            throw new RuntimeException(errorMessagePrefix(node) + "Left operand or right" +
-                "expression must conform to the other. Left operand type: " + 
-                leftOperand.getExprType() + " and right operand type: " 
-                + rightOperand.getExprType()  + ".");
+            registerSemanticError(node, "the lefthand type '" + leftOperand.getExprType() + "' in the binary operation ('" + node.getOpName() + "') does not match the righthand type '" + rightOperand.getExprType() + "'");
         }  
     
-        node.setExprType(BOOL);
+        node.setExprType(node.getOpType());
         return null;
     }
 
@@ -502,7 +660,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryCompEqExpr node) { 
-        binaryCompExpr(node);
+        binaryExpr(node);
         return null; 
     }
 
@@ -511,7 +669,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryCompNeExpr node) { 
-         binaryCompExpr(node);
+         binaryExpr(node);
         return null; 
     }
 
@@ -520,7 +678,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryCompLtExpr node) { 
-        binaryCompExpr(node);
+        binaryExpr(node);
             return null; 
     }
 
@@ -529,7 +687,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryCompLeqExpr node) { 
-        binaryCompExpr(node);
+        binaryExpr(node);
             return null; 
     }
 
@@ -538,7 +696,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryCompGtExpr node) { 
-        binaryCompExpr(node);
+        binaryExpr(node);
             return null; 
     }
 
@@ -547,32 +705,8 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryCompGeqExpr node) { 
-        binaryCompExpr(node);
+        binaryExpr(node);
             return null; 
-    }
-
-    /** Visit a binary arithmetic expression node (should never be called)
-      * @param node the binary arithmetic expression node
-      * @return result of the visit 
-      * */
-    public Object binaryArithExpr(BinaryArithExpr node) { 
-        //check that both operands are int\
-        Expr leftOperand = (Expr) node.getLeftExpr();
-        Expr rightOperand = (Expr) node.getRightExpr();
-        node.getLeftExpr().accept(this);
-        
-        if(leftOperand.getExprType() != INT) {
-            throw new RuntimeException(errorMessagePrefix(node) + "Left Operand must be of type int, given type: " + leftOperand.getExprType() + ".");
-        } 
-    
-        node.getRightExpr().accept(this);
-    
-        if(rightOperand.getExprType() != INT) {
-            throw new RuntimeException(errorMessagePrefix(node) + "Left Operand must be of type int, given type: " + leftOperand.getExprType() + ".");
-        } 
-        
-        node.setExprType(BOOL);
-        return null;
     }
 
     /** Visit a binary arithmetic plus expression node
@@ -580,7 +714,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryArithPlusExpr node) { 
-        binaryArithExpr(node);
+        binaryExpr(node);
             return null;
     }
 
@@ -589,7 +723,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryArithMinusExpr node) { 
-        binaryArithExpr(node);
+        binaryExpr(node);
             return null; 
     }
 
@@ -598,7 +732,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryArithTimesExpr node) { 
-            binaryArithExpr(node);
+            binaryExpr(node);
         return null; 
     }
 
@@ -607,7 +741,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryArithDivideExpr node) { 
-        binaryArithExpr(node);
+        binaryExpr(node);
             return null; 
     }
 
@@ -616,32 +750,8 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryArithModulusExpr node) { 
-            binaryArithExpr(node);
+            binaryExpr(node);
         return null; 
-    }
-
-    /** Visit a binary logical expression node (should never be called)
-      * @param node the binary logical expression node
-      * @return result of the visit 
-      * */
-    public Object binaryLogicExpr(BinaryLogicExpr node) { 
-        //check that both operands are int\
-        Expr leftOperand = (Expr) node.getLeftExpr();
-        Expr rightOperand = (Expr) node.getRightExpr();
-        node.getLeftExpr().accept(this);
-        
-        if(leftOperand.getExprType() != BOOL) {
-            throw new RuntimeException(errorMessagePrefix(node) + "Left Operand must be of type bool, given type: " + leftOperand.getExprType() + ".");
-        } 
-    
-        node.getRightExpr().accept(this);
-    
-        if(rightOperand.getExprType() != BOOL) {
-            throw new RuntimeException(errorMessagePrefix(node) + "Left Operand must be of type bool, given type: " + leftOperand.getExprType() + ".");
-        } 
-        
-        node.setExprType(BOOL);
-        return null;
     }
 
     /** Visit a binary logical AND expression node
@@ -649,7 +759,7 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryLogicAndExpr node) { 
-        binaryLogicExpr(node);
+        binaryExpr(node);
             return null; 
     }
 
@@ -658,119 +768,195 @@ public class TypeCheckVisitor extends SemantVisitor {
       * @return result of the visit 
       * */
     public Object visit(BinaryLogicOrExpr node) {
-        binaryLogicExpr(node);
+        binaryExpr(node);
         return null;
     }
 
-    
-
-    /** Visit a unary negation expression node
-      * @param node the unary negation expression node
+    /** Visit a new array expression node
+      * @param node the new array expression node
       * @return result of the visit 
       * */
-      public Object visit(UnaryNegExpr node) { 
-        System.out.println("got here 6");
-            node.getExpr().accept(this);
-            Expr expr = node.getExpr();
-        if (!expr.getExprType().equals(INT)) {
-            throw new RuntimeException(errorMessagePrefix(node) + 
-                "Expression must be of type int, given type: " + 
-                expr.getExprType() + ".");
+      public Object visit(NewArrayExpr node) {
+        //type check size expr
+        node.getSize().accept(this);
+        String sizeType = node.getSize().getExprType();
+        String type = node.getType();
+        if(!sizeType.equals(INT)) {
+          registerSemanticError(node, "size expression of type '" + sizeType + "' is not type '" + INT + "'");
         }
-        
-        node.setExprType(INT);
-
+  
+        if (!typeExists(type)) {
+          registerSemanticError(node, "type '" + type + "' of array is undefined");
+        }
+  
+        node.setExprType(node.getType() + "[]");
         return null; 
-    }
-
-    /** Visit a unary NOT expression node
-      * @param node the unary NOT expression node
-      * @return result of the visit 
-      * */
-    public Object visit(UnaryNotExpr node) { 
+      }
+  
+      /** Visit an instanceof expression node
+        * @param node the instanceof expression node
+        * @return result of the visit 
+        * */
+      public Object visit(InstanceofExpr node) { 
+        //type check expr
         node.getExpr().accept(this);
-        Expr expr = node.getExpr();
-        if (!expr.getExprType().equals(BOOL)) {
-            throw new RuntimeException(errorMessagePrefix(node) + 
-                "Expression must be of type boolean, given type: " + 
-                expr.getExprType() + ".");
+        
+        String type = node.getType();
+        String exprType = node.getExpr().getExprType();
+        //check if expr type is known
+        if (typeExists(type)) {
+          registerSemanticError(node, "the instanceof righthand type '" + type + "' is undefined");
+        }
+  
+        if (isPrimitive(exprType)) {
+          registerSemanticError(node, "the instanceof lefthand expression has type '" + type + "', which is primitive and not an object type");
+        }
+  
+        if (exprType.equals(VOID)) {
+          registerSemanticError(node, "the instanceof righthand type cannot be type '" + VOID + "'");
         }
         
-        expr.setExprType(BOOL);
-        return null; 
-    }
-
-    /** Visit a unary increment expression node
-      * @param node the unary increment expression node
-      * @return result of the visit 
-      * */
-    public Object visit(UnaryIncrExpr node) { 
+        node.setExprType(BOOL);
+        return BOOL; 
+      }
+  
+      /** Visit a cast expression node
+        * @param node the cast expression node
+        * @return result of the visit 
+        * */
+      public Object visit(CastExpr node) { 
+        String castType; 
+  
+        //check if cast type exists
+        castType = node.getType();
+        if (!typeExists(castType)) {
+          registerSemanticError(node, "type '" + castType + "' of cast is undefined");
+          castType = "Object";
+        }
+  
+        if (isPrimitive(castType)) {
+          registerSemanticError(node, "expression in cast has type '" + castType + "', which is primitive and can't be casted");
+          castType = "Object";
+        }
+  
+        //type check expression
         node.getExpr().accept(this);
-        Expr expr = node.getExpr();
-        if (!expr.getExprType().equals(INT)) {
-            throw new RuntimeException(errorMessagePrefix(node) + 
-                "Expression must be of type int, given type: " + 
-                expr.getExprType() + ".");
+        String currType = node.getExpr().getExprType();
+  
+        //upcast
+        if (conformsTo(currType, castType)) {
+          node.setUpCast(true);
+          //downcast
+        } else if (conformsTo(castType, currType)){
+  
+          node.setUpCast(false);
+          //check if downcast is valid
+          node.setExprType(currType);
+  
+        } else {
+          registerSemanticError(node, "invalid cast of type '" + currType + "' into type '" + castType + "'");
+          castType = "Object";
         }
-        
-        expr.setExprType(INT);
-        return null; 
+  
+          return castType; 
+      }
+  
+
+    public String getTypeOfVarExp(Expr refExpr, String name, ASTNode node) {
+      String type;
+      
+      if (refExpr != null) {
+
+        //check if refExpr is 'this' or 'super'
+        if (refExpr instanceof VarExpr) {
+          String refName = ((VarExpr)refExpr).getName();
+          if (refName.equals(THIS)) {
+            type = (String) thisLookupVar(name);
+          } else if (refName.equals(SUPER)) {
+            type = (String) superLookupVar(name);
+          } else {
+            String refType = refExpr.getExprType();
+            if (!typeExists(refType)) {
+              registerSemanticError(node, "type '" + refType + "' is undefined for variable expression");
+              type = (String) lookupMethodInClass(refType, name);
+            } else {
+              type = OBJECT;
+            }
+          }
+        } else {
+          String refType = refExpr.getExprType();
+            if (!typeExists(refType)) {
+              registerSemanticError(node, "type '" + refType + "' is undefined for variable expression");
+              type = (String) lookupMethodInClass(refType, name);
+            } else {
+              type = OBJECT;
+            }
+        }
+      } else {//ref is null
+        if (name.equals(THIS)) {
+          type = classTreeNode.getName();
+        } else if (name.equals(SUPER)) {
+          type = classTreeNode.getParent().getName();
+        } else if (name.equals(NULL)) {
+          type = null;
+        } else {
+          type = (String)lookupVar(name);
+          if (type == null) {
+            registerSemanticError(node, "type '" + type + "' is undefined for variable expression");
+            type = OBJECT;
+          }
+        }
+      }
+
+      return type;
     }
 
-    /** Visit a unary decrement expression node
-      * @param node the unary decrement expression node
-      * @return result of the visit 
-      * */
-    public Object visit(UnaryDecrExpr node) { 
-        node.getExpr().accept(this);
-            Expr expr = node.getExpr();
-        if (!expr.getExprType().equals(INT)) {
-            throw new RuntimeException(errorMessagePrefix(node) + 
-                "Expression must be of type int, given type: " + 
-                expr.getExprType() + ".");
-        }
-        
-        expr.setExprType(INT);
-        return null; 
-    }
-
-    
     /** Visit a variable expression node
       * @param node the variable expression node
       * @return result of the visit 
       * */
       public Object visit(VarExpr node) { 
-        Expr refExpr = node.getRef();
+        
         String name = node.getName();
-        if (node.getRef() != null) {
-            node.getRef().accept(this);
-            
-            //check that variable was declared
-            String type = (String) classTreeNode.getVarSymbolTable().lookup(name);
-            if(type == null) {
-                registerSemanticError(node, "Variable with name: " + name + 
-                    " has not been declared.");
-            } 
+        
+        Expr refExpr = node.getRef();
+        
+        //type check reference expression
+        if (refExpr != null)
+          refExpr.accept(this);
+        
 
-            
-            if (refExpr instanceof VarExpr) {
-
-            } else if (refExpr instanceof ArrayExpr) {
-                //if the ref is an array, the only name allowed is length
-                if (!name.equals("length")) {
-                    registerSemanticError(node, errorMessagePrefix(node) + 
-                    "Only valid field for array is length, given field name: " + 
-                    name + ".");
-                }
-            }
-        }
-            
+        node.setExprType(getTypeOfVarExp(refExpr, name, node));
         return null; 
     }
 
     public Object visit(ConstIntExpr node) { 
       node.setExprType(INT);
       return null; 
+    }
+
+    
+    /** Visit an array expression node
+      * @param node the array expression node
+      * @return result of the visit 
+      * */
+      public Object visit(ArrayExpr node) { 
+        Expr refExpr = node.getRef();
+        String name = node.getName();
+        String indexType;
+        if (refExpr != null)
+            refExpr.accept(this);
+        
+        node.setExprType(getTypeOfVarExp(refExpr, name, node));
+        
+        node.getIndex().accept(this);
+        indexType = node.getIndex().getExprType();
+        if (!indexType.equals(INT)) {
+          registerSemanticError(node, "invalid index expression of type '" + 
+           indexType + "' expression must be type 'int'");
+        }
+
+        return null; 
     }
   
     /** Visit a boolean constant expression node
@@ -791,6 +977,8 @@ public class TypeCheckVisitor extends SemantVisitor {
       return null; 
     }
 
+    
+
      /**
       * 
       *
@@ -801,87 +989,10 @@ public class TypeCheckVisitor extends SemantVisitor {
       *
       *
       */
-  
 
     
 
     
-
-    
-
-    /** Visit a statement node (should never be calle)
-      * @param node the statement node
-      * @return result of the visit 
-      * */
-    public Object visit(Stmt node) { 
-        throw new RuntimeException("This visitor method should not be called (node is abstract)");
-    }
-
-    
-
-    /** Visit an if statement node
-      * @param node the if statement node
-      * @return result of the visit 
-      * */
-    public Object visit(IfStmt node) { 
-        node.getPredExpr().accept(this);
-  System.out.printf("Then Block\n");
-  enterScope();
-        node.getThenStmt().accept(this);
-  System.out.printf("Then Block\n");
-  exitScope();
-  
-  System.out.printf("Else Block\n");
-        enterScope();
-  node.getElseStmt().accept(this);
-  
-  System.out.printf("Else Block\n");
-  exitScope();
-        return null; 
-    }
-
-    /** Visit a while statement node
-      * @param node the while statement node
-      * @return result of the visit 
-      * */
-    public Object visit(WhileStmt node) { 
-        Expr predExpr = node.getPredExpr();
-        predExpr.accept(this);
-        if (!predExpr.getExprType().equals(BOOL)) {
-            throw new RuntimeException(errorMessagePrefix(node) 
-                + "Predicate must be of type boolean, given type: " 
-                + predExpr.getExprType() + ".");
-        }
-        
-  System.out.printf("While Block\n");
-      enterScope();
-            node.getBodyStmt().accept(this);
-      
-  System.out.printf("While Block\n");
-      exitScope();
-        return null; 
-    }
-
-    /** Visit a for statement node
-      * @param node the for statement node
-      * @return result of the visit 
-      * */
-    public Object visit(ForStmt node) { 
-        if (node.getInitExpr() != null)
-            node.getInitExpr().accept(this);
-        if (node.getPredExpr() != null)
-            node.getPredExpr().accept(this);
-        if (node.getUpdateExpr() != null)
-            node.getUpdateExpr().accept(this);
-      
-  System.out.printf("For Block\n");
-      enterScope();
-        node.getBodyStmt().accept(this);
-  
-  System.out.printf("For Block\n");
-      exitScope();
-        return null; 
-    }
 
     /** Visit a break statement node
       * @param node the break statement node
@@ -890,111 +1001,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     public Object visit(BreakStmt node) { 
         return null;
     }
-
-    /** Visit a block statement node
-      * @param node the block statement node
-      * @return result of the visit 
-      * */
-    public Object visit(BlockStmt node) { 
-      
-  System.out.printf("Block \n");
-      enterScope();
-        node.getStmtList().accept(this);
-  
-  System.out.printf("Block\n");
-  exitScope();
-        return null; 
-    }
-
-    /** Visit a return statement node
-      * @param node the return statement node
-      * @return result of the visit 
-      * */
-    public Object visit(ReturnStmt node) { 
-        if (node.getExpr() != null)
-            node.getExpr().accept(this);
-        return null; 
-    }
-
-
-
-    /** Visit an expression node (should never be called)
-      * @param node the expression node
-      * @return result of the visit 
-      * */
-    public Object visit(Expr node) { 
-        throw new RuntimeException("This visitor method should not be called (node is abstract)");
-    }
-
-  
-
     
 
-    /** Visit a new array expression node
-      * @param node the new array expression node
-      * @return result of the visit 
-      * */
-    public Object visit(NewArrayExpr node) {
-      System.out.printf("got to NewArrayExay");
-            node.getSize().accept(this);
-      node.setExprType(node.getType() + "[]");
-        return null; 
-    }
-
-    /** Visit an instanceof expression node
-      * @param node the instanceof expression node
-      * @return result of the visit 
-      * */
-    public Object visit(InstanceofExpr node) { 
-        node.getExpr().accept(this);
-        return null; 
-    }
-
-    /** Visit a cast expression node
-      * @param node the cast expression node
-      * @return result of the visit 
-      * */
-    public Object visit(CastExpr node) { 
-        node.getExpr().accept(this);
-        return null; 
-    }
-
-    /** Visit a binary expression node (should never be called)
-      * @param node the binary expression node
-      * @return result of the visit 
-      * */
-    public Object visit(BinaryExpr node) { 
-        throw new RuntimeException("This visitor method should not be called (node is abstract)");
-    }
-
     
-    /** Visit a unary expression node
-      * @param node the unary expression node
-      * @return result of the visit 
-      * */
-    public Object visit(UnaryExpr node) { 
-            throw new RuntimeException("This visitor method should not be called (node is abstract)");
-    }
-
-
-    /** Visit an array expression node
-      * @param node the array expression node
-      * @return result of the visit 
-      * */
-    public Object visit(ArrayExpr node) { 
-        if (node.getRef() != null)
-            node.getRef().accept(this);
-        node.getIndex().accept(this);
-        return null; 
-    }
-
-    /** Visit a constant expression node (should never be called)
-      * @param node the constant expression node
-      * @return result of the visit 
-      * */
-    public Object visit(ConstExpr node) { 
-            throw new RuntimeException("This visitor method should not be called (node is abstract)");
-    }
-
 
 }
