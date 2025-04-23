@@ -35,33 +35,39 @@ public class PrintVisitor extends Visitor {
     /** Indentation size */
     private int indentSize;
 
-    /** PrintVisitor constructor
-      * @param indent starting indentation
-      * @param indentSize indentation size
-      * */
+    /**
+     * PrintVisitor constructor
+     * 
+     * @param indent     starting indentation
+     * @param indentSize indentation size
+     */
     public PrintVisitor(int indent, int indentSize) {
         this.indent = indent;
         this.indentSize = indentSize;
     }
 
-    /** Print indentation
-      * */
+    /**
+     * Print indentation
+     */
     private void indent() {
-        for (int i = 0; i < indent; i++) System.out.print(" ");
+        for (int i = 0; i < indent; i++)
+            System.out.print(" ");
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(Class_ node) {
         indent();
         System.out.println("// Source file: " + node.getFilename());
         indent();
         System.out.println("// Source line: " + node.getLineNum());
         indent();
-        System.out.println("class " + node.getName() + " extends " + 
-                           node.getParent() + " {");        
+        System.out.println("class " + node.getName() + " extends " +
+                node.getParent() + " {");
         indent += indentSize;
         node.getMemberList().accept(this);
         indent -= indentSize;
@@ -70,10 +76,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(Field node) {
         indent();
         System.out.println("// Source line: " + node.getLineNum());
@@ -87,11 +95,13 @@ public class PrintVisitor extends Visitor {
         }
         return null;
     }
-    
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(Method node) {
         indent();
         System.out.println("// Source line: " + node.getLineNum());
@@ -107,41 +117,49 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(FormalList node) {
         Iterator iter = node.getIterator();
         for (int i = 0; iter.hasNext(); i++) {
-            ((Formal)iter.next()).accept(this);
+            ((Formal) iter.next()).accept(this);
             if (i < node.getSize() - 1)
                 System.out.print(", ");
         }
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(Formal node) {
         System.out.print("/*line:" + node.getLineNum() + "*/" + node.getType() + " " + node.getName());
         return null;
     }
-    
-    /** Print the line number of the statement
-      * @param node statement node
-      * */
+
+    /**
+     * Print the line number of the statement
+     * 
+     * @param node statement node
+     */
     private void printStmtMeta(Stmt node) {
         indent();
         System.out.println("// Source line: " + node.getLineNum());
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(DeclStmt node) {
         printStmtMeta(node);
         indent();
@@ -152,10 +170,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ExprStmt node) {
         printStmtMeta(node);
         indent();
@@ -164,10 +184,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(IfStmt node) {
         printStmtMeta(node);
         indent();
@@ -184,11 +206,13 @@ public class PrintVisitor extends Visitor {
         indent -= indentSize;
         return null;
     }
-    
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(WhileStmt node) {
         printStmtMeta(node);
         indent();
@@ -200,11 +224,13 @@ public class PrintVisitor extends Visitor {
         indent -= indentSize;
         return null;
     }
-    
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ForStmt node) {
         printStmtMeta(node);
         indent();
@@ -223,11 +249,13 @@ public class PrintVisitor extends Visitor {
         indent -= indentSize;
         return null;
     }
-    
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BreakStmt node) {
         printStmtMeta(node);
         indent();
@@ -235,10 +263,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BlockStmt node) {
         printStmtMeta(node);
         indent();
@@ -251,10 +281,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ReturnStmt node) {
         indent();
         System.out.println("// Source line: " + node.getLineNum());
@@ -269,48 +301,56 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ExprList node) {
         Iterator iter = node.getIterator();
         for (int i = 0; iter.hasNext(); i++) {
-            ((ASTNode)iter.next()).accept(this);
+            ((ASTNode) iter.next()).accept(this);
             if (i < node.getSize() - 1)
                 System.out.print(", ");
         }
         return null;
     }
 
-    /** Print the line number and type of the expression
-      * @param node expression node
-      * */
+    /**
+     * Print the line number and type of the expression
+     * 
+     * @param node expression node
+     */
     private void printExprMeta(Expr node) {
         if (node.getExprType() == null)
             System.out.print("/*L" + node.getLineNum() + "*/");
         else
             System.out.print("/*L" + node.getLineNum() + ",type:" + node.getExprType() + "*/");
     }
-    
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(DispatchExpr node) {
         System.out.print("(");
         printExprMeta(node);
-        node.getRefExpr().accept(this);  // never null
+        node.getRefExpr().accept(this); // never null
         System.out.print("." + node.getMethodName() + "(");
         node.getActualList().accept(this);
         System.out.print("))");
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(NewExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -318,10 +358,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(NewArrayExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -331,10 +373,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(InstanceofExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -343,10 +387,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(CastExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -356,10 +402,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(AssignExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -371,10 +419,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ArrayAssignExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -388,9 +438,11 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print a binary expression node
-      * @param node binary expression node
-      * */
+    /**
+     * Print a binary expression node
+     * 
+     * @param node binary expression node
+     */
     public void printBinaryExpr(BinaryExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -400,126 +452,154 @@ public class PrintVisitor extends Visitor {
         System.out.print(")");
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryCompEqExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryCompNeExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryCompLtExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryCompLeqExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryCompGtExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryCompGeqExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryArithPlusExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryArithMinusExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryArithTimesExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryArithDivideExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryArithModulusExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryLogicAndExpr node) {
         printBinaryExpr(node);
         return null;
     }
 
-   /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(BinaryLogicOrExpr node) {
         printBinaryExpr(node);
         return null;
     }
-        
-    /** Print a unary expression node
-      * @param node unary expression node
-      * */
+
+    /**
+     * Print a unary expression node
+     * 
+     * @param node unary expression node
+     */
     public void printUnaryExpr(UnaryExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -533,55 +613,65 @@ public class PrintVisitor extends Visitor {
         System.out.print(")");
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(UnaryNegExpr node) {
         printUnaryExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(UnaryNotExpr node) {
         printUnaryExpr(node);
         return null;
     }
-    
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(UnaryIncrExpr node) {
         printUnaryExpr(node);
         return null;
     }
-    
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(UnaryDecrExpr node) {
         printUnaryExpr(node);
         return null;
     }
-    
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(VarExpr node) {
         /*
-        System.out.print("(");
-        printExprMeta(node);
-        if (node.getRef() != null)
-            node.getRef().accept(this);
-        System.out.print("." + node.getName() + ")");
-        return null;
-        */
+         * System.out.print("(");
+         * printExprMeta(node);
+         * if (node.getRef() != null)
+         * node.getRef().accept(this);
+         * System.out.print("." + node.getName() + ")");
+         * return null;
+         */
         System.out.print("(");
         printExprMeta(node);
         if (node.getRef() != null) {
@@ -592,10 +682,12 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ArrayExpr node) {
         System.out.print("(");
         printExprMeta(node);
@@ -609,9 +701,11 @@ public class PrintVisitor extends Visitor {
         return null;
     }
 
-    /** Print constant expression node
-      * @param node constant expression node
-      * */
+    /**
+     * Print constant expression node
+     * 
+     * @param node constant expression node
+     */
     public void printConstExpr(ConstExpr node) {
         String constant = node.getConstant();
         System.out.print("(");
@@ -631,34 +725,39 @@ public class PrintVisitor extends Visitor {
                     System.out.print(constant.charAt(i));
             }
             System.out.print("\"");
-        }
-        else
+        } else
             System.out.print(constant);
         System.out.print(")");
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ConstIntExpr node) {
         printConstExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ConstBooleanExpr node) {
         printConstExpr(node);
         return null;
     }
 
-    /** Print AST node
-      * @param node AST node
-      * @return null (returns value to satisfy compiler)
-      * */
+    /**
+     * Print AST node
+     * 
+     * @param node AST node
+     * @return null (returns value to satisfy compiler)
+     */
     public Object visit(ConstStringExpr node) {
         printConstExpr(node);
         return null;

@@ -1,0 +1,17 @@
+# Built .class files
+*.class
+
+# Generated parser files
+src/parser/*.java
+
+# API files
+api/html/*
+
+# Built aast files
+tests/*.aast
+
+# Diff files
+tests/*.diff
+
+# Generated bantamc.bat
+bin/bantamc.bat
