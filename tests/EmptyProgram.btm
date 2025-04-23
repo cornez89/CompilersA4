@@ -1,6 +1,5 @@
 class Main {
     void main() {
-        TextIO io = new TextIO();
         return;
     }
 }

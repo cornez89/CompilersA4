@@ -95,8 +95,6 @@ abstract public class SemantVisitor extends Visitor {
             node1 = classTreeNode.lookupClass(type1);
             node2 = classTreeNode.lookupClass(type2);
 
-            System.out.println(node1.isBuiltIn() + ", " + node1.getParent());
-
             if (type2.equals("Object"))
                 return true;
 
