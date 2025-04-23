@@ -1014,7 +1014,6 @@ public class TypeCheckVisitor extends SemantVisitor {
 
     public Object visit(ConstIntExpr node) {
         node.setExprType(INT);
-        System.out.println("int const expr " + node.getExprType());
         return null;
     }
 
