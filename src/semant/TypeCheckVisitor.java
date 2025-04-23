@@ -198,10 +198,10 @@ public class TypeCheckVisitor extends SemantVisitor {
     }
 
     protected Object checkFormal(String name, String type, ASTNode node, String nodeType) {
-      if (!typeExists(type)) {
-        registerSemanticError(node, "type '" + type + "' of " + nodeType +" '" + name + "' is undefined");
-        type = "Object";
-      }
+        if (!typeExists(type)) {
+            registerSemanticError(node, "type '" + type + "' of " + nodeType + " '" + name + "' is undefined");
+            type = "Object";
+        }
 
         if (isReserved(name)) {
             registerSemanticError(node, nodeType + "s cannot be named '" + name + "'");
@@ -235,7 +235,6 @@ public class TypeCheckVisitor extends SemantVisitor {
      * @return result of the visit
      */
     public Object visit(DeclStmt node) {
-
         // same as formal
         String declaredType = node.getType();
         String name = node.getName();
@@ -245,9 +244,10 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getInit().accept(this);
         String type = node.getInit().getExprType();
         if (!conformsTo(type, declaredType)) {
-          registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName() + "' does not match declared type '" + declaredType + "'");
+            registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName()
+                    + "' does not match declared type '" + declaredType + "'");
         } else {
-          addVar(name, type);
+            addVar(name, type);
         }
 
         return null;
@@ -341,9 +341,9 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getIndex().accept(this);
         String indexType = node.getIndex().getExprType();
         if (!indexType.equals(INT)) {
-          registerSemanticError(node, "invalid index expression of type '" + 
-          indexType + "' expression must be type 'int'");
-        } 
+            registerSemanticError(node, "invalid index expression of type '" +
+                    indexType + "' expression must be type 'int'");
+        }
 
         // Check that the var is defined
         String name = node.getName();
@@ -372,7 +372,6 @@ public class TypeCheckVisitor extends SemantVisitor {
      * @return result of the visit
      */
     public Object visit(NewExpr node) {
-
         // Check that type exists
         String type = node.getType();
         if (!typeExists(type)) {
@@ -381,7 +380,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         } else if (isPrimitive(type)) {
             registerSemanticError(node,
                     "type '" + type + "' of new construction is primitive and cannot be constructed");
-            node.setExprType(OBJECT);
+            node.setExprType(VOID);
         } else {
             node.setExprType(type);
         }
@@ -395,26 +394,26 @@ public class TypeCheckVisitor extends SemantVisitor {
      * @return result of the visit
      */
     public Object visit(DispatchExpr node) {
-
         // type check reference expression
         node.getRefExpr().accept(this);
         Expr refExpr = node.getRefExpr();
+        System.out.println(refExpr.getExprType() + ", " + refExpr.getLineNum() + ", " + node.getMethodName());
 
         // not sure if this is right
-        //
-        //
-        //
-        System.out.println("Class " + refExpr.getExprType() + " symbol table size = " + classTreeNode.lookupClass(refExpr.getExprType()).getMethodSymbolTable().getCurrScopeSize());
         Method method = (Method) lookupMethodInClass(refExpr.getExprType(), node.getMethodName());
 
         // check if method exists
         if (method == null) {
             registerSemanticError(node, "dispatch to unknown method '" + node.getMethodName() + "'");
+            return null;
         }
 
         // type check formals
         node.getActualList().accept(this);
         Iterator<ASTNode> arguments = node.getActualList().getIterator();
+        if (method.getFormalList() == null) {
+            System.out.print("ding ding ding on the nose");
+        }
         Iterator<ASTNode> formals = method.getFormalList().getIterator();
         int numOfFormals = method.getFormalList().getSize();
         int numOfArgs = node.getActualList().getSize();
@@ -635,10 +634,10 @@ public class TypeCheckVisitor extends SemantVisitor {
     }
 
     public Object visit(ClassTreeNode classTreeNode) {
-      
+
         Iterator<ClassTreeNode> children = classTreeNode.getChildrenList();
         if (!classTreeNode.isBuiltIn())
-          classTreeNode.getASTNode().accept(this);
+            classTreeNode.getASTNode().accept(this);
 
         while (children.hasNext()) {
 
