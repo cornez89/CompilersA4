@@ -344,6 +344,7 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         //Check that the var is defined
         String name = node.getName();
+
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
 
@@ -600,18 +601,17 @@ public class TypeCheckVisitor extends SemantVisitor {
         System.out.printf("Curr Class: %s, num of children: %d", classTreeNode.getName(), classTreeNode.getNumChildren());
         Iterator<ClassTreeNode> children = classTreeNode.getChildrenList();
         System.out.printf("ClassTreeNode\n");
-        enterScope(); 
         classTreeNode.getASTNode().accept(this);
         
         while (children.hasNext()) {
-          enterScope();
+
           ClassTreeNode child = children.next();
           child.getVarSymbolTable().setParent(classTreeNode.getVarSymbolTable());
           child.getMethodSymbolTable().setParent(classTreeNode.getMethodSymbolTable());
           (new TypeCheckVisitor(child, errorHandler)).visit(child);
-          exitScope();
+
         }
-        exitScope();
+
         return null;
       }
 

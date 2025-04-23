@@ -72,8 +72,10 @@ abstract public class SemantVisitor extends Visitor {
     public boolean conformsTo(String type1, String type2) throws RuntimeException{
         ClassTreeNode node1; 
         ClassTreeNode node2;
-
-        if (type1.equals(VOID) && type2.equals(VOID)) {
+        if (type1 == null || type2 == null) {
+            System.out.println("Null type inputted in conformsTo() type1: " + type1 + ", type2: " + type2);
+            return false;
+        } else if (type1.equals(VOID) && type2.equals(VOID)) {
             return true;
         } else if (!typeExists(type1) || !typeExists(type2)) {
             return false;
@@ -101,8 +103,11 @@ abstract public class SemantVisitor extends Visitor {
     }   
 
     protected boolean typeExists(String type) {
+        System.out.println(type);
         return classTreeNode.lookupClass(type) != null || isPrimitive(type) || 
-            (type.substring(type.length()-2).equals("[]") && (classTreeNode.lookupClass(type.substring(0, type.length()-2)) != null || isPrimitive(type.substring(0, type.length()-2))));
+            (type.substring(type.length()-2).equals("[]") && 
+            (classTreeNode.lookupClass(type.substring(0, type.length()-2)) != null || 
+                isPrimitive(type.substring(0, type.length()-2))));
     }
 
     protected boolean isReserved(String name) {
@@ -117,53 +122,7 @@ abstract public class SemantVisitor extends Visitor {
         return typeExists(type) || isPrimitive(type) || type.equals("void");
     }
 
-    protected boolean isValidMethodOverride(Method method) {
-        Method originalMethod = (Method) classTreeNode.getMethodSymbolTable().lookup(method.getName());
-        boolean isValid = true;
-        
-        if (!method.getReturnType().equals(originalMethod.getReturnType())) {
-            errorHandler.register(errorHandler.SEMANT_ERROR, 
-                classTreeNode.getASTNode().getFilename(),
-                0, "Error in BuildClassTree: Invalid Override. Return type: " + method.getReturnType() + 
-                    " does not match original return type: " + originalMethod.getReturnType());
-            isValid = false;
-        } 
-
-        if (methodArgsMatch(method, originalMethod)) {
-            //already registered errors
-            isValid = false;
-        } 
-
-        return isValid;
-    }
-
-    protected boolean methodArgsMatch(Method method1, Method method2 ) {
-        boolean isValid = true;
-        if (method1.getFormalList().getSize() != method2.getFormalList().getSize()) {
-            errorHandler.register(errorHandler.SEMANT_ERROR, 
-                classTreeNode.getASTNode().getFilename(),
-                0, "number of actual parameters (" + method1.getFormalList().getSize() + ") differs from number of formal parameters (" + method2.getFormalList().getSize() + ") in dispatch to method '" + method1.getName() + "'");
-            isValid = false;
-        } else {
-            Iterator<ASTNode> formals1 = method1.getFormalList().getIterator();
-            Iterator<ASTNode> formals2 = method2.getFormalList().getIterator();
-            int i = 0;
-            while (formals1.hasNext()) {
-                String type1 = ((Formal) formals1.next()).getType();
-                String type2 = ((Formal) formals2.next()).getType();
-                if (!type1.equals(type2)) {
-                    errorHandler.register(errorHandler.SEMANT_ERROR, 
-                    classTreeNode.getASTNode().getFilename(),
-                    0, "actual parameter " + i + " with type '" + 
-                    type1  + "'' does not match formal parameter " + i + " with declared type '" +  
-                    type2 + "' in dispatch to method'" + method1.getName() + "'");
-                        isValid = false;
-                }
-                i++;
-            }
-        }
-        return isValid;
-    }
+    
 
     protected void addVar(String name, String type) {
         classTreeNode.getVarSymbolTable().add(name, type);

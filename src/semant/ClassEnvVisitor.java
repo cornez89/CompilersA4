@@ -1,6 +1,7 @@
 package semant;
 
 import java.lang.reflect.Member;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
@@ -24,7 +25,80 @@ import util.ClassTreeNode;
 import util.ErrorHandler;
 
 public class ClassEnvVisitor extends SemantVisitor {
+        
+        
+                // get all parent fields and put them in current class symbol table
+                // ClassTreeNode parent = classTreeNode.getParent();
+                // while(parent != null)
+                // {
+                //         Class_ parentAST = parent.getASTNode();
 
+                //         // get an iterator of the parents member list
+                //         Iterator<ASTNode> iterator = parentAST.
+                //         getMemberList().getIterator();
+
+                //         // check each member and see if it's a field, if it
+                //         // is, add it to the current classTreeNode symbol table
+                //         while(iterator.hasNext())
+                //         {
+                //                 ASTNode currentMember = iterator.next();
+
+                //                 if(currentMember instanceof Field)
+                //                 {
+                //                         Field field = (Field) currentMember;
+                //                         classTreeNode.getVarSymbolTable().add
+                //                         (field.getName(), field.getType());
+                //                 }
+                //         }
+                // }
+        protected boolean methodArgsMatch(Method method1, Method method2 ) {
+                boolean isValid = true;
+                if (method1.getFormalList().getSize() != method2.getFormalList().getSize()) {
+                    errorHandler.register(errorHandler.SEMANT_ERROR, 
+                        classTreeNode.getASTNode().getFilename(),
+                        0, "number of actual parameters (" + method1.getFormalList().getSize() + ") differs from number of formal parameters (" + method2.getFormalList().getSize() + ") in dispatch to method '" + method1.getName() + "'");
+                    isValid = false;
+                } else {
+                    Iterator<ASTNode> formals1 = method1.getFormalList().getIterator();
+                    Iterator<ASTNode> formals2 = method2.getFormalList().getIterator();
+                    int i = 0;
+                    while (formals1.hasNext()) {
+                        String type1 = ((Formal) formals1.next()).getType();
+                        String type2 = ((Formal) formals2.next()).getType();
+                        if (!type1.equals(type2)) {
+                            errorHandler.register(errorHandler.SEMANT_ERROR, 
+                            classTreeNode.getASTNode().getFilename(),
+                            0, "actual parameter " + i + " with type '" + 
+                            type1  + "'' does not match formal parameter " + i + " with declared type '" +  
+                            type2 + "' in dispatch to method'" + method1.getName() + "'");
+                                isValid = false;
+                        }
+                        i++;
+                    }
+                }
+                return isValid;
+            }
+
+        protected boolean isValidMethodOverride(Method method) {
+        Method originalMethod = (Method) classTreeNode.getMethodSymbolTable().lookup(method.getName());
+        boolean isValid = true;
+        
+
+        if (!method.getReturnType().equals(originalMethod.getReturnType())) {
+            errorHandler.register(errorHandler.SEMANT_ERROR, 
+                classTreeNode.getASTNode().getFilename(),
+                0, "Error in BuildClassTree: Invalid Override. Return type: " + method.getReturnType() + 
+                    " does not match original return type: " + originalMethod.getReturnType());
+            isValid = false;
+        } 
+
+        if (methodArgsMatch(method, originalMethod)) {
+            //already registered errors
+            isValid = false;
+        } 
+
+        return isValid;
+    }
         public ClassEnvVisitor(ClassTreeNode classTreeNode, ErrorHandler errorHandler) {
                 super.classTreeNode = classTreeNode;
                 super.errorHandler = errorHandler;
@@ -43,39 +117,13 @@ public class ClassEnvVisitor extends SemantVisitor {
         }
 
         public Object visit(ClassTreeNode classTreeNode) {
+                super.classTreeNode = classTreeNode;
                 Iterator<ClassTreeNode> children = classTreeNode.getChildrenList();
                 enterScope();
-
-                // get all parent fields and put them in current class symbol table
-                ClassTreeNode parent = classTreeNode.getParent();
-                while(parent != null)
-                {
-                        Class_ parentAST = parent.getASTNode();
-
-                        // get an iterator of the parents member list
-                        Iterator<ASTNode> iterator = parentAST.
-                        getMemberList().getIterator();
-
-                        // check each member and see if it's a field, if it
-                        // is, add it to the current classTreeNode symbol table
-                        while(iterator.hasNext())
-                        {
-                                ASTNode currentMember = iterator.next();
-
-                                if(currentMember instanceof Field)
-                                {
-                                        Field field = (Field) currentMember;
-                                        classTreeNode.getVarSymbolTable().add
-                                        (field.getName(), field.getType());
-                                }
-                        }
-                }
-
                 classTreeNode.getASTNode().accept(this);
-
+                
                 while (children.hasNext()) {
                         ClassTreeNode child = children.next();
-
                         // check after each child
                         if (classTreeNode.getVarSymbolTable().getSize() > 1500) {
                                 errorHandler.register(errorHandler.SEMANT_ERROR,
@@ -85,20 +133,17 @@ public class ClassEnvVisitor extends SemantVisitor {
                         }
 
                         visit(child);
+                        super.classTreeNode = child.getParent();
 
                 }
-                exitScope();
-
                 return null;
         }
 
         public Object visit(Class_ node) {
-                enterScope();
                 Iterator<ASTNode> classIterator = node.getMemberList().getIterator();
                 while (classIterator.hasNext()) {
                         classIterator.next().accept(this);
                 }
-                exitScope();
                 return null;
         }
 
@@ -120,93 +165,16 @@ public class ClassEnvVisitor extends SemantVisitor {
                 if (classTreeNode.getMethodSymbolTable().peek(node.getName()) != null) {
 
                         // name already exists
-                        errorHandler.register(errorHandler.SEMANT_ERROR,
-                        classTreeNode.getASTNode().getFilename(), node.getLineNum(),
-                        "Error in BuildSymbolTable: Method: " + node.getName() +
-                        "() already exists in the current scope.");
+                        registerSemanticError(node, "method '" + node.getName() + 
+                        "' is already defined in class '" + classTreeNode.getName() + "'");
                 } else if (classTreeNode.getMethodSymbolTable().lookup(node.getName()) != null) {
+
                         // method will report errors for us
                         isValidMethodOverride(node);
-
                         classTreeNode.getMethodSymbolTable().add(node.getName(), node);
                 } else {
                         classTreeNode.getMethodSymbolTable().add(node.getName(), node);
                 }
-
-                // check the formals in the method
-                enterScope();
-
-                Iterator<ASTNode> iterator = node.getFormalList().getIterator();
-
-                while (iterator.hasNext()) {
-                        ASTNode current = iterator.next();
-                        // type cast the ast node to a formal
-                        Formal formal = (Formal) current;
-
-                        if (classTreeNode.getVarSymbolTable().peek(formal.getName()) != null) {
-                                errorHandler.register(errorHandler.SEMANT_ERROR,
-                                classTreeNode.getASTNode().getFilename(),
-                                formal.getLineNum(), "Error in Method " +
-                                node.getName() + ", " + formal.getName() +
-                                " already exists in the current scope.");
-                        } else {
-                                classTreeNode.getVarSymbolTable().add(formal.getName(), formal.getType());
-                        }
-                }
-
-                node.getStmtList().accept(this);
-
-                exitScope();
-
-                return null;
-        }
-
-        public Object visit(DeclStmt node) {
-                if (classTreeNode.getVarSymbolTable().getScopeLevel(node.getName())
-                 < classTreeNode.getVarSymbolTable().getCurrScopeLevel()) {
-                        classTreeNode.getVarSymbolTable().add(node.getName(), node.getType());
-                } else {
-                        errorHandler.register(errorHandler.SEMANT_ERROR,
-                        classTreeNode.getASTNode().getFilename(), node.getLineNum(),
-                        "Error in ClassEnvVisitor: Var: " + node.getName() +
-                        " already exists in the current scope.");
-                }
-                return null;
-        }
-
-        public Object visit(IfStmt node) {
-                enterScope();
-                node.getThenStmt().accept(this);
-                exitScope();
-                enterScope();
-                node.getElseStmt().accept(this);
-                exitScope();
-                return null;
-        }
-
-        public Object visit(WhileStmt node) {
-                enterScope();
-                node.getBodyStmt().accept(this);
-                exitScope();
-
-                return null;
-        }
-
-        public Object visit(ForStmt node) {
-                enterScope();
-                node.getBodyStmt().accept(this);
-                exitScope();
-
-                return null;
-        }
-
-        public Object visit(BlockStmt node) {
-                Iterator<ASTNode> stmts = node.getStmtList().getIterator();
-                enterScope();
-                while (stmts.hasNext()) {
-                        stmts.next().accept(this);
-                }
-                exitScope();
 
                 return null;
         }
