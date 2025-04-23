@@ -397,7 +397,6 @@ public class TypeCheckVisitor extends SemantVisitor {
         // type check reference expression
         node.getRefExpr().accept(this);
         Expr refExpr = node.getRefExpr();
-        System.out.println(refExpr.getExprType() + ", " + refExpr.getLineNum() + ", " + node.getMethodName());
 
         // not sure if this is right
         Method method = (Method) lookupMethodInClass(refExpr.getExprType(), node.getMethodName());
@@ -412,7 +411,6 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getActualList().accept(this);
         Iterator<ASTNode> arguments = node.getActualList().getIterator();
         if (method.getFormalList() == null) {
-            System.out.print("ding ding ding on the nose");
         }
         Iterator<ASTNode> formals = method.getFormalList().getIterator();
         int numOfFormals = method.getFormalList().getSize();
