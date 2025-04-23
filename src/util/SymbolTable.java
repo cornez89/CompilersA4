@@ -66,7 +66,6 @@ public class SymbolTable {
      * Enter a new scope
      */
     public void enterScope() {
-        System.out.printf("Entered Scope, scopes = %d\n", scopes.size());
         hash = new Hashtable<String, Object>();
         scopes.add(hash);
     }
@@ -75,8 +74,6 @@ public class SymbolTable {
      * Exit a scope
      */
     public void exitScope() {
-
-        System.out.printf("Exited Scope, scopes = %d\n", scopes.size());
         if (scopes.size() == 0)
             throw new RuntimeException("No scope to exit");
         scopes.removeElementAt(scopes.size() - 1);
@@ -94,10 +91,6 @@ public class SymbolTable {
      * @param value value of symbol (i.e., type)
      */
     public void add(String s, Object value) {
-        System.out.printf("Scope level %d, contains:\n", scopes.size());
-        for (String key : hash.keySet()) {
-            System.out.printf("key: %s, value %s\n", key, hash.get(key));
-        }
         if (scopes.size() == 0)
             throw new RuntimeException("Must enter a scope before adding to table");
         hash.put(s, value);
@@ -120,10 +113,9 @@ public class SymbolTable {
                 return value;
         }
 
-        if (parent != null) { //
-            System.out.printf("Got here parent scope size = %d\n", parent.getCurrScopeLevel());
+        if (parent != null) {
             return parent.lookup(s);
-        } //
+        }
         return null;
     }
 
