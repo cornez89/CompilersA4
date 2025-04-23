@@ -71,8 +71,6 @@ abstract public class SemantVisitor extends Visitor {
         ClassTreeNode node1;
         ClassTreeNode node2;
         if (trimmedType1 == null || trimmedType2 == null) {
-            System.out
-                    .println("Null type inputted in conformsTo() type1: " + trimmedType1 + ", type2: " + trimmedType2);
             return false;
         } else if (trimmedType1.equals(VOID) && trimmedType2.equals(VOID)) {
             return true;
@@ -86,9 +84,6 @@ abstract public class SemantVisitor extends Visitor {
         } else if (!isPrimitiveOrArray(trimmedType1) && !isPrimitiveOrArray(trimmedType2)) {
             node1 = classTreeNode.lookupClass(trimmedType1);
             node2 = classTreeNode.lookupClass(trimmedType2);
-
-            System.out.println(node1.getName());
-            System.out.println(node2.getName());
 
             while (node1.getParent() != null) {
                 if (node1.getName().equals(node2.getName())) {
@@ -104,11 +99,9 @@ abstract public class SemantVisitor extends Visitor {
 
     protected boolean typeExists(String type) {
         String trimmedType = removeArray(type);
-        System.out.println(trimmedType + ".");
         if (classTreeNode.lookupClass(trimmedType) != null || isPrimitive(trimmedType)) {
             return true;
         } else {
-            System.out.println("Invalid type of " + trimmedType);
             return false;
         }
     }
@@ -148,23 +141,14 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     protected Object lookupVar(String name) {
-        System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(),
-                classTreeNode.getVarSymbolTable().getCurrScopeLevel(),
-                classTreeNode.getVarSymbolTable().getCurrScopeSize());
         return classTreeNode.getVarSymbolTable().lookup(name);
     }
 
     protected Object thisLookupVar(String name) {
-        System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(),
-                classTreeNode.getVarSymbolTable().getCurrScopeLevel(),
-                classTreeNode.getVarSymbolTable().getCurrScopeSize());
         return lookupVar("this." + name);
     }
 
     protected Object superLookupVar(String name) {
-        System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(),
-                classTreeNode.getVarSymbolTable().getCurrScopeLevel(),
-                classTreeNode.getVarSymbolTable().getCurrScopeSize());
         return classTreeNode.getParent().getVarSymbolTable().lookup(name);
     }
 
@@ -174,34 +158,23 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     protected Object lookupMethod(String name) {
-        System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(),
-                classTreeNode.getVarSymbolTable().getCurrScopeLevel(),
-                classTreeNode.getVarSymbolTable().getCurrScopeSize());
         return classTreeNode.getMethodSymbolTable().lookup(name);
     }
 
     protected Object peekVar(String name) {
-        System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(),
-                classTreeNode.getVarSymbolTable().getCurrScopeLevel(),
-                classTreeNode.getVarSymbolTable().getCurrScopeSize());
         return classTreeNode.getVarSymbolTable().peek(name);
     }
 
     protected Object methodExistsInClass(String name) {
-        System.out.printf("Class: %s, currScope: %d, size: %d\n", classTreeNode.getName(),
-                classTreeNode.getVarSymbolTable().getCurrScopeLevel(),
-                classTreeNode.getVarSymbolTable().getCurrScopeSize());
         return classTreeNode.getMethodSymbolTable().lookup(name);
     }
 
     protected void enterScope() {
-        System.out.printf("Class: %s\n", classTreeNode.getName());
         classTreeNode.getVarSymbolTable().enterScope();
         classTreeNode.getMethodSymbolTable().enterScope();
     }
 
     protected void exitScope() {
-        System.out.printf("Class: %s\n", classTreeNode.getName());
         classTreeNode.getVarSymbolTable().exitScope();
         classTreeNode.getMethodSymbolTable().exitScope();
     }

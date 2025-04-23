@@ -98,24 +98,20 @@ public class SemanticAnalyzer {
 
         // PART 1: class tree
         // build and check class hierarchy tree
-        System.out.println("In buildClassTree()");
         buildClassTree(classList);
 
         // PART 2: class symbol table
         // build class symbol table for members and check that members are
         // declared properly
-        System.out.println("In buildSymbolTable()");
         buildSymbolTable();
 
         // PART 3: Main class/main method
         // check that there is a Main class and main method
 
-        System.out.println("In checkMain()");
         checkMain();
 
         // PART 4: type checking
         // type check each member (fields and methods) of each user-defined class
-        System.out.println("In typeCheck()");
         typeCheck();
 
         errorHandler.checkErrors();
@@ -348,10 +344,8 @@ public class SemanticAnalyzer {
             classesChanged = initialNumOfClasses != classNodes.size();
         }
         for (String className : classMap.keySet()) {
-            System.out.println("class: " + className + " value: " + classMap.get(className));
         }
         for (ClassTreeNode node : orderedClassList) {
-            System.out.println(node.getName());
         }
         // The remaining nodes do not have a parent class
         for (ASTNode node : classNodes) {
@@ -373,15 +367,6 @@ public class SemanticAnalyzer {
      */
     private void buildSymbolTable() {
 
-        // for(String className : classMap.keySet()) {
-        // System.out.println("class: " + className + " value: " +
-        // classMap.get(className));
-        // }
-        // for (ClassTreeNode node : orderedClassList) {
-        // System.out.println(node.getName());
-        // }
-        // for(int i = 0; i < orderedClassList.size(); i++) {
-        // ClassTreeNode classTreeNode = orderedClassList.elementAt(i);
         ClassEnvVisitor classEnvVisitor = new ClassEnvVisitor(root, errorHandler);
         classEnvVisitor.visit(root);
 
