@@ -112,9 +112,7 @@ public class ClassEnvVisitor extends SemantVisitor {
         super.classTreeNode = classTreeNode;
         Iterator<ClassTreeNode> children = classTreeNode.getChildrenList();
         enterScope();
-        System.out.println(classTreeNode.getName());
         classTreeNode.getASTNode().accept(this);
-        System.out.println("Method size: " + classTreeNode.getMethodSymbolTable().getSize() + " - Var size: " + classTreeNode.getVarSymbolTable().getSize());
         while (children.hasNext()) {
             ClassTreeNode child = children.next();
             // check after each child
