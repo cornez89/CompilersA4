@@ -60,18 +60,19 @@ abstract public class SemantVisitor extends Visitor {
      * 
      * @param type1
      * @param type2
-     * @param trimmedType1 
+     * @param trimmedType1
      * @param trimmedType2
      * @return true if no errors are found
      * @throws RuntimeException
      */
-    public boolean conformsTo(String type1, String type2) throws RuntimeException{
+    public boolean conformsTo(String type1, String type2) throws RuntimeException {
         String trimmedType1 = removeArray(type1);
         String trimmedType2 = removeArray(type2);
-        ClassTreeNode node1; 
+        ClassTreeNode node1;
         ClassTreeNode node2;
         if (trimmedType1 == null || trimmedType2 == null) {
-            System.out.println("Null type inputted in conformsTo() type1: " + trimmedType1 + ", type2: " + trimmedType2);
+            System.out
+                    .println("Null type inputted in conformsTo() type1: " + trimmedType1 + ", type2: " + trimmedType2);
             return false;
         } else if (trimmedType1.equals(VOID) && trimmedType2.equals(VOID)) {
             return true;
@@ -79,12 +80,13 @@ abstract public class SemantVisitor extends Visitor {
             return false;
         } else if (isPrimitiveOrArray(trimmedType1) ^ isPrimitiveOrArray(trimmedType2)) {
             return false;
-        } else if (isPrimitiveOrArray(trimmedType1) && isPrimitiveOrArray(trimmedType2) && !trimmedType1.equals(trimmedType2)) {
+        } else if (isPrimitiveOrArray(trimmedType1) && isPrimitiveOrArray(trimmedType2)
+                && !trimmedType1.equals(trimmedType2)) {
             return false;
         } else if (!isPrimitiveOrArray(trimmedType1) && !isPrimitiveOrArray(trimmedType2)) {
             node1 = classTreeNode.lookupClass(trimmedType1);
             node2 = classTreeNode.lookupClass(trimmedType2);
-            
+
             System.out.println(node1.getName());
             System.out.println(node2.getName());
 
@@ -107,7 +109,7 @@ abstract public class SemantVisitor extends Visitor {
             return true;
         } else {
             System.out.println("Invalid type of " + trimmedType);
-            return false; 
+            return false;
         }
     }
 
