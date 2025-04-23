@@ -1,22 +1,16 @@
 package semant;
-import java.util.Hashtable;
 import java.util.Iterator;
-
-import javax.management.RuntimeErrorException;
-import javax.print.attribute.HashAttributeSet;
 
 import ast.ASTNode;
 import ast.ArrayAssignExpr;
 import ast.ArrayExpr;
 import ast.AssignExpr;
 import ast.BinaryArithDivideExpr;
-import ast.BinaryArithExpr;
 import ast.BinaryArithMinusExpr;
 import ast.BinaryArithModulusExpr;
 import ast.BinaryArithPlusExpr;
 import ast.BinaryArithTimesExpr;
 import ast.BinaryCompEqExpr;
-import ast.BinaryCompExpr;
 import ast.BinaryCompGeqExpr;
 import ast.BinaryCompGtExpr;
 import ast.BinaryCompLeqExpr;
@@ -24,15 +18,12 @@ import ast.BinaryCompLtExpr;
 import ast.BinaryCompNeExpr;
 import ast.BinaryExpr;
 import ast.BinaryLogicAndExpr;
-import ast.BinaryLogicExpr;
 import ast.BinaryLogicOrExpr;
 import ast.BlockStmt;
 import ast.BreakStmt;
 import ast.CastExpr;
-import ast.ClassList;
 import ast.Class_;
 import ast.ConstBooleanExpr;
-import ast.ConstExpr;
 import ast.ConstIntExpr;
 import ast.ConstStringExpr;
 import ast.DeclStmt;
@@ -60,7 +51,6 @@ import ast.VarExpr;
 import ast.WhileStmt;
 import util.ClassTreeNode;
 import util.ErrorHandler;
-import util.SymbolTable;
 
 public class TypeCheckVisitor extends SemantVisitor {
 
@@ -241,7 +231,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         String declaredType = node.getType();
         String name = node.getName();
         declaredType = (String) checkFormal(name, declaredType, node, "declaration");
-
+        
         //check that init type conforms to declared type
         node.getInit().accept(this);
         String type = node.getInit().getExprType();

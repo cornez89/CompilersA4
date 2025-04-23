@@ -26,11 +26,8 @@
 package semant;
 
 import ast.*;
-import java.lang.reflect.Array;
 import util.*;
-import visitor.*;
 import java.util.*;
-import java.util.function.Consumer;
 
 /** The <tt>SemanticAnalyzer</tt> class performs semantic analysis.
   * In particular this class is able to perform (via the <tt>analyze()</tt>

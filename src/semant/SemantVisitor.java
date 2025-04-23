@@ -1,17 +1,8 @@
 package semant;
 
-import java.lang.foreign.SymbolLookup;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import ast.ASTNode;
-import ast.Formal;
-import ast.FormalList;
-import ast.Method;
 import util.ClassTreeNode;
 import util.ErrorHandler;
-import util.SymbolTable;
 import visitor.Visitor;
 
 abstract public class SemantVisitor extends Visitor {
@@ -103,11 +94,16 @@ abstract public class SemantVisitor extends Visitor {
     }   
 
     protected boolean typeExists(String type) {
-        System.out.println(type);
-        return classTreeNode.lookupClass(type) != null || isPrimitive(type) || 
-            (type.substring(type.length()-2).equals("[]") && 
-            (classTreeNode.lookupClass(type.substring(0, type.length()-2)) != null || 
-                isPrimitive(type.substring(0, type.length()-2))));
+        type = removeArray(type);
+        System.out.println(type+ ".");
+        return classTreeNode.lookupClass(type) != null || isPrimitive(type);
+    }
+
+    protected String removeArray(String type) {
+        if (type.length() > 2 && type.substring(type.length()-2).equals("[]")) {
+            return type.substring(0, type.length()-2);
+        }
+        return type;
     }
 
     protected boolean isReserved(String name) {

@@ -1,26 +1,12 @@
 package semant;
 
-import java.lang.reflect.Member;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
-
 import ast.ASTNode;
-import ast.ArrayAssignExpr;
-import ast.AssignExpr;
-import ast.BlockStmt;
 import ast.Class_;
-import ast.DeclStmt;
-import ast.ExprStmt;
 import ast.Field;
-import ast.ForStmt;
 import ast.Formal;
-import ast.IfStmt;
 import ast.Method;
 import ast.Program;
-import ast.Stmt;
-import ast.WhileStmt;
 import util.ClassTreeNode;
 import util.ErrorHandler;
 
