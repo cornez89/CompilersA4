@@ -1,4 +1,4 @@
-package visitor;
+package semant;
 
 import java.lang.reflect.Member;
 import java.util.Hashtable;
@@ -20,10 +20,8 @@ import ast.Method;
 import ast.Program;
 import ast.Stmt;
 import ast.WhileStmt;
-import semant.SemanticAnalyzer;
 import util.ClassTreeNode;
 import util.ErrorHandler;
-import util.SymbolTable;
 
 public class ClassEnvVisitor extends SemantVisitor {
 

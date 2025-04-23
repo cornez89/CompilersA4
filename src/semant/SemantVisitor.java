@@ -1,4 +1,4 @@
-package visitor;
+package semant;
 
 import java.lang.foreign.SymbolLookup;
 import java.util.HashSet;
@@ -12,6 +12,7 @@ import ast.Method;
 import util.ClassTreeNode;
 import util.ErrorHandler;
 import util.SymbolTable;
+import visitor.Visitor;
 
 abstract public class SemantVisitor extends Visitor {
     

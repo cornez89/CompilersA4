@@ -1,4 +1,4 @@
-package visitor;
+package semant;
 import java.util.Hashtable;
 import java.util.Iterator;
 
