@@ -298,7 +298,7 @@ public class TypeCheckVisitor extends SemantVisitor {
                     "' and righthand type '" + exprType + "' are not compatible in assignment");
         }
 
-        node.setExprType(exprType);
+        node.setExprType(declaredType);
 
         return null;
     }
@@ -361,7 +361,7 @@ public class TypeCheckVisitor extends SemantVisitor {
                     "' and righthand type '" + exprType + "' are not compatible in assignment");
         }
 
-        node.setExprType(exprType);
+        node.setExprType(declaredType);
 
         return null;
     }
@@ -952,14 +952,18 @@ public class TypeCheckVisitor extends SemantVisitor {
                     if (!typeExists(refType)) {
                         registerSemanticError(node, "type '" + refType + "' is undefined for variable expression");
                         type = OBJECT;
-                    } else if (((String) lookupMethodInClass(refType, name)).endsWith("]") && !name.equals("length")) {
-                        registerSemanticError(node, "bad reference to '" + name + "': arrays do not have this field (they only have a 'length' field)");
-                        type = OBJECT;
+                    } else if (((String) lookupVar(refName)).endsWith("]")) {
+                        if (!name.equals("length")) {
+                            registerSemanticError(node, "bad reference to '" + name + "': arrays do not have this field (they only have a 'length' field)");
+                            type = OBJECT;
+                        } else {
+                            type = INT;
+                        }
                     } else {
-                        type = (String) lookupMethodInClass(refType, name);
+                        registerSemanticError(node, "bad reference '" + name + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
+                        type = OBJECT;
                     }
                 }
-
             } else {
                 String refType = refExpr.getExprType();
                 if (!typeExists(refType)) {
