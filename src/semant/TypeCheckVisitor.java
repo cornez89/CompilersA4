@@ -919,16 +919,12 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getExpr().accept(this);
         String currType = node.getExpr().getExprType();
 
-        // upcast
-        if (conformsTo(currType, castType)) {
+        if (conformsTo(currType, castType)) { // upcast
             node.setUpCast(true);
-            // downcast
-        } else if (conformsTo(castType, currType)) {
-
+            node.setExprType(castType);
+        } else if (conformsTo(castType, currType)) { // downcast
             node.setUpCast(false);
-            // check if downcast is valid
-            node.setExprType(currType);
-
+            node.setExprType(castType);
         } else {
             registerSemanticError(node, "invalid cast of type '" + currType + "' into type '" + castType + "'");
             castType = "Object";
@@ -941,7 +937,6 @@ public class TypeCheckVisitor extends SemantVisitor {
         String type;
 
         if (refExpr != null) {
-
             // check if refExpr is 'this' or 'super'
             if (refExpr instanceof VarExpr) {
                 String refName = ((VarExpr) refExpr).getName();
@@ -973,7 +968,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             } else if (name.equals(SUPER)) {
                 type = classTreeNode.getParent().getName();
             } else if (name.equals(NULL)) {
-                type = null;
+                type = OBJECT;
             } else {
                 type = (String) lookupVar(name);
                 if (type == null) {
