@@ -69,7 +69,7 @@ abstract public class SemantVisitor extends Visitor {
      */
     public boolean conformsTo(String type1, String type2) {
         if (type1 == null || type2 == null)
-            return null;
+            return false;
         boolean isArray1 = type1.endsWith("[]");
         boolean isArray2 = type2.endsWith("[]");
         if (isArray1 ^ isArray2) {
