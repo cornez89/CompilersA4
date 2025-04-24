@@ -878,7 +878,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         String type = node.getType();
         String exprType = node.getExpr().getExprType();
         // check if expr type is known
-        if (typeExists(type)) {
+        if (!typeExists(type)) {
             registerSemanticError(node, "the instanceof righthand type '" + type + "' is undefined");
         }
 

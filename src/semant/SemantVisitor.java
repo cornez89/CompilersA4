@@ -110,11 +110,7 @@ abstract public class SemantVisitor extends Visitor {
 
     protected boolean typeExists(String type) {
         String trimmedType = removeArray(type);
-        if (classTreeNode.lookupClass(trimmedType) != null || isPrimitive(trimmedType)) {
-            return true;
-        } else {
-            return false;
-        }
+        return classTreeNode.lookupClass(trimmedType) != null || isPrimitive(trimmedType);
     }
 
     protected String removeArray(String type) {
