@@ -316,9 +316,9 @@ public class TypeCheckVisitor extends SemantVisitor {
         // check that expr type conforms to the type of the variable
         String exprType = node.getExpr().getExprType();
         if (!conformsTo(exprType, declaredType)) {
-            registerSemanticError(node, "the lefthand type '" + declaredType +
-                    "' and righthand type '" + exprType + "' are not compatible"
-                    + " in assignment");
+            registerSemanticError(node, "the righthand type '" + exprType +
+                    "' does not conform to the lefthand type '" + declaredType
+                     + "' in assignment");
         }
 
         node.setExprType(exprType);
@@ -386,9 +386,9 @@ public class TypeCheckVisitor extends SemantVisitor {
         String exprType = node.getExpr().getExprType();
 
         if (!conformsTo(exprType, declaredType.substring(0))) {
-            registerSemanticError(node, "the lefthand type '" + declaredType +
-                "' and righthand type '" + exprType + "' are not compatible"
-                + " in assignment");
+            registerSemanticError(node, "the righthand type '" + exprType +
+                    "' does not conform to the lefthand type '" + declaredType
+                     + "' in assignment");
         }
 
         node.setExprType(exprType);
