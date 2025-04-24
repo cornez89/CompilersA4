@@ -937,7 +937,7 @@ public class TypeCheckVisitor extends SemantVisitor {
     }
 
     public String getTypeOfVarExp(Expr refExpr, String name, ASTNode node) {
-        String type;
+        String type = null;
 
         if (refExpr != null) {
             // check if refExpr is 'this' or 'super'
@@ -951,11 +951,15 @@ public class TypeCheckVisitor extends SemantVisitor {
                     String refType = refExpr.getExprType();
                     if (!typeExists(refType)) {
                         registerSemanticError(node, "type '" + refType + "' is undefined for variable expression");
-                        type = (String) lookupMethodInClass(refType, name);
-                    } else {
                         type = OBJECT;
+                    } else if (((String) lookupMethodInClass(refType, name)).endsWith("]") && !name.equals("length")) {
+                        registerSemanticError(node, "bad reference to '" + name + "': arrays do not have this field (they only have a 'length' field)");
+                        type = OBJECT;
+                    } else {
+                        type = (String) lookupMethodInClass(refType, name);
                     }
                 }
+
             } else {
                 String refType = refExpr.getExprType();
                 if (!typeExists(refType)) {
@@ -1026,7 +1030,10 @@ public class TypeCheckVisitor extends SemantVisitor {
         if (refExpr != null)
             refExpr.accept(this);
 
-        node.setExprType(getTypeOfVarExp(refExpr, name, node));
+        String baseType = getTypeOfVarExp(refExpr, name, node);
+        baseType = baseType.substring(0, baseType.length() -2);
+
+        node.setExprType(baseType);
 
         node.getIndex().accept(this);
         indexType = node.getIndex().getExprType();
@@ -1034,7 +1041,6 @@ public class TypeCheckVisitor extends SemantVisitor {
             registerSemanticError(node, "invalid index expression of type '" +
                     indexType + "' expression must be type 'int'");
         }
-
         return null;
     }
 
