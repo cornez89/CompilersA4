@@ -306,13 +306,20 @@ public class SemanticAnalyzer {
                     classNodes.remove(i);
                 } else {
 
+                    // ensure classes have default parent object if nothing else
+                    String parentName = classNode.getParent();
+                    if(parentName == null || parentName.isEmpty())
+                    {
+                        parentName = "Object";
+                    }
+
                     // check if parent exists
-                    if (!classMap.keySet().contains(classNode.getParent())) {
+                    if (!classMap.keySet().contains(parentName)) {
                         // No parent class found
                         // no Need to register an error here,
                         // just report classes with no parent after the loop
                         i++;
-                    } else if (!classMap.get(classNode.getParent()).isExtendable()) {
+                    } else if (!classMap.get(parentName).isExtendable()) {
                         errorHandler.register(errorHandler.SEMANT_ERROR,
                                 classNode.getFilename(), 0,
                                 "Parent class: " + classNode.getParent()
@@ -320,7 +327,7 @@ public class SemanticAnalyzer {
                         classNodes.remove(i);
                     } else {
                         // update parent link
-                        ClassTreeNode parent = classMap.get(classNode.getParent());
+                        ClassTreeNode parent = classMap.get(parentName);
                         classTreeNode.setParent(parent); // updates the parent as well
 
                         // add to classMap

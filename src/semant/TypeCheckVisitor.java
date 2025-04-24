@@ -97,7 +97,7 @@ public class TypeCheckVisitor extends SemantVisitor {
                         "type '" + node.getType() + "' of field '" + node.getName() + "' is undefined");
             }
 
-            if (initExpr.getExprType().equals(VOID)) {
+            if (VOID.equals(initExpr.getExprType())) {
                 registerSemanticError(node, "cannot return an expression of type '" + VOID + "' from a method");
             }
 
@@ -427,7 +427,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         while (arguments.hasNext() && formals.hasNext()) {
             Expr arg = (Expr) arguments.next();
             Formal formal = (Formal) formals.next();
-            if (arg.getExprType().equals(VOID)) {
+            if (VOID.equals(arg.getExprType())) {
                 registerSemanticError(node, "actual parameter " + i +
                         " in the call to method " + method.getName() +
                         " is void and cannot be used within an expression");
@@ -563,7 +563,7 @@ public class TypeCheckVisitor extends SemantVisitor {
     public Object visit(WhileStmt node) {
         Expr predExpr = node.getPredExpr();
         predExpr.accept(this);
-        if (!predExpr.getExprType().equals(BOOL)) {
+        if (!(BOOL).equals(predExpr.getExprType())) {
             registerSemanticError(node, "predicate in while-statement does not have type boolean");
         }
 
@@ -586,7 +586,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             node.getInitExpr().accept(this);
         if (node.getPredExpr() != null) {
             node.getPredExpr().accept(this);
-            if (!node.getPredExpr().getExprType().equals(BOOL)) {
+            if (!(BOOL).equals(node.getPredExpr().getExprType())) {
                 registerSemanticError(node, "predicate in while-statement does not have type boolean");
             }
         }
