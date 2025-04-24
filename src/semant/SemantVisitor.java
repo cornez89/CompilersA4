@@ -68,55 +68,42 @@ abstract public class SemantVisitor extends Visitor {
      * @return true if no errors are found
      */
     public boolean conformsTo(String type1, String type2) {
-        String s = "";
-        int i = 0;
-        try {
-            if (type1 == null || type2 == null)
-                throw new NullPointerException();
-            s += "Check " + ++i + "\n";
-            boolean isArray1 = type1.endsWith("[]");
-            boolean isArray2 = type2.endsWith("[]");
-            s += "Check " + ++i + "\n";
-            if (isArray1 ^ isArray2) {
-                return false;
-            }
-            s += "Check " + ++i + "\n";
-            if (isArray1) {
-                return conformsTo(type1.substring(0, type1.length() - 2),
-                        type2.substring(0, type1.length() - 2));
-            }
-            s += "Check " + ++i + "\n";
-            ClassTreeNode node1;
-            ClassTreeNode node2;
+        if (type1 == null || type2 == null)
+            return null;
+        boolean isArray1 = type1.endsWith("[]");
+        boolean isArray2 = type2.endsWith("[]");
+        if (isArray1 ^ isArray2) {
+            return false;
+        }
+        if (isArray1) {
+            return conformsTo(type1.substring(0, type1.length() - 2),
+                    type2.substring(0, type1.length() - 2));
+        }
+        ClassTreeNode node1;
+        ClassTreeNode node2;
 
-            if (type1.equals(VOID) && type2.equals(VOID)) {
+        if (type1.equals(VOID) && type2.equals(VOID)) {
+            return true;
+        } else if (!typeExists(type1) || !typeExists(type2)) {
+            return false;
+        } else if (isPrimitive(type1) ^ isPrimitive(type2)) {
+            return false;
+        } else if (isPrimitive(type1) && isPrimitive(type2)
+                && !type1.equals(type2)) {
+            return false;
+        } else if (!isPrimitive(type1) && !isPrimitive(type2)) {
+            node1 = classTreeNode.lookupClass(type1);
+            node2 = classTreeNode.lookupClass(type2);
+
+            if (type2.equals("Object"))
                 return true;
-            } else if (!typeExists(type1) || !typeExists(type2)) {
-                return false;
-            } else if (isPrimitive(type1) ^ isPrimitive(type2)) {
-                return false;
-            } else if (isPrimitive(type1) && isPrimitive(type2)
-                    && !type1.equals(type2)) {
-                return false;
-            } else if (!isPrimitive(type1) && !isPrimitive(type2)) {
-                node1 = classTreeNode.lookupClass(type1);
-                node2 = classTreeNode.lookupClass(type2);
 
-                s += "Check " + ++i + "\n";
-                if (type2.equals("Object"))
+            while (node1 != null) {
+                if (node1.getName().equals(node2.getName()))
                     return true;
-
-                s += "Check " + ++i + "\n";
-                while (node1 != null) {
-                    if (node1.getName().equals(node2.getName()))
-                        return true;
-                    node1 = node1.getParent();
-                }
-                return false;
+                node1 = node1.getParent();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(s);
+            return false;
         }
 
         return true;
