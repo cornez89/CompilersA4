@@ -298,14 +298,23 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         node.getExpr().accept(this);
 
+        // special case for trying to change array length
+        if (node.getRefName() != null && node.getName().equals("length")) {
+            String arrayName = (node.getRefName());
+            registerSemanticError(node, "length field in array '" +
+                    arrayName + "': cannot be modified");
+            return null;
+        }
+
         String name = node.getName();
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
         // check that expr type conforms to the type of the variable
         String exprType = node.getExpr().getExprType();
         if (!conformsTo(exprType, declaredType)) {
-            registerSemanticError(node, "the lefthand type '" + declaredType +
-                    "' and righthand type '" + exprType + "' are not compatible in assignment");
+            registerSemanticError(node, "the righthand type '" + exprType +
+                    "' does not conform to the lefthand type '" + declaredType +
+                    "' in assignment");
         }
 
         node.setExprType(exprType);
@@ -364,8 +373,9 @@ public class TypeCheckVisitor extends SemantVisitor {
         String exprType = node.getExpr().getExprType();
 
         if (!conformsTo(exprType, declaredType.substring(0))) {
-            registerSemanticError(node, "the lefthand type '" + declaredType +
-                    "' and righthand type '" + exprType + "' are not compatible in assignment");
+            registerSemanticError(node, "the righthand type '" + exprType +
+                    "' does not conform to the lefthand type '" + declaredType +
+                    "' in assignment");
         }
 
         node.setExprType(exprType);
@@ -861,11 +871,14 @@ public class TypeCheckVisitor extends SemantVisitor {
         String sizeType = node.getSize().getExprType();
         String type = node.getType();
         if (!sizeType.equals(INT)) {
-            registerSemanticError(node, "size expression of type '" + sizeType + "' is not type '" + INT + "'");
+            registerSemanticError(node, "size in the array construction has type '"
+                    + sizeType + "' rather than '" + INT + "'");
         }
 
         if (!typeExists(type)) {
-            registerSemanticError(node, "type '" + type + "' of array is undefined");
+            registerSemanticError(node, "type '" + type + "' of new construction is undefined");
+            node.setExprType(OBJECT);
+            return null;
         }
 
         node.setExprType(node.getType() + "[]");
@@ -884,15 +897,28 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         String type = node.getType();
         String exprType = node.getExpr().getExprType();
-        // check if expr type is known
+        // check if type exists
         if (!typeExists(type)) {
-            registerSemanticError(node, "the instanceof righthand type '" + type + "' is undefined");
+            if (type.endsWith("[]")) {
+                registerSemanticError(node, "the base type in the instanceof" +
+                        " righthand array type '" + type.substring(0,
+                                type.length() - 2)
+                        + "' is undefined");
+            } else {
+                registerSemanticError(node, "the instanceof righthand type '" + type + "' is undefined");
+            }
         }
 
         if (isPrimitive(exprType)) {
             registerSemanticError(node,
-                    "the instanceof lefthand expression has type '" + type
+                    "the instanceof lefthand expression has type '" + exprType
                             + "', which is primitive and not an object type");
+        }
+
+        if (isPrimitive(type)) {
+            registerSemanticError(node,
+                    "the instanceof righthand type '" + type
+                            + "' is primitive and not an object type");
         }
 
         if (exprType.equals(VOID)) {
@@ -915,7 +941,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         // check if cast type exists
         castType = node.getType();
         if (!typeExists(castType)) {
-            registerSemanticError(node, "type '" + castType + "' of cast is undefined");
+            registerSemanticError(node, "the base type in the target array type '" +
+                    castType.substring(0, castType.length() - 2) + "' is undefined");
             castType = "Object";
         }
 
@@ -931,14 +958,13 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         if (conformsTo(currType, castType)) { // upcast
             node.setUpCast(true);
-            node.setExprType(castType);
         } else if (conformsTo(castType, currType)) { // downcast
             node.setUpCast(false);
-            node.setExprType(castType);
         } else {
-            registerSemanticError(node, "invalid cast of type '" + currType + "' into type '" + castType + "'");
-            castType = "Object";
+            registerSemanticError(node, "inconvertible types ('" + currType + "'=>'"
+                    + castType + "')");
         }
+        node.setExprType(castType);
 
         return castType;
     }
