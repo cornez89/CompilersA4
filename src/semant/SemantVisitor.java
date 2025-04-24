@@ -161,6 +161,13 @@ abstract public class SemantVisitor extends Visitor {
 
     protected Object lookupMethodInClass(String className, String name) {
         ClassTreeNode classTreeNode = this.classTreeNode.lookupClass(className);
+
+        if(classTreeNode == null)
+        {
+            registerSemanticError(null, "Debug! Error in adding class " + className);
+            return null;
+        }
+
         return classTreeNode.getMethodSymbolTable().lookup(name);
     }
 

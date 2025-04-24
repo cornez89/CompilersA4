@@ -278,11 +278,12 @@ public class SemanticAnalyzer {
         while (iterator.hasNext()) {
             classNodes.add(iterator.next());
         }
-        int initialNumOfClasses = classNodes.size();
         boolean classesChanged = true;
 
         //cycle through classNodes and add it to the map if its parent exists
         while (!classNodes.isEmpty() && classesChanged) {
+            // track the number of nodes prior removing any
+            int beforeLoopSize = classNodes.size();
 
             for (int i = 0; i < classNodes.size();) {
                 // make class tree node
@@ -305,16 +306,20 @@ public class SemanticAnalyzer {
                     classNodes.remove(i);
                 } else {
 
+                    // ensure classes have default parent object if nothing else
+                    String parentName = classNode.getParent();
+                    if(parentName == null || parentName.isEmpty())
+                    {
+                        parentName = "Object";
+                    }
+
                     // check if parent exists
-                    if (!classMap.keySet().contains(classNode.getParent())) {
+                    if (!classMap.keySet().contains(parentName)) {
                         // No parent class found
-                        // do not put into map just yet
-                        errorHandler.register(errorHandler.SEMANT_ERROR,
-                                classNode.getFilename(), 0,
-                                "Parent class not added yet for " + classNode.getName()
-                                        + ".");
+                        // no Need to register an error here,
+                        // just report classes with no parent after the loop
                         i++;
-                    } else if (!classMap.get(classNode.getParent()).isExtendable()) {
+                    } else if (!classMap.get(parentName).isExtendable()) {
                         errorHandler.register(errorHandler.SEMANT_ERROR,
                                 classNode.getFilename(), 0,
                                 "Parent class: " + classNode.getParent()
@@ -322,7 +327,7 @@ public class SemanticAnalyzer {
                         classNodes.remove(i);
                     } else {
                         // update parent link
-                        ClassTreeNode parent = classMap.get(classNode.getParent());
+                        ClassTreeNode parent = classMap.get(parentName);
                         classTreeNode.setParent(parent); // updates the parent as well
 
                         // add to classMap
@@ -354,7 +359,7 @@ public class SemanticAnalyzer {
                     }
                 }
             }
-            classesChanged = initialNumOfClasses != classNodes.size();
+            classesChanged = beforeLoopSize != classNodes.size();
         }
         // The remaining nodes do not have a parent class
         for (ASTNode node : classNodes) {

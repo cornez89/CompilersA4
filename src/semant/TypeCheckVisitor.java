@@ -97,7 +97,7 @@ public class TypeCheckVisitor extends SemantVisitor {
                         "type '" + node.getType() + "' of field '" + node.getName() + "' is undefined");
             }
 
-            if (initExpr.getExprType().equals(VOID)) {
+            if (VOID.equals(initExpr.getExprType())) {
                 registerSemanticError(node, "cannot return an expression of type '" + VOID + "' from a method");
             }
 
@@ -247,7 +247,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName()
                     + "' does not match declared type '" + declaredType + "'");
         } else {
-            addVar(name, type);
+            addVar(name, declaredType);
         }
 
         return null;
@@ -286,11 +286,11 @@ public class TypeCheckVisitor extends SemantVisitor {
     public Object visit(AssignExpr node) {
 
         node.getExpr().accept(this);
-
+    
         String name = node.getName();
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
-
+        System.out.println(declaredType);
         // check that expr type conforms to the type of the variable
         String exprType = node.getExpr().getExprType();
         if (!conformsTo(exprType, declaredType)) {
@@ -427,7 +427,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         while (arguments.hasNext() && formals.hasNext()) {
             Expr arg = (Expr) arguments.next();
             Formal formal = (Formal) formals.next();
-            if (arg.getExprType().equals(VOID)) {
+            if (VOID.equals(arg.getExprType())) {
                 registerSemanticError(node, "actual parameter " + i +
                         " in the call to method " + method.getName() +
                         " is void and cannot be used within an expression");
@@ -563,10 +563,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     public Object visit(WhileStmt node) {
         Expr predExpr = node.getPredExpr();
         predExpr.accept(this);
-        if (!predExpr.getExprType().equals(BOOL)) {
-            throw new RuntimeException(errorMessagePrefix(node)
-                    + "Predicate must be of type boolean, given type: "
-                    + predExpr.getExprType() + ".");
+        if (!(BOOL).equals(predExpr.getExprType())) {
+            registerSemanticError(node, "predicate in while-statement does not have type boolean");
         }
 
         enterScope();
@@ -588,7 +586,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             node.getInitExpr().accept(this);
         if (node.getPredExpr() != null) {
             node.getPredExpr().accept(this);
-            if (!node.getPredExpr().getExprType().equals(BOOL)) {
+            if (!(BOOL).equals(node.getPredExpr().getExprType())) {
                 registerSemanticError(node, "predicate in while-statement does not have type boolean");
             }
         }
