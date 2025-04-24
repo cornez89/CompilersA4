@@ -954,13 +954,15 @@ public class TypeCheckVisitor extends SemantVisitor {
                         type = OBJECT;
                     } else if (((String) lookupVar(refName)).endsWith("]")) {
                         if (!name.equals("length")) {
-                            registerSemanticError(node, "bad reference to '" + name + "': arrays do not have this field (they only have a 'length' field)");
+                            registerSemanticError(node, "bad reference to '" + name
+                                    + "': arrays do not have this field (they only have a 'length' field)");
                             type = OBJECT;
                         } else {
                             type = INT;
                         }
                     } else {
-                        registerSemanticError(node, "bad reference '" + name + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
+                        registerSemanticError(node, "bad reference '" + name
+                                + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
                         type = OBJECT;
                     }
                 }
@@ -979,7 +981,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             } else if (name.equals(SUPER)) {
                 type = classTreeNode.getParent().getName();
             } else if (name.equals(NULL)) {
-                type = OBJECT;
+                type = NULL;
             } else {
                 type = (String) lookupVar(name);
                 if (type == null) {
@@ -1035,7 +1037,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             refExpr.accept(this);
 
         String baseType = getTypeOfVarExp(refExpr, name, node);
-        baseType = baseType.substring(0, baseType.length() -2);
+        baseType = baseType.substring(0, baseType.length() - 2);
 
         node.setExprType(baseType);
 
