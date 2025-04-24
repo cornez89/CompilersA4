@@ -84,14 +84,15 @@ abstract public class SemantVisitor extends Visitor {
 
         if (type1.equals(VOID) && type2.equals(VOID)) {
             return true;
-        } else if (!typeExists(type1) || !typeExists(type2)) {
-            return false;
         } else if (isPrimitive(type1) ^ isPrimitive(type2)) {
             return false;
-        } else if (isPrimitive(type1) && isPrimitive(type2)
-                && !type1.equals(type2)) {
+        } else if (isPrimitive(type1) && isPrimitive(type2)) {
+            return type1.equals(type2);
+        } else if (type1.equals(NULL) || type2.equals(NULL)) {
+            return true;
+        } else if (!typeExists(type1) || !typeExists(type2)) {
             return false;
-        } else if (!isPrimitive(type1) && !isPrimitive(type2)) {
+        } else {
             node1 = classTreeNode.lookupClass(type1);
             node2 = classTreeNode.lookupClass(type2);
 
@@ -105,8 +106,6 @@ abstract public class SemantVisitor extends Visitor {
             }
             return false;
         }
-
-        return true;
     }
 
     protected boolean typeExists(String type) {
