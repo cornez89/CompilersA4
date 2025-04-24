@@ -221,7 +221,7 @@ public class TypeCheckVisitor extends SemantVisitor {
      * @return result of the visit
      */
     public Object visit(StmtList node) {
-        for (Iterator it = node.getIterator(); it.hasNext();) {
+        for (Iterator<ASTNode> it = node.getIterator(); it.hasNext();) {
             Stmt stmt = (Stmt) it.next();
             stmt.accept(this);
         }
@@ -350,7 +350,7 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
-        declaredType = declaredType.substring( 0, declaredType.length() -2);
+        declaredType = declaredType.substring(0, declaredType.length() - 2);
 
         // check that return type of expr conforms to type of array
         node.getExpr().accept(this);
@@ -671,9 +671,9 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         node.getLeftExpr().accept(this);
         node.getRightExpr().accept(this);
-        String leftType =  node.getLeftExpr().getExprType();
+        String leftType = node.getLeftExpr().getExprType();
         String rightType = node.getRightExpr().getExprType();
-        
+
         if (node.getOperandType() != null) {
             if (!leftType.equals(node.getOperandType())) {
                 registerSemanticError(node,
@@ -687,11 +687,11 @@ public class TypeCheckVisitor extends SemantVisitor {
             }
         } else {
             if (!conformsTo(leftType, rightType) &&
-                !conformsTo(rightType, leftType)) {
+                    !conformsTo(rightType, leftType)) {
                 registerSemanticError(node,
-                    "the lefthand type '" + leftType + "' in the binary operation ('"
-                    + node.getOpName() + "') does not match the righthand type '" + rightType
-                    + "'");
+                        "the lefthand type '" + leftType + "' in the binary operation ('"
+                                + node.getOpName() + "') does not match the righthand type '" + rightType
+                                + "'");
             }
         }
 
