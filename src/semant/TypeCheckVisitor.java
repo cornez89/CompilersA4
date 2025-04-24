@@ -61,6 +61,9 @@ public class TypeCheckVisitor extends SemantVisitor {
     // int used to track loop depth to know if break valid
     private int loopDepth = 0;
 
+    // used for detail in error messages
+    private Method currMethod;
+
     public TypeCheckVisitor(ClassTreeNode classTreeNode, ErrorHandler errorHandler) {
         super.classTreeNode = classTreeNode;
         super.errorHandler = errorHandler;
@@ -106,6 +109,8 @@ public class TypeCheckVisitor extends SemantVisitor {
      */
     public Object visit(Method node) {
         enterScope();
+
+        currMethod = node;
 
         String name = node.getName();
 
@@ -153,12 +158,6 @@ public class TypeCheckVisitor extends SemantVisitor {
                             + " declared return type '" +
                             expectedReturnType + "' in method '" + name + "'");
                 returned = true;
-            } else if (stmt instanceof DeclStmt) {
-                DeclStmt declStmt = (DeclStmt) stmt;
-                if (!variables.add(declStmt.getName())) {
-                    registerSemanticError(declStmt,
-                            "variable '" + declStmt.getName() + "' is already defined in method " + name);
-                }
             }
         }
         if (!expectedReturnType.equals(VOID) && !returned)
@@ -257,8 +256,12 @@ public class TypeCheckVisitor extends SemantVisitor {
                     + (isPrimitive(type)
                             || isPrimitive(declaredType) ? "match" : "conform to")
                     + " declared type '" + declaredType + "'");
-        } else {
+        }
+        if (!existsInMethodVarScope(name)) {
             addVar(name, declaredType);
+        } else {
+            registerSemanticError(node,
+                    "variable '" + node.getName() + "' is already defined in method " + currMethod.getName());
         }
 
         return null;
@@ -421,7 +424,7 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         // check if method exists
         if (method == null) {
-            registerSemanticError(node, "dispatch to unknown method '" + node.getMethodName() + "'");
+            registerSemanticError(node, "can't dispatch on a primitive or void type");
             return null;
         }
 
@@ -690,6 +693,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getRightExpr().accept(this);
         String leftType = node.getLeftExpr().getExprType();
         String rightType = node.getRightExpr().getExprType();
+        // System.out.println(node.getLineNum() + ": " + leftType + ", " + rightType);
 
         if (node.getOperandType() != null) {
             if (!leftType.equals(node.getOperandType())) {
