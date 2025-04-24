@@ -1,26 +1,26 @@
 /* Bantam Java Compiler and Language Toolset.
 
-   Copyright (C) 2007 by Marc Corliss (corliss@hws.edu) and 
-                         E Christopher Lewis (lewis@vmware.com).
-   ALL RIGHTS RESERVED.
+Copyright (C) 2007 by Marc Corliss (corliss@hws.edu) and 
+        E Christopher Lewis (lewis@vmware.com).
+ALL RIGHTS RESERVED.
 
-   The Bantam Java toolset is distributed under the following 
-   conditions:
+The Bantam Java toolset is distributed under the following 
+conditions:
 
-     You may make copies of the toolset for your own use and 
-     modify those copies.
+You may make copies of the toolset for your own use and 
+modify those copies.
 
-     All copies of the toolset must retain the author names and 
-     copyright notice.
+All copies of the toolset must retain the author names and 
+copyright notice.
 
-     You may not sell the toolset or distribute it in 
-     conjunction with a commerical product or service without 
-     the expressed written consent of the authors.
+You may not sell the toolset or distribute it in 
+conjunction with a commerical product or service without 
+the expressed written consent of the authors.
 
-   THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS 
-   OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE 
-   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
-   PARTICULAR PURPOSE. 
+THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS 
+OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE 
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+PARTICULAR PURPOSE. 
 */
 
 package semant;
@@ -67,8 +67,10 @@ public class SemanticAnalyzer {
     /**
      * SemanticAnalyzer constructor
      * 
-     * @param program root of the AST
-     * @param debug   boolean indicating whether debugging is enabled
+     * @param program
+     *            root of the AST
+     * @param debug
+     *            boolean indicating whether debugging is enabled
      */
     public SemanticAnalyzer(Program program, boolean debug) {
         this.program = program;
@@ -82,12 +84,15 @@ public class SemanticAnalyzer {
      * @return root of the class hierarchy tree (needed for code generation)
      *
      *         Must add code to do the following:
-     *         1 - build built-in class nodes in class hierarchy tree (already done)
+     *         1 - build built-in class nodes in class hierarchy tree (already
+     *         done)
      *         and
      *         build and check the rest of the class hierarchy tree
-     *         2 - build the environment for each class (adding class members only)
+     *         2 - build the environment for each class (adding class members
+     *         only)
      *         and check that members are declared properly
-     *         3 - check that the Main class and main method are declared properly
+     *         3 - check that the Main class and main method are declared
+     *         properly
      *         4 - type check each class member
      *         See the lab manual for more details on each of these steps.
      */
@@ -111,7 +116,8 @@ public class SemanticAnalyzer {
         checkMain();
 
         // PART 4: type checking
-        // type check each member (fields and methods) of each user-defined class
+        // type check each member (fields and methods) of each user-defined
+        // class
         typeCheck();
 
         errorHandler.checkErrors();
@@ -125,15 +131,13 @@ public class SemanticAnalyzer {
     private void updateBuiltins() {
         // create AST node for object
         Class_ astNode = new Class_(-1, "<built-in class>", "Object", null,
-                (MemberList) (new MemberList(-1))
-                        .addElement(new Method(-1, "Object", "clone",
-                                new FormalList(-1),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1,
-                                                null)))));
+            (MemberList) (new MemberList(-1))
+                .addElement(new Method(-1, "Object", "clone",
+                    new FormalList(-1), (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null)))));
         // create a class tree node for object, save in variable root
-        root = new ClassTreeNode(astNode,
-                /* built-in? */true, /* extendable? */true, classMap);
+        root = new ClassTreeNode(astNode, /* built-in? */true,
+            /* extendable? */true, classMap);
         // add object class tree node to the mapping
         classMap.put("Object", root);
 
@@ -143,101 +147,87 @@ public class SemanticAnalyzer {
         // classes, so they do not have to be included in the AST.
 
         // create AST node for String
-        astNode = new Class_(-1, "<built-in class>",
-                "String", "Object",
-                (MemberList) (new MemberList(-1))
-                        .addElement(new Method(-1, "int", "length",
-                                new FormalList(-1),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "boolean", "equals",
-                                (FormalList) (new FormalList(-1))
-                                        .addElement(new Formal(-1, "Object",
-                                                "str")),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "String", "substring",
-                                (FormalList) (new FormalList(-1))
-                                        .addElement(new Formal(-1, "int",
-                                                "beginIndex"))
-                                        .addElement(new Formal(-1, "int",
-                                                "endIndex")),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "String", "concat",
-                                (FormalList) (new FormalList(-1))
-                                        .addElement(new Formal(-1, "String",
-                                                "str")),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1,
-                                                null)))));
+        astNode = new Class_(-1, "<built-in class>", "String", "Object",
+            (MemberList) (new MemberList(-1))
+                .addElement(
+                    new Method(-1, "int", "length", new FormalList(-1),
+                        (StmtList) (new StmtList(-1))
+                            .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "boolean", "equals",
+                    (FormalList) (new FormalList(-1))
+                        .addElement(new Formal(-1, "Object", "str")),
+                    (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "String", "substring",
+                    (FormalList) (new FormalList(-1))
+                        .addElement(new Formal(-1, "int", "beginIndex"))
+                        .addElement(new Formal(-1, "int", "endIndex")),
+                    (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "String", "concat",
+                    (FormalList) (new FormalList(-1))
+                        .addElement(new Formal(-1, "String", "str")),
+                    (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null)))));
         // create class tree node for String, add it to the mapping
         classMap.put("String", new ClassTreeNode(astNode, /* built-in? */true,
-                /* extendable? */false, classMap));
+            /* extendable? */false, classMap));
 
         // create AST node for TextIO
-        astNode = new Class_(-1, "<built-in class>",
-                "TextIO", "Object",
-                (MemberList) (new MemberList(-1))
-                        .addElement(new Method(-1, "void", "readStdin",
-                                new FormalList(-1),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "void", "readFile",
-                                (FormalList) (new FormalList(-1))
-                                        .addElement(new Formal(-1, "String",
-                                                "readFile")),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "void", "writeStdout",
-                                new FormalList(-1),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "void", "writeStderr",
-                                new FormalList(-1),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "void", "writeFile",
-                                (FormalList) (new FormalList(-1))
-                                        .addElement(new Formal(-1, "String",
-                                                "writeFile")),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "String", "getString",
-                                new FormalList(-1),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "int", "getInt",
-                                new FormalList(-1),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "TextIO", "putString",
-                                (FormalList) (new FormalList(-1))
-                                        .addElement(new Formal(-1, "String",
-                                                "str")),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
-                        .addElement(new Method(-1, "TextIO", "putInt",
-                                (FormalList) (new FormalList(-1))
-                                        .addElement(new Formal(-1, "int",
-                                                "n")),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1,
-                                                null)))));
+        astNode = new Class_(-1, "<built-in class>", "TextIO", "Object",
+            (MemberList) (new MemberList(-1))
+                .addElement(
+                    new Method(-1, "void", "readStdin", new FormalList(-1),
+                        (StmtList) (new StmtList(-1))
+                            .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "void", "readFile",
+                    (FormalList) (new FormalList(-1))
+                        .addElement(new Formal(-1, "String", "readFile")),
+                    (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null))))
+                .addElement(
+                    new Method(-1, "void", "writeStdout", new FormalList(-1),
+                        (StmtList) (new StmtList(-1))
+                            .addElement(new ReturnStmt(-1, null))))
+                .addElement(
+                    new Method(-1, "void", "writeStderr", new FormalList(-1),
+                        (StmtList) (new StmtList(-1))
+                            .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "void", "writeFile",
+                    (FormalList) (new FormalList(-1))
+                        .addElement(new Formal(-1, "String", "writeFile")),
+                    (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null))))
+                .addElement(
+                    new Method(-1, "String", "getString", new FormalList(-1),
+                        (StmtList) (new StmtList(-1))
+                            .addElement(new ReturnStmt(-1, null))))
+                .addElement(
+                    new Method(-1, "int", "getInt", new FormalList(-1),
+                        (StmtList) (new StmtList(-1))
+                            .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "TextIO", "putString",
+                    (FormalList) (new FormalList(-1))
+                        .addElement(new Formal(-1, "String", "str")),
+                    (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "TextIO", "putInt",
+                    (FormalList) (new FormalList(-1))
+                        .addElement(new Formal(-1, "int", "n")),
+                    (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null)))));
         // create class tree node for TextIO, add it to the mapping
         classMap.put("TextIO", new ClassTreeNode(astNode, /* built-in? */true,
-                /* extendable? */false, classMap));
+            /* extendable? */false, classMap));
 
         // create AST node for Sys
-        astNode = new Class_(-1, "<built-in class>",
-                "Sys", "Object",
-                (MemberList) (new MemberList(-1))
-                        .addElement(new Method(-1, "void", "exit",
-                                (FormalList) (new FormalList(-1))
-                                        .addElement(new Formal(-1, "int",
-                                                "status")),
-                                (StmtList) (new StmtList(-1))
-                                        .addElement(new ReturnStmt(-1, null))))
+        astNode = new Class_(-1, "<built-in class>", "Sys", "Object",
+            (MemberList) (new MemberList(-1))
+                .addElement(new Method(-1, "void", "exit",
+                    (FormalList) (new FormalList(-1))
+                        .addElement(new Formal(-1, "int", "status")),
+                    (StmtList) (new StmtList(-1))
+                        .addElement(new ReturnStmt(-1, null))))
         /*
          * .addElement(new Method(-1, "int", "time",
          * new FormalList(-1),
@@ -247,7 +237,7 @@ public class SemanticAnalyzer {
         );
         // create class tree node for Sys, add it to the mapping
         classMap.put("Sys", new ClassTreeNode(astNode, /* built-in? */true,
-                /* extendable? */false, classMap));
+            /* extendable? */false, classMap));
     }
 
     /*************************************************************************
@@ -261,7 +251,8 @@ public class SemanticAnalyzer {
      * of the nodes, and check if parent exists; (3) check that there are
      * no cycles in the graph (i.e., that it's a tree)
      * 
-     * @param classList list of AST class nodes
+     * @param classList
+     *            list of AST class nodes
      */
     private void buildClassTree(ClassList classList) {
         updateBuiltins();
@@ -288,23 +279,26 @@ public class SemanticAnalyzer {
             for (int i = 0; i < classNodes.size();) {
                 // make class tree node
                 Class_ classNode = classNodes.get(i);
-                ClassTreeNode classTreeNode = new ClassTreeNode(
-                        classNode,
-                        false, // never built in
-                        true, // always extendable
-                        classMap);
+                ClassTreeNode classTreeNode = new ClassTreeNode(classNode,
+                    false, // never built in
+                    true, // always extendable
+                    classMap);
 
                 // check if name already exists
                 if (classMap.containsKey((classNode.getName()))) {
                     ClassTreeNode old = classMap.get(classNode.getName());
                     if (old.isBuiltIn()) {
-                        errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(),
-                                classNode.getLineNum(), "built-in class '" + old.getName() + "' cannot be redefined");
+                        errorHandler.register(errorHandler.SEMANT_ERROR,
+                            classNode.getFilename(), classNode.getLineNum(),
+                            "built-in class '" + old.getName()
+                                + "' cannot be redefined");
 
                     } else {
-                        errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(),
-                                classNode.getLineNum(), "duplicate class '" + old.getName()
-                                        + "' (originally defined at line " + old.getASTNode().getLineNum() + ")");
+                        errorHandler.register(errorHandler.SEMANT_ERROR,
+                            classNode.getFilename(), classNode.getLineNum(),
+                            "duplicate class '" + old.getName()
+                                + "' (originally defined at line "
+                                + old.getASTNode().getLineNum() + ")");
 
                     }
 
@@ -312,7 +306,8 @@ public class SemanticAnalyzer {
                     classNodes.remove(i);
                 } else {
 
-                    // ensure classes have default parent object if nothing else
+                    // ensure classes have default parent object if nothing
+                    // else
                     String parentName = classNode.getParent();
                     if (parentName == null || parentName.isEmpty()) {
                         parentName = "Object";
@@ -325,15 +320,16 @@ public class SemanticAnalyzer {
                         i++;
                     } else if (!classMap.get(parentName).isExtendable()) {
                         errorHandler.register(errorHandler.SEMANT_ERROR,
-                                classNode.getFilename(), classNode
-                                        .getLineNum(),
-                                "class '" + classNode.getName() + "' extends non-extendable class '" + parentName
-                                        + "'");
+                            classNode.getFilename(), classNode.getLineNum(),
+                            "class '" + classNode.getName()
+                                + "' extends non-extendable class '"
+                                + parentName + "'");
                         classNodes.remove(i);
                     } else {
                         // update parent link
                         ClassTreeNode parent = classMap.get(parentName);
-                        classTreeNode.setParent(parent); // updates the parent as well
+                        classTreeNode.setParent(parent); // updates the parent
+                                                         // as well
 
                         // add to classMap
                         classMap.put(classNode.getName(), classTreeNode);
@@ -369,11 +365,15 @@ public class SemanticAnalyzer {
             }
             if (inLoop)
                 errorHandler.register(errorHandler.SEMANT_ERROR,
-                        node.getFilename(), node.getLineNum(),
-                        "inheritance cycle found involving class '" + node.getName() + "'");
+                    node.getFilename(), node.getLineNum(),
+                    "inheritance cycle found involving class '"
+                        + node.getName() + "'");
             else
-                errorHandler.register(errorHandler.SEMANT_ERROR, node.getFilename(), node.getLineNum(),
-                        "class '" + node.getName() + "' extends non-existent class '" + node.getParent() + "'");
+                errorHandler.register(errorHandler.SEMANT_ERROR,
+                    node.getFilename(), node.getLineNum(),
+                    "class '" + node.getName()
+                        + "' extends non-existent class '" + node.getParent()
+                        + "'");
         }
     }
 
@@ -387,7 +387,8 @@ public class SemanticAnalyzer {
      */
     private void buildSymbolTable() {
 
-        ClassEnvVisitor classEnvVisitor = new ClassEnvVisitor(root, errorHandler);
+        ClassEnvVisitor classEnvVisitor = new ClassEnvVisitor(root,
+            errorHandler);
         classEnvVisitor.visit(root);
 
     }
@@ -399,39 +400,44 @@ public class SemanticAnalyzer {
         if (classMap.keySet().contains("Main")) {
             ClassTreeNode mainClass = classMap.get("Main");
 
-            Iterator<ASTNode> members = mainClass.getASTNode().getMemberList().getIterator();
+            Iterator<ASTNode> members = mainClass.getASTNode().getMemberList()
+                .getIterator();
             Method mainMethod = null;
             while (members.hasNext()) {
                 Member member = (Member) members.next();
-                if (member instanceof Method && ((Method) member).getName().equals("main")) {
+                if (member instanceof Method
+                    && ((Method) member).getName().equals("main")) {
                     mainMethod = (Method) member;
                 }
             }
 
             if (mainMethod != null) {
                 if (mainMethod.getFormalList().getIterator().hasNext()) {
-                    
+
                     // Error main method is not defined correctly
                     errorHandler.register(errorHandler.SEMANT_ERROR,
-                            mainClass.getASTNode().getFilename(), mainMethod.getLineNum(),
-                            "'main' method in class 'Main' cannot take arguments");
+                        mainClass.getASTNode().getFilename(),
+                        mainMethod.getLineNum(),
+                        "'main' method in class 'Main' cannot take arguments");
                 }
 
                 if (!mainMethod.getReturnType().equals("void")) {
                     errorHandler.register(errorHandler.SEMANT_ERROR,
-                    mainClass.getASTNode().getFilename(), mainMethod.getLineNum(),
-                    "'main' method in class 'Main' must be void");    
+                        mainClass.getASTNode().getFilename(),
+                        mainMethod.getLineNum(),
+                        "'main' method in class 'Main' must be void");
                 }
             } else {
                 // Error main method is not defined
                 errorHandler.register(errorHandler.SEMANT_ERROR,
-                        mainClass.getASTNode().getFilename(), mainClass.getASTNode().getLineNum(),
-                        "no 'main' method defined in the 'Main' class.");
+                    mainClass.getASTNode().getFilename(),
+                    mainClass.getASTNode().getLineNum(),
+                    "no 'main' method defined in the 'Main' class.");
             }
         } else {
             // Error main method is not defined
             errorHandler.register(errorHandler.SEMANT_ERROR,
-                         "no class 'Main' defined.");
+                "no class 'Main' defined.");
         }
     }
 
@@ -440,7 +446,8 @@ public class SemanticAnalyzer {
      */
     private void typeCheck() {
 
-        TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor(root, errorHandler);
+        TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor(root,
+            errorHandler);
         typeCheckVisitor.visit(root);
 
     }

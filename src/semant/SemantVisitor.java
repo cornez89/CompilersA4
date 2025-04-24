@@ -18,10 +18,9 @@ abstract public class SemantVisitor extends Visitor {
     protected static String SUPER = "super";
     protected static String THIS = "this";
     protected static String NULL = "null";
-    static private String[] reservedWordsArray = {
-            "this", "super", "null", "class", "extends", "for",
-            "while", "if", "else", "return", "break", "new"
-    };
+    static private String[] reservedWordsArray = { "this", "super", "null",
+        "class", "extends", "for", "while", "if", "else", "return", "break",
+        "new" };
 
     /**
      * Gets if 'type' is an array or array of primitives.
@@ -39,21 +38,22 @@ abstract public class SemantVisitor extends Visitor {
         return type != null && (type.equals(BOOL) || type.equals(INT));
     }
 
+    public boolean isPrimitiveOrVoid(String type) {
+        return type != null && (isPrimitive(type) || type.equals(VOID));
+    }
+
     private boolean isArray(String type) {
-        return type.length() > 2 && type.substring(type.length() - 2).equals("[]");
+        return type.length() > 2
+            && type.substring(type.length() - 2).equals("[]");
     }
 
     protected void registerSemanticError(ASTNode node, String message) {
         if (node == null) {
-            errorHandler.register(
-                    errorHandler.SEMANT_ERROR,
-                    message);
+            errorHandler.register(errorHandler.SEMANT_ERROR, message);
         } else {
-            errorHandler.register(
-                    errorHandler.SEMANT_ERROR,
-                    classTreeNode.getASTNode().getFilename(),
-                    node.getLineNum(),
-                    message);
+            errorHandler.register(errorHandler.SEMANT_ERROR,
+                classTreeNode.getASTNode().getFilename(), node.getLineNum(),
+                message);
         }
     }
 
@@ -77,7 +77,7 @@ abstract public class SemantVisitor extends Visitor {
         }
         if (isArray1) {
             return conformsTo(type1.substring(0, type1.length() - 2),
-                    type2.substring(0, type2.length() - 2));
+                type2.substring(0, type2.length() - 2));
         }
         ClassTreeNode node1;
         ClassTreeNode node2;
@@ -107,7 +107,8 @@ abstract public class SemantVisitor extends Visitor {
 
     protected boolean typeExists(String type) {
         String trimmedType = removeArray(type);
-        return classTreeNode.lookupClass(trimmedType) != null || isPrimitive(trimmedType);
+        return classTreeNode.lookupClass(trimmedType) != null
+            || isPrimitive(trimmedType);
     }
 
     protected String removeArray(String type) {
@@ -133,19 +134,20 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     protected boolean existsInCurrentVarScope(String name) {
-        return classTreeNode.getVarSymbolTable().getScopeLevel(name) == classTreeNode.getVarSymbolTable()
-                .getCurrScopeLevel();
+        return classTreeNode.getVarSymbolTable().getScopeLevel(
+            name) == classTreeNode.getVarSymbolTable().getCurrScopeLevel();
     }
 
     protected boolean existsInCurrentMethodScope(String name) {
-        return classTreeNode.getMethodSymbolTable().getScopeLevel(name) == classTreeNode.getMethodSymbolTable()
-                .getCurrScopeLevel();
+        return classTreeNode.getMethodSymbolTable().getScopeLevel(
+            name) == classTreeNode.getMethodSymbolTable().getCurrScopeLevel();
     }
 
     protected boolean existsInMethodVarScope(String name) {
         if (classTreeNode.getParent() != null)
             return classTreeNode.getVarSymbolTable().getScopeLevel(name)
-                    - classTreeNode.getParent().getVarSymbolTable().getCurrScopeLevel() > 1;
+                - classTreeNode.getParent().getVarSymbolTable()
+                    .getCurrScopeLevel() > 1;
         else
             return classTreeNode.getVarSymbolTable().getScopeLevel(name) > 1;
     }
@@ -155,7 +157,7 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     protected Object thisLookupVar(String name) {
-        return lookupVar(name);
+        return lookupVar("this." + name);
     }
 
     protected Object superLookupVar(String name) {

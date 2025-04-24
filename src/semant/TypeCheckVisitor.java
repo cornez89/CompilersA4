@@ -64,18 +64,20 @@ public class TypeCheckVisitor extends SemantVisitor {
     // used for detail in error messages
     private Method currMethod;
 
-    public TypeCheckVisitor(ClassTreeNode classTreeNode, ErrorHandler errorHandler) {
+    public TypeCheckVisitor(ClassTreeNode classTreeNode,
+        ErrorHandler errorHandler) {
         super.classTreeNode = classTreeNode;
         super.errorHandler = errorHandler;
     }
 
     public Object visit(Field node) {
         if (isReserved(node.getName())) {
-            registerSemanticError(node, "fields cannot be named '" + node.getName() + "'");
+            registerSemanticError(node,
+                "fields cannot be named '" + node.getName() + "'");
         }
         if (!typeExists(node.getType())) {
-            registerSemanticError(node,
-                    "type '" + node.getType() + "' of field '" + node.getName() + "' is undefined");
+            registerSemanticError(node, "type '" + node.getType()
+                + "' of field '" + node.getName() + "' is undefined");
         }
 
         if (node.getInit() != null) {
@@ -84,16 +86,17 @@ public class TypeCheckVisitor extends SemantVisitor {
 
             if (VOID.equals(initExpr.getExprType())) {
                 registerSemanticError(node,
-                        "expression type '" + initExpr.getExprType() + "' of field 's' cannot be " + VOID);
+                    "expression type '" + initExpr.getExprType()
+                        + "' of field 's' cannot be " + VOID);
             } else if (!conformsTo(initExpr.getExprType(), node.getType())) {
                 // Two errors in one
                 // checks if primitives match
                 // checks if references types conform
-                registerSemanticError(node,
-                        "expression type '" + initExpr.getExprType() + "' of field '" + node.getName()
-                                + "' does not "
-                                + (isPrimitive(node.getType()) ? "match" : "conform to")
-                                + " declared type '" + node.getType() + "'");
+                registerSemanticError(node, "expression type '"
+                    + initExpr.getExprType() + "' of field '" + node.getName()
+                    + "' does not "
+                    + (isPrimitive(node.getType()) ? "match" : "conform to")
+                    + " declared type '" + node.getType() + "'");
             }
 
         }
@@ -104,7 +107,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a method node
      * 
-     * @param node the method node
+     * @param node
+     *            the method node
      * @return result of the visit
      */
     public Object visit(Method node) {
@@ -124,12 +128,13 @@ public class TypeCheckVisitor extends SemantVisitor {
         String expectedReturnType = node.getReturnType();
         boolean returnTypeValid = isValidReturnType(expectedReturnType);
         if (!returnTypeValid)
-            registerSemanticError(node, "return type '" + expectedReturnType + "' of method '"
-                    + name + "' is undefined");
+            registerSemanticError(node, "return type '" + expectedReturnType
+                + "' of method '" + name + "' is undefined");
 
         // check that method name is valid
         if (isReserved(name))
-            registerSemanticError(node, "methods cannot be named '" + name + "'");
+            registerSemanticError(node,
+                "methods cannot be named '" + name + "'");
 
         // check return conformity
         Iterator<ASTNode> bodyStmts = node.getStmtList().getIterator();
@@ -139,7 +144,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         while (formalStmts.hasNext()) {
             Formal formal = (Formal) formalStmts.next();
             if (!variables.add(formal.getName())) {
-                registerSemanticError(formal, "formal '" + formal.getName() + "' is multiply defined");
+                registerSemanticError(formal,
+                    "formal '" + formal.getName() + "' is multiply defined");
             }
         }
 
@@ -148,21 +154,34 @@ public class TypeCheckVisitor extends SemantVisitor {
             if (stmt instanceof ReturnStmt && returnTypeValid) {
                 ReturnStmt returnStmt = (ReturnStmt) stmt;
                 String actualReturnType = (String) returnStmt.accept(this);
-                // verify expected and actual return types match
+
+                if (returnStmt.getExpr() != null
+                    && actualReturnType.equals(VOID)) {
+                    registerSemanticError(returnStmt,
+                        "cannot return an expression of type 'void' from a "
+                            + "method");
+                    actualReturnType = OBJECT;
+                }
+
+                // verify expected and actual return types
                 if (!conformsTo(actualReturnType, expectedReturnType))
-                    registerSemanticError(returnStmt, "return type '" + actualReturnType
-                            + "' "
-                            + (isPrimitive(expectedReturnType) || expectedReturnType.equals(VOID)
-                                    ? "is not compatible with"
-                                    : "does not conform to")
-                            + " declared return type '" +
-                            expectedReturnType + "' in method '" + name + "'");
+                    // match
+                    registerSemanticError(returnStmt, "return type '"
+                        + actualReturnType + "' "
+                        + (isPrimitiveOrVoid(
+                            expectedReturnType)
+                                                ? "is not compatible with"
+                                                    : "does not conform to")
+                        + " declared return type '" + expectedReturnType
+                        + "' in method '" + name + "'");
                 returned = true;
             }
         }
         if (!expectedReturnType.equals(VOID) && !returned)
-            registerSemanticError(node, "declared return type of method '" + name + "' is '"
-                    + expectedReturnType + "' but method body is not returning any expression");
+            registerSemanticError(node,
+                "declared return type of method '" + name + "' is '"
+                    + expectedReturnType
+                    + "' but method body is not returning any expression");
 
         exitScope();
         return null;
@@ -171,7 +190,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a list node of formals
      * 
-     * @param node the formal list node
+     * @param node
+     *            the formal list node
      * @return result of the visit
      */
     public Object visit(FormalList node) {
@@ -192,7 +212,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a formal node
      * 
-     * @param node the formal node
+     * @param node
+     *            the formal node
      * @return result of the visit
      */
     public Object visit(Formal node) {
@@ -204,18 +225,22 @@ public class TypeCheckVisitor extends SemantVisitor {
         return type;
     }
 
-    protected String checkFormal(String name, String type, ASTNode node, String nodeType) {
+    protected String checkFormal(String name, String type, ASTNode node,
+        String nodeType) {
         return checkFormal(name, type, node, nodeType, nodeType);
     }
 
-    protected String checkFormal(String name, String type, ASTNode node, String nodeType, String altNodeType) {
+    protected String checkFormal(String name, String type, ASTNode node,
+        String nodeType, String altNodeType) {
         if (!typeExists(type)) {
-            registerSemanticError(node, "type '" + type + "' of " + nodeType + " '" + name + "' is undefined");
+            registerSemanticError(node, "type '" + type + "' of " + nodeType
+                + " '" + name + "' is undefined");
             type = "Object";
         }
 
         if (isReserved(name)) {
-            registerSemanticError(node, altNodeType + "s cannot be named '" + name + "'");
+            registerSemanticError(node,
+                altNodeType + "s cannot be named '" + name + "'");
         }
 
         return type;
@@ -224,7 +249,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a list node of statements
      * 
-     * @param node the statement list node
+     * @param node
+     *            the statement list node
      * @return result of the visit
      */
     public Object visit(StmtList node) {
@@ -238,35 +264,34 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a declaration statement node
      * 
-     * @param node the declaration statement node
+     * @param node
+     *            the declaration statement node
      * @return result of the visit
      */
     public Object visit(DeclStmt node) {
         // same as formal
         String declaredType = node.getType();
         String name = node.getName();
-        declaredType = checkFormal(name, declaredType, node, "declaration", "variable");
+        declaredType = checkFormal(name, declaredType, node, "declaration",
+            "variable");
 
         // check that init type conforms to declared type
         node.getInit().accept(this);
         String type = node.getInit().getExprType();
         if (!conformsTo(type, declaredType)) {
-            registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName()
-                    + "' does not "
+            registerSemanticError(node,
+                "expression type '" + type + "' of declaration '"
+                    + node.getName() + "' does not "
                     + (isPrimitive(type)
-                            || isPrimitive(declaredType) ? "match" : "conform to")
+                        || isPrimitive(declaredType) ? "match" : "conform to")
                     + " declared type '" + declaredType + "'");
         }
         if (!existsInMethodVarScope(name)) {
             addVar(name, declaredType);
         } else {
-            registerSemanticError(node,
-                    "variable '" + node.getName() + "' is already defined in method " + currMethod.getName());
+            registerSemanticError(node, "variable '" + node.getName()
+                + "' is already defined in method " + currMethod.getName());
         }
-
-        // add var even if we found an error in declaration
-        // so we can check for other problems with it
-        addVar(name, declaredType);
 
         return null;
     }
@@ -274,7 +299,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit an expression statement node
      * 
-     * @param node the expression statement node
+     * @param node
+     *            the expression statement node
      * @return result of the visit
      */
     public Object visit(ExprStmt node) {
@@ -283,13 +309,10 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getExpr().accept(this);
         Expr expr = node.getExpr();
         // Only valid ExprStmt are assignment, new, dispatch and unary
-        if (!(expr instanceof AssignExpr ||
-                expr instanceof ArrayAssignExpr ||
-                expr instanceof NewExpr ||
-                expr instanceof NewArrayExpr ||
-                expr instanceof DispatchExpr ||
-                expr instanceof UnaryIncrExpr ||
-                expr instanceof UnaryDecrExpr)) {
+        if (!(expr instanceof AssignExpr || expr instanceof ArrayAssignExpr
+            || expr instanceof NewExpr || expr instanceof NewArrayExpr
+            || expr instanceof DispatchExpr || expr instanceof UnaryIncrExpr
+            || expr instanceof UnaryDecrExpr)) {
             registerSemanticError(node, "not a statement");
         }
         return null;
@@ -298,7 +321,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit an assignment expression node
      * 
-     * @param node the assignment expression node
+     * @param node
+     *            the assignment expression node
      * @return result of the visit
      */
     public Object visit(AssignExpr node) {
@@ -308,8 +332,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         // special case for trying to change array length
         if (node.getRefName() != null && node.getName().equals("length")) {
             String arrayName = (node.getRefName());
-            registerSemanticError(node, "length field in array '" +
-                    arrayName + "': cannot be modified");
+            registerSemanticError(node, "length field in array '" + arrayName
+                + "': cannot be modified");
             return null;
         }
 
@@ -318,10 +342,18 @@ public class TypeCheckVisitor extends SemantVisitor {
         String declaredType = checkTypeOfAssignment(name, ref, node);
         // check that expr type conforms to the type of the variable
         String exprType = node.getExpr().getExprType();
-        if (!conformsTo(exprType, declaredType)) {
-            registerSemanticError(node, "the righthand type '" + exprType +
-                    "' does not conform to the lefthand type '" + declaredType
-                     + "' in assignment");
+        if (declaredType != null && !conformsTo(exprType, declaredType)) {
+            if (isPrimitive(declaredType) || isPrimitive(exprType)) {
+                registerSemanticError(node,
+                    "the lefthand type '" + declaredType
+                        + "' and righthand type '" + exprType
+                        + "' are not compatible in assignment");
+            } else {
+                registerSemanticError(node,
+                    "the righthand type '" + exprType
+                        + "' does not conform to the lefthand type '"
+                        + declaredType + "' in assignment");
+            }
         }
 
         node.setExprType(exprType);
@@ -329,26 +361,30 @@ public class TypeCheckVisitor extends SemantVisitor {
         return null;
     }
 
-    protected String checkTypeOfAssignment(String name, String ref, ASTNode node) {
+    protected String checkTypeOfAssignment(String name, String ref,
+        ASTNode node) {
         String declaredType = null;
 
         // check that ref is valid
         if (ref == null) { // lookup from current scope
             declaredType = (String) lookupVar(name);
-        } else if (ref.equals(THIS)) { // lookup from first scope of curr class
+        } else if (ref.equals(THIS)) { // lookup from first scope of curr
+                                       // class
             declaredType = (String) thisLookupVar(name);
-        } else if (ref.equals(SUPER)) { // lookup from first scope in super class
+        } else if (ref.equals(SUPER)) { // lookup from first scope in super
+                                        // class
             declaredType = (String) superLookupVar(name);
         } else {
             registerSemanticError(node, "bad reference '" + ref
-                    + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
-            return OBJECT;
+                + "': fields are 'protected' and can only be accessed within "
+                + "the class or subclass via 'this' or 'super'");
+            return null;
         }
 
         if (declaredType == null) {
-            registerSemanticError(node, "variable '" + name + "' in assignment"
-            + " is undeclared");
-            return OBJECT;
+            registerSemanticError(node,
+                "variable '" + name + "' in assignment" + " is undeclared");
+            return null;
         }
 
         return declaredType;
@@ -357,7 +393,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit an array assignment expression node
      * 
-     * @param node the array assignment expression node
+     * @param node
+     *            the array assignment expression node
      * @return result of the visit
      */
     public Object visit(ArrayAssignExpr node) {
@@ -365,8 +402,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getIndex().accept(this);
         String indexType = node.getIndex().getExprType();
         if (!indexType.equals(INT)) {
-            registerSemanticError(node, "invalid index expression of type '" +
-                    indexType + "' expression must be type 'int'");
+            registerSemanticError(node, "invalid index expression of type '"
+                + indexType + "' expression must be type 'int'");
         }
 
         // Check that the var is defined
@@ -377,8 +414,7 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         // if var was undeclared, it has now been set to
         // object so don't take off an imaginary []
-        if(declaredType == OBJECT)
-        {
+        if (declaredType == OBJECT || declaredType == null) {
             return null;
         }
 
@@ -389,9 +425,10 @@ public class TypeCheckVisitor extends SemantVisitor {
         String exprType = node.getExpr().getExprType();
 
         if (!conformsTo(exprType, declaredType.substring(0))) {
-            registerSemanticError(node, "the righthand type '" + exprType +
-                    "' does not conform to the lefthand type '" + declaredType
-                     + "' in assignment");
+            registerSemanticError(node,
+                "the lefthand type '" + declaredType
+                    + "' and righthand type '" + exprType
+                    + "' are not compatible in assignment");
         }
 
         node.setExprType(exprType);
@@ -402,19 +439,23 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a new expression node
      * 
-     * @param node the new expression node
+     * @param node
+     *            the new expression node
      * @return result of the visit
      */
     public Object visit(NewExpr node) {
         // Check that type exists
         String type = node.getType();
         if (!typeExists(type)) {
-            registerSemanticError(node, "type '" + type + "' of new construction is undefined");
+            registerSemanticError(node,
+                "type '" + type + "' of new construction is undefined");
             node.setExprType(OBJECT);
         } else if (isPrimitive(type)) {
             registerSemanticError(node,
-                    "type '" + type + "' of new construction is primitive and cannot be constructed");
-            node.setExprType(VOID);
+                "type '" + type
+                    + "' of new construction is primitive and cannot be "
+                    + "constructed");
+            node.setExprType(OBJECT);
         } else {
             node.setExprType(type);
         }
@@ -424,7 +465,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a dispatch expression node
      * 
-     * @param node the dispatch expression node
+     * @param node
+     *            the dispatch expression node
      * @return result of the visit
      */
     public Object visit(DispatchExpr node) {
@@ -432,27 +474,35 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getRefExpr().accept(this);
         Expr refExpr = node.getRefExpr();
 
+        if (isPrimitiveOrVoid(refExpr.getExprType())) {
+            node.setExprType(OBJECT);
+            registerSemanticError(node,
+                "can't dispatch on a primitive or void type");
+            return null;
+        }
         // not sure if this is right
-        Method method = (Method) lookupMethodInClass(refExpr.getExprType(), node.getMethodName());
+        Method method = (Method) lookupMethodInClass(refExpr.getExprType(),
+            node.getMethodName());
 
         // check if method exists
         if (method == null) {
-            registerSemanticError(node, "can't dispatch on a primitive or void type");
+            registerSemanticError(node,
+                "dispatch to unknown method '" + node.getMethodName() + "'");
             return null;
         }
 
         // type check formals
         node.getActualList().accept(this);
         Iterator<ASTNode> arguments = node.getActualList().getIterator();
-        if (method.getFormalList() == null) {
-        }
         Iterator<ASTNode> formals = method.getFormalList().getIterator();
         int numOfFormals = method.getFormalList().getSize();
         int numOfArgs = node.getActualList().getSize();
         if (numOfArgs != numOfFormals) {
-            registerSemanticError(node, "number of actual parameters (" + numOfArgs +
-                    ") differs from number of formal parameters (" + numOfFormals +
-                    ") in dispatch to method '" + method.getName() + "'");
+            registerSemanticError(node,
+                "number of actual parameters (" + numOfArgs
+                    + ") differs from number of formal parameters ("
+                    + numOfFormals + ") in dispatch to method '"
+                    + method.getName() + "'");
         }
 
         // check that formals match in type and args aren't void
@@ -461,16 +511,21 @@ public class TypeCheckVisitor extends SemantVisitor {
             Expr arg = (Expr) arguments.next();
             Formal formal = (Formal) formals.next();
             if (VOID.equals(arg.getExprType())) {
-                registerSemanticError(node, "actual parameter " + i +
-                        " in the call to method " + method.getName() +
-                        " is void and cannot be used within an expression");
+                registerSemanticError(node,
+                    "actual parameter " + i + " in the call to method "
+                        + method.getName()
+                        + " is void and cannot be used within an expression");
             } else if (!conformsTo(arg.getExprType(), formal.getType())) {
                 registerSemanticError(node,
-                        "actual parameter " + i + " with type '" + arg.getExprType()
-                                + "' does not match formal parameter " + i
-                                + " with declared type '" + formal.getType() + "' in dispatch to method '"
-                                + method.getName() + "'");
+                    "actual parameter " + i + " with type '"
+                        + arg.getExprType() + "' does not "
+                        + (isPrimitive(arg.getExprType()) || isPrimitive(
+                            formal.getType()) ? "match" : "conform to")
+                        + " formal parameter " + i + " with declared type '"
+                        + formal.getType() + "' in dispatch to method '"
+                        + method.getName() + "'");
             }
+            i++;
         }
 
         node.setExprType(method.getReturnType());
@@ -480,7 +535,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a list node of expressions
      * 
-     * @param node the expression list node
+     * @param node
+     *            the expression list node
      * @return result of the visit
      */
     public Object visit(ExprList node) {
@@ -492,22 +548,27 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a list node of classes
      * 
-     * @param node the class list node
+     * @param node
+     *            the class list node
      * @return result of the visit
      */
 
     /**
      * Visit a unary increment expression node
      * 
-     * @param node the unary increment expression node
+     * @param node
+     *            the unary increment expression node
      * @return result of the visit
      */
 
     protected Object typeCheckUnary(UnaryExpr unaryExpr, String type) {
 
         if (!type.equals(unaryExpr.getOperandType())) {
-            registerSemanticError(unaryExpr, "the expression type '" + type + "' in the unary operation ('"
-                    + unaryExpr.getOpName() + "') is incorrect; should have been: " + unaryExpr.getOperandType());
+            registerSemanticError(unaryExpr,
+                "the expression type '" + type + "' in the unary operation ('"
+                    + unaryExpr.getOpName()
+                    + "') is incorrect; should have been: "
+                    + unaryExpr.getOperandType());
         }
         unaryExpr.setExprType(unaryExpr.getOpType());
         return null;
@@ -524,7 +585,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a unary decrement expression node
      * 
-     * @param node the unary decrement expression node
+     * @param node
+     *            the unary decrement expression node
      * @return result of the visit
      */
     public Object visit(UnaryDecrExpr node) {
@@ -538,7 +600,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a unary negation expression node
      * 
-     * @param node the unary negation expression node
+     * @param node
+     *            the unary negation expression node
      * @return result of the visit
      */
     public Object visit(UnaryNegExpr node) {
@@ -552,7 +615,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a unary NOT expression node
      * 
-     * @param node the unary NOT expression node
+     * @param node
+     *            the unary NOT expression node
      * @return result of the visit
      */
     public Object visit(UnaryNotExpr node) {
@@ -566,14 +630,16 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit an if statement node
      * 
-     * @param node the if statement node
+     * @param node
+     *            the if statement node
      * @return result of the visit
      */
     public Object visit(IfStmt node) {
         node.getPredExpr().accept(this);
         String predType = node.getPredExpr().getExprType();
         if (!predType.equals(BOOL)) {
-            registerSemanticError(node, "predicate in if-statement does not have type boolean");
+            registerSemanticError(node,
+                "predicate in if-statement does not have type boolean");
         }
         enterScope();
         node.getThenStmt().accept(this);
@@ -590,14 +656,16 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a while statement node
      * 
-     * @param node the while statement node
+     * @param node
+     *            the while statement node
      * @return result of the visit
      */
     public Object visit(WhileStmt node) {
         Expr predExpr = node.getPredExpr();
         predExpr.accept(this);
         if (!(BOOL).equals(predExpr.getExprType())) {
-            registerSemanticError(node, "predicate in while-statement does not have type boolean");
+            registerSemanticError(node,
+                "predicate in while-statement does not have type boolean");
         }
         loopDepth++;
         enterScope();
@@ -611,7 +679,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a for statement node
      * 
-     * @param node the for statement node
+     * @param node
+     *            the for statement node
      * @return result of the visit
      */
     public Object visit(ForStmt node) {
@@ -621,7 +690,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         if (node.getPredExpr() != null) {
             node.getPredExpr().accept(this);
             if (!(BOOL).equals(node.getPredExpr().getExprType())) {
-                registerSemanticError(node, "predicate in for-statement does not have type boolean");
+                registerSemanticError(node,
+                    "predicate in for-statement does not have type boolean");
             }
         }
         if (node.getUpdateExpr() != null) {
@@ -639,7 +709,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a block statement node
      * 
-     * @param node the block statement node
+     * @param node
+     *            the block statement node
      * @return result of the visit
      */
     public Object visit(BlockStmt node) {
@@ -653,7 +724,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a return statement node
      * 
-     * @param node the return statement node
+     * @param node
+     *            the return statement node
      * @return result of the visit
      */
     public Object visit(ReturnStmt node) {
@@ -674,8 +746,10 @@ public class TypeCheckVisitor extends SemantVisitor {
         while (children.hasNext()) {
 
             ClassTreeNode child = children.next();
-            child.getVarSymbolTable().setParent(classTreeNode.getVarSymbolTable());
-            child.getMethodSymbolTable().setParent(classTreeNode.getMethodSymbolTable());
+            child.getVarSymbolTable()
+                .setParent(classTreeNode.getVarSymbolTable());
+            child.getMethodSymbolTable()
+                .setParent(classTreeNode.getMethodSymbolTable());
             super.classTreeNode = child;
             visit(child);
         }
@@ -685,7 +759,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a class node
      * 
-     * @param node the class node
+     * @param node
+     *            the class node
      * @return result of the visit
      */
     public Object visit(Class_ node) {
@@ -696,7 +771,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary comparison expression node (should never be called)
      * 
-     * @param node the binary comparison expression node
+     * @param node
+     *            the binary comparison expression node
      * @return result of the visit
      */
     public Object binaryExpr(BinaryExpr node) {
@@ -706,26 +782,32 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getRightExpr().accept(this);
         String leftType = node.getLeftExpr().getExprType();
         String rightType = node.getRightExpr().getExprType();
-        // System.out.println(node.getLineNum() + ": " + leftType + ", " + rightType);
+        // System.out.println(node.getLineNum() + ": " + leftType + ", " +
+        // rightType);
 
         if (node.getOperandType() != null) {
             if (!leftType.equals(node.getOperandType())) {
                 registerSemanticError(node,
-                        "the lefthand type '" + leftType + "' in the binary operation ('"
-                                + node.getOpName() + "') is incorrect; should have been: " + node.getOperandType());
+                    "the lefthand type '" + leftType
+                        + "' in the binary operation ('" + node.getOpName()
+                        + "') is incorrect; should have been: "
+                        + node.getOperandType());
             }
             if (!rightType.equals(node.getOperandType())) {
                 registerSemanticError(node,
-                        "the righthand type '" + rightType + "' in the binary operation ('"
-                                + node.getOpName() + "') is incorrect; should have been: " + node.getOperandType());
+                    "the righthand type '" + rightType
+                        + "' in the binary operation ('" + node.getOpName()
+                        + "') is incorrect; should have been: "
+                        + node.getOperandType());
             }
         } else {
-            if (!conformsTo(leftType, rightType) &&
-                    !conformsTo(rightType, leftType)) {
+            if (!conformsTo(leftType, rightType)
+                && !conformsTo(rightType, leftType)) {
                 registerSemanticError(node,
-                        "the lefthand type '" + leftType + "' in the binary operation ('"
-                                + node.getOpName() + "') does not match the righthand type '" + rightType
-                                + "'");
+                    "the lefthand type '" + leftType
+                        + "' in the binary operation ('" + node.getOpName()
+                        + "') does not match the righthand type '" + rightType
+                        + "'");
             }
         }
 
@@ -736,7 +818,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary comparison equals expression node
      * 
-     * @param node the binary comparison equals expression node
+     * @param node
+     *            the binary comparison equals expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompEqExpr node) {
@@ -747,7 +830,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary comparison not equals expression node
      * 
-     * @param node the binary comparison not equals expression node
+     * @param node
+     *            the binary comparison not equals expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompNeExpr node) {
@@ -758,7 +842,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary comparison less than expression node
      * 
-     * @param node the binary comparison less than expression node
+     * @param node
+     *            the binary comparison less than expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompLtExpr node) {
@@ -769,7 +854,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary comparison less than or equal to expression node
      * 
-     * @param node the binary comparison less than or equal to expression node
+     * @param node
+     *            the binary comparison less than or equal to expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompLeqExpr node) {
@@ -780,7 +866,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary comparison greater than expression node
      * 
-     * @param node the binary comparison greater than expression node
+     * @param node
+     *            the binary comparison greater than expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompGtExpr node) {
@@ -791,7 +878,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary comparison greater than or equal to expression node
      * 
-     * @param node the binary comparison greater to or equal to expression node
+     * @param node
+     *            the binary comparison greater to or equal to expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompGeqExpr node) {
@@ -802,7 +890,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary arithmetic plus expression node
      * 
-     * @param node the binary arithmetic plus expression node
+     * @param node
+     *            the binary arithmetic plus expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithPlusExpr node) {
@@ -813,7 +902,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary arithmetic minus expression node
      * 
-     * @param node the binary arithmetic minus expression node
+     * @param node
+     *            the binary arithmetic minus expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithMinusExpr node) {
@@ -824,7 +914,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary arithmetic times expression node
      * 
-     * @param node the binary arithmetic times expression node
+     * @param node
+     *            the binary arithmetic times expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithTimesExpr node) {
@@ -835,7 +926,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary arithmetic divide expression node
      * 
-     * @param node the binary arithmetic divide expression node
+     * @param node
+     *            the binary arithmetic divide expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithDivideExpr node) {
@@ -846,7 +938,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary arithmetic modulus expression node
      * 
-     * @param node the binary arithmetic modulus expression node
+     * @param node
+     *            the binary arithmetic modulus expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithModulusExpr node) {
@@ -857,7 +950,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary logical AND expression node
      * 
-     * @param node the binary logical AND expression node
+     * @param node
+     *            the binary logical AND expression node
      * @return result of the visit
      */
     public Object visit(BinaryLogicAndExpr node) {
@@ -868,7 +962,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a binary logical OR expression node
      * 
-     * @param node the binary logical OR expression node
+     * @param node
+     *            the binary logical OR expression node
      * @return result of the visit
      */
     public Object visit(BinaryLogicOrExpr node) {
@@ -879,7 +974,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a new array expression node
      * 
-     * @param node the new array expression node
+     * @param node
+     *            the new array expression node
      * @return result of the visit
      */
     public Object visit(NewArrayExpr node) {
@@ -888,12 +984,14 @@ public class TypeCheckVisitor extends SemantVisitor {
         String sizeType = node.getSize().getExprType();
         String type = node.getType();
         if (!sizeType.equals(INT)) {
-            registerSemanticError(node, "size in the array construction has type '"
-                    + sizeType + "' rather than '" + INT + "'");
+            registerSemanticError(node,
+                "size in the array construction has type '" + sizeType
+                    + "' rather than " + INT);
         }
 
         if (!typeExists(type)) {
-            registerSemanticError(node, "type '" + type + "' of new construction is undefined");
+            registerSemanticError(node,
+                "type '" + type + "' of new construction is undefined");
             node.setExprType(OBJECT);
             return null;
         }
@@ -905,7 +1003,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit an instanceof expression node
      * 
-     * @param node the instanceof expression node
+     * @param node
+     *            the instanceof expression node
      * @return result of the visit
      */
     public Object visit(InstanceofExpr node) {
@@ -914,32 +1013,36 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         String type = node.getType();
         String exprType = node.getExpr().getExprType();
-        // check if type exists
-        if (!typeExists(type)) {
-            if (type.endsWith("[]")) {
-                registerSemanticError(node, "the base type in the instanceof" +
-                        " righthand array type '" + type.substring(0,
-                                type.length() - 2)
-                        + "' is undefined");
-            } else {
-                registerSemanticError(node, "the instanceof righthand type '" + type + "' is undefined");
-            }
-        }
 
         if (isPrimitive(exprType)) {
             registerSemanticError(node,
-                    "the instanceof lefthand expression has type '" + exprType
-                            + "', which is primitive and not an object type");
+                "the instanceof lefthand expression has type '" + exprType
+                    + "', which is primitive and not an object type");
+        }
+
+        // check if type exists
+        if (!typeExists(type)) {
+            if (type.endsWith("[]")) {
+                registerSemanticError(node,
+                    "the base type in the instanceof"
+                        + " righthand array type '"
+                        + type.substring(0, type.length() - 2)
+                        + "' is undefined");
+            } else {
+                registerSemanticError(node, "the instanceof righthand type '"
+                    + type + "' is undefined");
+            }
         }
 
         if (isPrimitive(type)) {
-            registerSemanticError(node,
-                    "the instanceof righthand type '" + type
-                            + "' is primitive and not an object type");
+            registerSemanticError(node, "the instanceof righthand type '"
+                + type + "' is primitive and not an object type");
         }
 
         if (exprType.equals(VOID)) {
-            registerSemanticError(node, "the instanceof righthand type cannot be type '" + VOID + "'");
+            registerSemanticError(node,
+                "the instanceof righthand type cannot be type '" + VOID
+                    + "'");
         }
 
         node.setExprType(BOOL);
@@ -949,7 +1052,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a cast expression node
      * 
-     * @param node the cast expression node
+     * @param node
+     *            the cast expression node
      * @return result of the visit
      */
     public Object visit(CastExpr node) {
@@ -958,14 +1062,22 @@ public class TypeCheckVisitor extends SemantVisitor {
         // check if cast type exists
         castType = node.getType();
         if (!typeExists(castType)) {
-            registerSemanticError(node, "the base type in the target array type '" +
-                    castType.substring(0, castType.length() - 2) + "' is undefined");
-            castType = "Object";
+            if (castType.endsWith("[]")) {
+                registerSemanticError(node,
+                    "the base type in the target array type '"
+                        + castType.substring(0, castType.length() - 2)
+                        + "' is undefined");
+                castType = "Object[]";
+            } else {
+                registerSemanticError(node,
+                    "the target type '" + castType + "' is undefined");
+                castType = "Object";
+            }
         }
 
         if (isPrimitive(castType)) {
-            registerSemanticError(node,
-                    "expression in cast has type '" + castType + "', which is primitive and can't be casted");
+            registerSemanticError(node, "the target type '" + castType
+                + "' is primitive and not an object type");
             castType = "Object";
         }
 
@@ -977,9 +1089,12 @@ public class TypeCheckVisitor extends SemantVisitor {
             node.setUpCast(true);
         } else if (conformsTo(castType, currType)) { // downcast
             node.setUpCast(false);
+        } else if (isPrimitive(currType)) {
+            registerSemanticError(node, "expression in cast has type '"
+                + currType + "', which is primitive and can't be casted");
         } else {
-            registerSemanticError(node, "inconvertible types ('" + currType + "'=>'"
-                    + castType + "')");
+            registerSemanticError(node, "inconvertible types ('" + currType
+                + "'=>'" + castType + "')");
         }
         node.setExprType(castType);
 
@@ -994,12 +1109,14 @@ public class TypeCheckVisitor extends SemantVisitor {
             if (refType.endsWith("[]")) {
                 if (!name.equals("length")) {
                     registerSemanticError(node, "bad reference to '" + name
-                            + "': arrays do not have this field (they only have a 'length' field)");
+                        + "': arrays do not have this field (they only have a "
+                        + "'length' field)");
                     type = OBJECT;
                 } else {
                     type = INT;
                 }
-            } else if (refExpr instanceof VarExpr) { // check if refExpr is 'this' or 'super'
+            } else if (refExpr instanceof VarExpr) { // check if refExpr is
+                                                     // 'this' or 'super'
                 String refName = ((VarExpr) refExpr).getName();
                 if (refName.equals(THIS)) {
                     type = (String) thisLookupVar(name);
@@ -1009,7 +1126,8 @@ public class TypeCheckVisitor extends SemantVisitor {
             }
             if (type == null) {
                 registerSemanticError(node, "bad reference '" + name
-                        + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
+                    + "': fields are 'protected' and can only be accessed "
+                    + "within the class or subclass via 'this' or 'super'");
                 type = OBJECT;
 
             }
@@ -1034,7 +1152,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a variable expression node
      * 
-     * @param node the variable expression node
+     * @param node
+     *            the variable expression node
      * @return result of the visit
      */
     public Object visit(VarExpr node) {
@@ -1059,7 +1178,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit an array expression node
      * 
-     * @param node the array expression node
+     * @param node
+     *            the array expression node
      * @return result of the visit
      */
     public Object visit(ArrayExpr node) {
@@ -1077,8 +1197,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         node.getIndex().accept(this);
         indexType = node.getIndex().getExprType();
         if (!indexType.equals(INT)) {
-            registerSemanticError(node, "invalid index expression of type '" +
-                    indexType + "' expression must be type 'int'");
+            registerSemanticError(node, "invalid index expression of type '"
+                + indexType + "' expression must be type 'int'");
         }
         return null;
     }
@@ -1086,7 +1206,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a boolean constant expression node
      * 
-     * @param node the boolean constant expression node
+     * @param node
+     *            the boolean constant expression node
      * @return result of the visit
      */
     public Object visit(ConstBooleanExpr node) {
@@ -1097,7 +1218,8 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a string constant expression node
      * 
-     * @param node the string constant expression node
+     * @param node
+     *            the string constant expression node
      * @return result of the visit
      */
     public Object visit(ConstStringExpr node) {
@@ -1108,12 +1230,14 @@ public class TypeCheckVisitor extends SemantVisitor {
     /**
      * Visit a break statement node
      * 
-     * @param node the break statement node
+     * @param node
+     *            the break statement node
      * @return result of the visit
      */
     public Object visit(BreakStmt node) {
         if (loopDepth == 0) {
-            registerSemanticError(node, "break statement is not inside a loop");
+            registerSemanticError(node,
+                "break statement is not inside a loop");
         }
         return null;
     }

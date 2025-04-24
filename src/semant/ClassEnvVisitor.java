@@ -9,29 +9,36 @@ import ast.Method;
 import ast.Program;
 import util.ClassTreeNode;
 import util.ErrorHandler;
+import util.SymbolTable;
 
 public class ClassEnvVisitor extends SemantVisitor {
 
     protected boolean methodArgsMatch(Method method1, Method method2) {
         boolean isValid = true;
-        if (method1.getFormalList().getSize() != method2.getFormalList().getSize()) {
+        if (method1.getFormalList().getSize() != method2.getFormalList()
+            .getSize()) {
             registerSemanticError(method1,
-                    "overriding method '" + method1.getName() + "' has " + method1.getFormalList().getSize()
-                            + " formals, which differs from the inherited method (" + method2.getFormalList().getSize()
-                            + ")");
+                "overriding method '" + method1.getName() + "' has "
+                    + method1.getFormalList().getSize()
+                    + " formals, which differs from the inherited method ("
+                    + method2.getFormalList().getSize() + ")");
             isValid = false;
         } else {
-            Iterator<ASTNode> formals1 = method1.getFormalList().getIterator();
-            Iterator<ASTNode> formals2 = method2.getFormalList().getIterator();
+            Iterator<ASTNode> formals1 = method1.getFormalList()
+                .getIterator();
+            Iterator<ASTNode> formals2 = method2.getFormalList()
+                .getIterator();
             int i = 1;
             while (formals1.hasNext()) {
                 String type1 = ((Formal) formals1.next()).getType();
                 String type2 = ((Formal) formals2.next()).getType();
                 if (!type1.equals(type2)) {
                     registerSemanticError(method1,
-                            "overriding method '" + method1.getName()
-                                    + "' has formal type '" + type1 + "' for formal " + i
-                                    + ", which differs from the inherited method's formal type '" + type2 + "'");
+                        "overriding method '" + method1.getName()
+                            + "' has formal type '" + type1 + "' for formal "
+                            + i
+                            + ", which differs from the inherited method's "
+                            + "formal type '" + type2 + "'");
                     isValid = false;
                 }
                 i++;
@@ -41,7 +48,8 @@ public class ClassEnvVisitor extends SemantVisitor {
     }
 
     protected boolean isValidMethodOverride(Method method) {
-        Method originalMethod = (Method) classTreeNode.getParent().getMethodSymbolTable().lookup(method.getName());
+        Method originalMethod = (Method) classTreeNode.getParent()
+            .getMethodSymbolTable().lookup(method.getName());
         boolean isValid = true;
 
         if (methodArgsMatch(method, originalMethod)) {
@@ -51,18 +59,19 @@ public class ClassEnvVisitor extends SemantVisitor {
 
         if (!method.getReturnType().equals(originalMethod.getReturnType())) {
             errorHandler.register(errorHandler.SEMANT_ERROR,
-                    classTreeNode.getASTNode().getFilename(),
-                    method.getLineNum(),
-                    "overriding method '" + method.getName() + "' has return type '" + method.getReturnType()
-                            + "', which differs from the inherited method's return type '"
-                            + originalMethod.getReturnType() + "'");
+                classTreeNode.getASTNode().getFilename(), method.getLineNum(),
+                "overriding method '" + method.getName()
+                    + "' has return type '" + method.getReturnType()
+                    + "', which differs from the inherited method's return "
+                    + "type '" + originalMethod.getReturnType() + "'");
             isValid = false;
         }
 
         return isValid;
     }
 
-    public ClassEnvVisitor(ClassTreeNode classTreeNode, ErrorHandler errorHandler) {
+    public ClassEnvVisitor(ClassTreeNode classTreeNode,
+        ErrorHandler errorHandler) {
         super.classTreeNode = classTreeNode;
         super.errorHandler = errorHandler;
     }
@@ -87,10 +96,10 @@ public class ClassEnvVisitor extends SemantVisitor {
             // check after each child
             if (classTreeNode.getVarSymbolTable().getSize() > 1500) {
                 errorHandler.register(errorHandler.SEMANT_ERROR,
-                        classTreeNode.getASTNode().getFilename(), 0,
-                        "Error in BuildSymbolTable: Max number of field" +
-                                "has been exceeded in class: " + classTreeNode.getName()
-                                + ".");
+                    classTreeNode.getASTNode().getFilename(), 0,
+                    "Error in BuildSymbolTable: Max number of field"
+                        + "has been exceeded in class: "
+                        + classTreeNode.getName() + ".");
             }
 
             visit(child);
@@ -109,28 +118,35 @@ public class ClassEnvVisitor extends SemantVisitor {
     }
 
     public Object visit(Field node) {
-        if (classTreeNode.getVarSymbolTable().peek(node.getName()) != null) {
+        SymbolTable table = classTreeNode.getVarSymbolTable();
+        String name = node.getName();
+        if (table.peek(name) != null) {
             // name already exists
             errorHandler.register(errorHandler.SEMANT_ERROR,
-                    classTreeNode.getASTNode().getFilename(), node.getLineNum(),
-                    "field '" + node.getName() + "' is already defined in class '" + classTreeNode.getName() + "'");
+                classTreeNode.getASTNode().getFilename(), node.getLineNum(),
+                "field '" + name + "' is already defined in class '"
+                    + classTreeNode.getName() + "'");
         } else {
-            classTreeNode.getVarSymbolTable().add(node.getName(), node.getType());
+            table.add(name, node.getType());
+            table.add("this." + name, node.getType());
         }
         return null;
     }
 
     public Object visit(Method node) {
-        if (classTreeNode.getParent() != null
-                && classTreeNode.getParent().getMethodSymbolTable().lookup(node.getName()) != null) {
+        if (classTreeNode.getParent() != null && classTreeNode.getParent()
+            .getMethodSymbolTable().lookup(node.getName()) != null) {
 
             // method will report errors for us
             isValidMethodOverride(node);
             classTreeNode.getMethodSymbolTable().add(node.getName(), node);
-        } else if (classTreeNode.getMethodSymbolTable().peek(node.getName()) != null) {
+        } else if (classTreeNode.getMethodSymbolTable()
+            .peek(node.getName()) != null) {
             // name already exists
-            registerSemanticError(node, "method '" + node.getName() +
-                    "' is already defined in class '" + classTreeNode.getName() + "'");
+            registerSemanticError(node,
+                "method '" + node.getName()
+                    + "' is already defined in class '"
+                    + classTreeNode.getName() + "'");
         } else {
             classTreeNode.getMethodSymbolTable().add(node.getName(), node);
         }
