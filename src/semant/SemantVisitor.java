@@ -73,11 +73,11 @@ abstract public class SemantVisitor extends Visitor {
         boolean isArray1 = type1.endsWith("[]");
         boolean isArray2 = type2.endsWith("[]");
         if (isArray1 ^ isArray2) {
-            return false;
+            return type1.equals(NULL) || type2.equals(OBJECT);
         }
         if (isArray1) {
             return conformsTo(type1.substring(0, type1.length() - 2),
-                    type2.substring(0, type1.length() - 2));
+                    type2.substring(0, type2.length() - 2));
         }
         ClassTreeNode node1;
         ClassTreeNode node2;
@@ -95,9 +95,6 @@ abstract public class SemantVisitor extends Visitor {
         } else {
             node1 = classTreeNode.lookupClass(type1);
             node2 = classTreeNode.lookupClass(type2);
-
-            if (type2.equals("Object"))
-                return true;
 
             while (node1 != null) {
                 if (node1.getName().equals(node2.getName()))
@@ -134,7 +131,6 @@ abstract public class SemantVisitor extends Visitor {
 
     protected void addVar(String name, String type) {
         classTreeNode.getVarSymbolTable().add(name, type);
-        classTreeNode.getVarSymbolTable().add("this." + name, type);
     }
 
     protected boolean existsInCurrentVarScope(String name) {
@@ -152,7 +148,7 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     protected Object thisLookupVar(String name) {
-        return lookupVar("this." + name);
+        return lookupVar(name);
     }
 
     protected Object superLookupVar(String name) {
@@ -160,10 +156,14 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     protected Object lookupMethodInClass(String className, String name) {
-        ClassTreeNode classTreeNode = this.classTreeNode.lookupClass(className);
+        ClassTreeNode classTreeNode;
+        if (className.endsWith("[]")) {
+            classTreeNode = this.classTreeNode.lookupClass(OBJECT);
+        } else {
+            classTreeNode = this.classTreeNode.lookupClass(className);
+        }
 
-        if(classTreeNode == null)
-        {
+        if (classTreeNode == null) {
             registerSemanticError(null, "Debug! Error in adding class " + className);
             return null;
         }

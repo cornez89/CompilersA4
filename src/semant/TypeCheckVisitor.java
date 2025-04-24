@@ -64,29 +64,6 @@ public class TypeCheckVisitor extends SemantVisitor {
         return "Error in " + node.getClass().getSimpleName() + ": ";
     }
 
-    /**
-     * 
-     * 
-     * 
-     * 
-     * Tested
-     * 
-     * 
-     * 
-     */
-
-    /**
-     * 
-     *
-     * 
-     *
-     * 
-     * Completed Nodes
-     * 
-     * 
-     * 
-     */
-
     public Object visit(ast.Field node) {
         if (node.getInit() != null) {
             Expr initExpr = node.getInit();
@@ -286,11 +263,10 @@ public class TypeCheckVisitor extends SemantVisitor {
     public Object visit(AssignExpr node) {
 
         node.getExpr().accept(this);
-    
+
         String name = node.getName();
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
-        System.out.println(declaredType);
         // check that expr type conforms to the type of the variable
         String exprType = node.getExpr().getExprType();
         if (!conformsTo(exprType, declaredType)) {
@@ -298,32 +274,30 @@ public class TypeCheckVisitor extends SemantVisitor {
                     "' and righthand type '" + exprType + "' are not compatible in assignment");
         }
 
-        node.setExprType(declaredType);
+        node.setExprType(exprType);
 
         return null;
     }
 
     protected String checkTypeOfAssignment(String name, String ref, ASTNode node) {
-
-        String declaredType = (String) lookupVar(name);
-        // Check that lefthand side is declared
-        if (declaredType == null) {
-            registerSemanticError(node, "the lefthand variable '" + name + "' must be declared");
-        }
+        String declaredType = null;
 
         // check that ref is valid
-        if (ref == null) {
+        if (ref == null) { // lookup from current scope
             declaredType = (String) lookupVar(name);
-            // lookup from current scope
-        } else if (ref.equals(THIS)) {
+        } else if (ref.equals(THIS)) { // lookup from first scope of curr class
             declaredType = (String) thisLookupVar(name);
-            // lookup from first scope of curr class
-        } else if (ref.equals(SUPER)) {
+        } else if (ref.equals(SUPER)) { // lookup from first scope in super class
             declaredType = (String) superLookupVar(name);
-            // lookup from first scope in super class
         } else {
             registerSemanticError(node, "bad reference '" + ref
                     + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
+            return OBJECT;
+        }
+
+        if (declaredType == null) {
+            registerSemanticError(node, "the lefthand variable '" + name + "' must be declared");
+            return OBJECT;
         }
 
         return declaredType;
@@ -336,7 +310,6 @@ public class TypeCheckVisitor extends SemantVisitor {
      * @return result of the visit
      */
     public Object visit(ArrayAssignExpr node) {
-
         // check that index returns an int
         node.getIndex().accept(this);
         String indexType = node.getIndex().getExprType();
@@ -361,7 +334,7 @@ public class TypeCheckVisitor extends SemantVisitor {
                     "' and righthand type '" + exprType + "' are not compatible in assignment");
         }
 
-        node.setExprType(declaredType);
+        node.setExprType(exprType);
 
         return null;
     }
@@ -938,40 +911,28 @@ public class TypeCheckVisitor extends SemantVisitor {
         String type = null;
 
         if (refExpr != null) {
-            // check if refExpr is 'this' or 'super'
-            if (refExpr instanceof VarExpr) {
+            String refType = refExpr.getExprType();
+            if (refType.endsWith("[]")) {
+                if (!name.equals("length")) {
+                    registerSemanticError(node, "bad reference to '" + name
+                            + "': arrays do not have this field (they only have a 'length' field)");
+                    type = OBJECT;
+                } else {
+                    type = INT;
+                }
+            } else if (refExpr instanceof VarExpr) { // check if refExpr is 'this' or 'super'
                 String refName = ((VarExpr) refExpr).getName();
                 if (refName.equals(THIS)) {
                     type = (String) thisLookupVar(name);
                 } else if (refName.equals(SUPER)) {
                     type = (String) superLookupVar(name);
-                } else {
-                    String refType = refExpr.getExprType();
-                    if (!typeExists(refType)) {
-                        registerSemanticError(node, "type '" + refType + "' is undefined for variable expression");
-                        type = OBJECT;
-                    } else if (((String) lookupVar(refName)).endsWith("]")) {
-                        if (!name.equals("length")) {
-                            registerSemanticError(node, "bad reference to '" + name
-                                    + "': arrays do not have this field (they only have a 'length' field)");
-                            type = OBJECT;
-                        } else {
-                            type = INT;
-                        }
-                    } else {
-                        registerSemanticError(node, "bad reference '" + name
-                                + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
-                        type = OBJECT;
-                    }
                 }
-            } else {
-                String refType = refExpr.getExprType();
-                if (!typeExists(refType)) {
-                    registerSemanticError(node, "type '" + refType + "' is undefined for variable expression");
-                    type = (String) lookupMethodInClass(refType, name);
-                } else {
-                    type = OBJECT;
-                }
+            }
+            if (type == null) {
+                registerSemanticError(node, "bad reference '" + name
+                        + "': fields are 'protected' and can only be accessed within the class or subclass via 'this' or 'super'");
+                type = OBJECT;
+
             }
         } else {// ref is null
             if (name.equals(THIS)) {
