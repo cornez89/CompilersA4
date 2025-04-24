@@ -82,7 +82,8 @@ public class TypeCheckVisitor extends SemantVisitor {
             initExpr.accept(this);
 
             if (VOID.equals(initExpr.getExprType())) {
-                registerSemanticError(node, "cannot return an expression of type '" + VOID + "' from a method");
+                registerSemanticError(node,
+                        "expression type '" + initExpr.getExprType() + "' of field 's' cannot be " + VOID);
             }
 
             // Two errors in one
@@ -91,7 +92,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             if (!conformsTo(initExpr.getExprType(), node.getType())) {
                 registerSemanticError(node,
                         "expression type '" + initExpr.getExprType() + "' of field '" + node.getName()
-                                + "' does not conform to declared type '" + node.getType() + "'");
+                                + "' does not match declared type '" + node.getType() + "'");
             }
 
         }
