@@ -247,7 +247,7 @@ public class TypeCheckVisitor extends SemantVisitor {
             registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName()
                     + "' does not match declared type '" + declaredType + "'");
         } else {
-            addVar(name, type);
+            addVar(name, declaredType);
         }
 
         return null;
@@ -286,11 +286,11 @@ public class TypeCheckVisitor extends SemantVisitor {
     public Object visit(AssignExpr node) {
 
         node.getExpr().accept(this);
-
+    
         String name = node.getName();
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
-
+        System.out.println(declaredType);
         // check that expr type conforms to the type of the variable
         String exprType = node.getExpr().getExprType();
         if (!conformsTo(exprType, declaredType)) {
