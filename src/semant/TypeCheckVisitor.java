@@ -238,7 +238,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         String type = node.getInit().getExprType();
         if (!conformsTo(type, declaredType)) {
             registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName()
-                    + "' does not match declared type '" + declaredType + "'");
+                    + "' does not conform to declared type '" + declaredType + "'");
         } else {
             addVar(name, declaredType);
         }
@@ -279,6 +279,14 @@ public class TypeCheckVisitor extends SemantVisitor {
     public Object visit(AssignExpr node) {
 
         node.getExpr().accept(this);
+
+        // special case for trying to change array length
+        if(node.getRefName() != null && node.getName().equals("length")) {
+            String arrayName = (node.getRefName());
+            registerSemanticError(node, "length field in array '" +
+            arrayName + "': cannot be modified");
+            return null;
+        }
 
         String name = node.getName();
         String ref = node.getRefName();
@@ -845,11 +853,14 @@ public class TypeCheckVisitor extends SemantVisitor {
         String sizeType = node.getSize().getExprType();
         String type = node.getType();
         if (!sizeType.equals(INT)) {
-            registerSemanticError(node, "size expression of type '" + sizeType + "' is not type '" + INT + "'");
+            registerSemanticError(node, "size in the array construction has type '"
+            + sizeType + "' rather than '" + INT + "'");
         }
 
         if (!typeExists(type)) {
-            registerSemanticError(node, "type '" + type + "' of array is undefined");
+            registerSemanticError(node, "type '" + type + "' of new construction is undefined");
+            node.setExprType(OBJECT);
+            return null;
         }
 
         node.setExprType(node.getType() + "[]");
@@ -881,8 +892,14 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         if (isPrimitive(exprType)) {
             registerSemanticError(node,
-                    "the instanceof lefthand expression has type '" + type
+                    "the instanceof lefthand expression has type '" + exprType
                             + "', which is primitive and not an object type");
+        }
+
+        if (isPrimitive(type)) {
+            registerSemanticError(node,
+                    "the instanceof righthand type '" + type
+                            + "' is primitive and not an object type");
         }
 
         if (exprType.equals(VOID)) {
