@@ -55,6 +55,9 @@ import util.ErrorHandler;
 
 public class TypeCheckVisitor extends SemantVisitor {
 
+    // int used to track loop depth to know if break valid
+    private int loopDepth = 0;
+
     public TypeCheckVisitor(ClassTreeNode classTreeNode, ErrorHandler errorHandler) {
         super.classTreeNode = classTreeNode;
         super.errorHandler = errorHandler;
@@ -109,7 +112,8 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         // check that return types conform
         ReturnStmt returnStmt = null;
-        String returnType = "void";
+        String expectedReturnType = node.getReturnType();
+        String actualReturnType = "";
         Iterator<ASTNode> bodyStmts = node.getStmtList().getIterator();
 
         // check that return stmt should be the last stmt
@@ -117,22 +121,23 @@ public class TypeCheckVisitor extends SemantVisitor {
             Stmt stmt = (Stmt) bodyStmts.next();
             if (stmt instanceof ReturnStmt) {
                 returnStmt = (ReturnStmt) stmt;
-                returnType = (String) returnStmt.accept(this);
-                break;
+                actualReturnType = (String) returnStmt.accept(this);
+                // verify expected and actual return types match
+                if(!conformsTo(expectedReturnType, actualReturnType))
+                {
+                    registerSemanticError(returnStmt, "return type '" + actualReturnType +
+                    "' is not compatible with declared return type '" + 
+                    expectedReturnType + "' in method " + node.getName());
+                }
             }
         }
 
+        // ! I don't think this is something Furcy wants us to check !
         // check that there are no expressions after the returnStmt
-        if (bodyStmts.hasNext()) {
-            registerSemanticError(node, "Unreachable statement of type '" +
-                    bodyStmts.next().getClass().getSimpleName() + "' after return statement");
-        }
-
-        // check that return type matches the actual return statement
-        if (!conformsTo(returnType, node.getReturnType())) {
-            registerSemanticError(node, "return type '" + returnType + "' is not compatible with declared return type '"
-                    + node.getReturnType() + "' in method '" + node.getName() + "'");
-        }
+        //if (bodyStmts.hasNext()) {
+        //    registerSemanticError(node, "Unreachable statement of type '" +
+        //            bodyStmts.next().getClass().getSimpleName() + "' after return statement");
+        //}
 
         exitScope();
         return null;
@@ -539,11 +544,12 @@ public class TypeCheckVisitor extends SemantVisitor {
         if (!(BOOL).equals(predExpr.getExprType())) {
             registerSemanticError(node, "predicate in while-statement does not have type boolean");
         }
-
+        loopDepth++;
         enterScope();
         node.getBodyStmt().accept(this);
 
         exitScope();
+        loopDepth--;
         return null;
     }
 
@@ -560,17 +566,18 @@ public class TypeCheckVisitor extends SemantVisitor {
         if (node.getPredExpr() != null) {
             node.getPredExpr().accept(this);
             if (!(BOOL).equals(node.getPredExpr().getExprType())) {
-                registerSemanticError(node, "predicate in while-statement does not have type boolean");
+                registerSemanticError(node, "predicate in for-statement does not have type boolean");
             }
         }
         if (node.getUpdateExpr() != null) {
             node.getUpdateExpr().accept(this);
         }
-
+        loopDepth++;
         enterScope();
         node.getBodyStmt().accept(this);
 
         exitScope();
+        loopDepth--;
         return null;
     }
 
@@ -1032,23 +1039,16 @@ public class TypeCheckVisitor extends SemantVisitor {
     }
 
     /**
-     * 
-     *
-     *
-     *
-     * Not completed
-     *
-     *
-     *
-     */
-
-    /**
      * Visit a break statement node
      * 
      * @param node the break statement node
      * @return result of the visit
      */
     public Object visit(BreakStmt node) {
+        if(loopDepth == 0)
+        {
+            registerSemanticError(node, "break statement is not inside a loop");
+        }
         return null;
     }
 
