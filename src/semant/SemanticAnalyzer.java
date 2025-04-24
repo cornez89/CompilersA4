@@ -409,31 +409,29 @@ public class SemanticAnalyzer {
             }
 
             if (mainMethod != null) {
-                if (!mainMethod.getFormalList().getIterator().hasNext() &&
-                        mainMethod.getReturnType().equals("void")) {
-                    // main class and main method are defined with no params
-
-                } else {
+                if (mainMethod.getFormalList().getIterator().hasNext()) {
+                    
                     // Error main method is not defined correctly
                     errorHandler.register(errorHandler.SEMANT_ERROR,
-                            mainClass.getASTNode().getFilename(), 0,
-                            "Error: Main method is not defined correctly." +
-                                    "Main should have a return type of void and no"
-                                    +
-                                    " params. Ex. void main().");
+                            mainClass.getASTNode().getFilename(), mainMethod.getLineNum(),
+                            "'main' method in class 'Main' cannot take arguments");
+                }
+
+                if (!mainMethod.getReturnType().equals("void")) {
+                    errorHandler.register(errorHandler.SEMANT_ERROR,
+                    mainClass.getASTNode().getFilename(), mainMethod.getLineNum(),
+                    "'main' method in class 'Main' must be void");    
                 }
             } else {
                 // Error main method is not defined
                 errorHandler.register(errorHandler.SEMANT_ERROR,
-                        mainClass.getASTNode().getFilename(), 0,
-                        "Error in CheckMain: Main method is not defined." +
-                                " Main class should have a main method defined" +
-                                " with return type of void and 0 params." +
-                                " Ex. void main().");
+                        mainClass.getASTNode().getFilename(), mainClass.getASTNode().getLineNum(),
+                        "no 'main' method defined in the 'Main' class.");
             }
         } else {
             // Error main method is not defined
-            errorHandler.register(errorHandler.SEMANT_ERROR, "no class 'Main' defined.");
+            errorHandler.register(errorHandler.SEMANT_ERROR,
+                         "no class 'Main' defined.");
         }
     }
 
