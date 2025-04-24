@@ -564,9 +564,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         Expr predExpr = node.getPredExpr();
         predExpr.accept(this);
         if (!predExpr.getExprType().equals(BOOL)) {
-            throw new RuntimeException(errorMessagePrefix(node)
-                    + "Predicate must be of type boolean, given type: "
-                    + predExpr.getExprType() + ".");
+            registerSemanticError(node, "predicate in while-statement does not have type boolean");
         }
 
         enterScope();
