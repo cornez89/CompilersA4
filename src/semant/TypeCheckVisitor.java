@@ -1,6 +1,8 @@
 package semant;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import ast.ASTNode;
 import ast.ArrayAssignExpr;
@@ -64,10 +66,6 @@ public class TypeCheckVisitor extends SemantVisitor {
         super.errorHandler = errorHandler;
     }
 
-    String errorMessagePrefix(ASTNode node) {
-        return "Error in " + node.getClass().getSimpleName() + ": ";
-    }
-
     public Object visit(Field node) {
         if (isReserved(node.getName())) {
             registerSemanticError(node, "fields cannot be named '" + node.getName() + "'");
@@ -84,15 +82,15 @@ public class TypeCheckVisitor extends SemantVisitor {
             if (VOID.equals(initExpr.getExprType())) {
                 registerSemanticError(node,
                         "expression type '" + initExpr.getExprType() + "' of field 's' cannot be " + VOID);
-            }
-
-            // Two errors in one
-            // checks if primitives match
-            // checks if references types conform
-            if (!conformsTo(initExpr.getExprType(), node.getType())) {
+            } else if (!conformsTo(initExpr.getExprType(), node.getType())) {
+                // Two errors in one
+                // checks if primitives match
+                // checks if references types conform
                 registerSemanticError(node,
                         "expression type '" + initExpr.getExprType() + "' of field '" + node.getName()
-                                + "' does not match declared type '" + node.getType() + "'");
+                                + "' does not "
+                                + (isPrimitive(node.getType()) ? "match" : "conform to")
+                                + " declared type '" + node.getType() + "'");
             }
 
         }
@@ -119,7 +117,8 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         // check that return type validity
         String expectedReturnType = node.getReturnType();
-        if (!isValidReturnType(expectedReturnType))
+        boolean returnTypeValid = isValidReturnType(expectedReturnType);
+        if (!returnTypeValid)
             registerSemanticError(node, "return type '" + expectedReturnType + "' of method '"
                     + name + "' is undefined");
 
@@ -129,24 +128,40 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         // check return conformity
         Iterator<ASTNode> bodyStmts = node.getStmtList().getIterator();
-        boolean returnedExpression = false;
+        Iterator<ASTNode> formalStmts = node.getFormalList().getIterator();
+        boolean returned = false;
+        Set<String> variables = new HashSet<>();
+        while (formalStmts.hasNext()) {
+            Formal formal = (Formal) formalStmts.next();
+            if (!variables.add(formal.getName())) {
+                registerSemanticError(formal, "formal '" + formal.getName() + "' is multiply defined");
+            }
+        }
 
         while (bodyStmts.hasNext()) {
             Stmt stmt = (Stmt) bodyStmts.next();
-            if (stmt instanceof ReturnStmt) {
+            if (stmt instanceof ReturnStmt && returnTypeValid) {
                 ReturnStmt returnStmt = (ReturnStmt) stmt;
                 String actualReturnType = (String) returnStmt.accept(this);
                 // verify expected and actual return types match
-                if (!expectedReturnType.equals(VOID) && actualReturnType.equals(VOID))
-                    continue;
-                else if (!conformsTo(actualReturnType, expectedReturnType))
-                    registerSemanticError(returnStmt, "return type '" + actualReturnType +
-                            "' is not compatible with declared return type '" +
+                if (!conformsTo(actualReturnType, expectedReturnType))
+                    registerSemanticError(returnStmt, "return type '" + actualReturnType
+                            + "' "
+                            + (isPrimitive(expectedReturnType) || expectedReturnType.equals(VOID)
+                                    ? "is not compatible with"
+                                    : "does not conform to")
+                            + " declared return type '" +
                             expectedReturnType + "' in method '" + name + "'");
-                returnedExpression = true;
+                returned = true;
+            } else if (stmt instanceof DeclStmt) {
+                DeclStmt declStmt = (DeclStmt) stmt;
+                if (!variables.add(declStmt.getName())) {
+                    registerSemanticError(declStmt,
+                            "variable '" + declStmt.getName() + "' is already defined in method " + name);
+                }
             }
         }
-        if (!expectedReturnType.equals(VOID) && !returnedExpression)
+        if (!expectedReturnType.equals(VOID) && !returned)
             registerSemanticError(node, "declared return type of method '" + name + "' is '"
                     + expectedReturnType + "' but method body is not returning any expression");
 
@@ -191,17 +206,17 @@ public class TypeCheckVisitor extends SemantVisitor {
     }
 
     protected String checkFormal(String name, String type, ASTNode node, String nodeType) {
+        return checkFormal(name, type, node, nodeType, nodeType);
+    }
+
+    protected String checkFormal(String name, String type, ASTNode node, String nodeType, String altNodeType) {
         if (!typeExists(type)) {
             registerSemanticError(node, "type '" + type + "' of " + nodeType + " '" + name + "' is undefined");
             type = "Object";
         }
 
         if (isReserved(name)) {
-            registerSemanticError(node, nodeType + "s cannot be named '" + name + "'");
-        }
-
-        if (existsInCurrentVarScope(name)) {
-            registerSemanticError(node, nodeType + " '" + name + "' is multiply defined");
+            registerSemanticError(node, altNodeType + "s cannot be named '" + name + "'");
         }
 
         return type;
@@ -231,14 +246,17 @@ public class TypeCheckVisitor extends SemantVisitor {
         // same as formal
         String declaredType = node.getType();
         String name = node.getName();
-        declaredType = checkFormal(name, declaredType, node, "variable");
+        declaredType = checkFormal(name, declaredType, node, "declaration", "variable");
 
         // check that init type conforms to declared type
         node.getInit().accept(this);
         String type = node.getInit().getExprType();
         if (!conformsTo(type, declaredType)) {
             registerSemanticError(node, "expression type '" + type + "' of declaration '" + node.getName()
-                    + "' does not match declared type '" + declaredType + "'");
+                    + "' does not "
+                    + (isPrimitive(type)
+                            || isPrimitive(declaredType) ? "match" : "conform to")
+                    + " declared type '" + declaredType + "'");
         } else {
             addVar(name, declaredType);
         }
@@ -961,14 +979,9 @@ public class TypeCheckVisitor extends SemantVisitor {
                 type = NULL;
             } else {
                 type = (String) lookupVar(name);
-                if (type == null) {
-                    registerSemanticError(node, "type '" + type + "' is undefined for variable expression");
-                    type = OBJECT;
-                }
             }
         }
         if (type == null) {
-            registerSemanticError(node, "var in getTypeOfVarExp is null");
             type = OBJECT;
         }
 
