@@ -261,6 +261,10 @@ public class TypeCheckVisitor extends SemantVisitor {
             addVar(name, declaredType);
         }
 
+        // add var even if we found an error in declaration
+        // so we can check for other problems with it
+        addVar(name, declaredType);
+
         return null;
     }
 
@@ -312,9 +316,9 @@ public class TypeCheckVisitor extends SemantVisitor {
         // check that expr type conforms to the type of the variable
         String exprType = node.getExpr().getExprType();
         if (!conformsTo(exprType, declaredType)) {
-            registerSemanticError(node, "the righthand type '" + exprType +
-                    "' does not conform to the lefthand type '" + declaredType +
-                    "' in assignment");
+            registerSemanticError(node, "the lefthand type '" + declaredType +
+                    "' and righthand type '" + exprType + "' are not compatible"
+                    + " in assignment");
         }
 
         node.setExprType(exprType);
@@ -339,7 +343,8 @@ public class TypeCheckVisitor extends SemantVisitor {
         }
 
         if (declaredType == null) {
-            registerSemanticError(node, "the lefthand variable '" + name + "' must be declared");
+            registerSemanticError(node, "variable '" + name + "' in assignment"
+            + " is undeclared");
             return OBJECT;
         }
 
@@ -366,6 +371,14 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
+
+        // if var was undeclared, it has now been set to
+        // object so don't take off an imaginary []
+        if(declaredType == OBJECT)
+        {
+            return null;
+        }
+
         declaredType = declaredType.substring(0, declaredType.length() - 2);
 
         // check that return type of expr conforms to type of array
@@ -373,9 +386,9 @@ public class TypeCheckVisitor extends SemantVisitor {
         String exprType = node.getExpr().getExprType();
 
         if (!conformsTo(exprType, declaredType.substring(0))) {
-            registerSemanticError(node, "the righthand type '" + exprType +
-                    "' does not conform to the lefthand type '" + declaredType +
-                    "' in assignment");
+            registerSemanticError(node, "the lefthand type '" + declaredType +
+                "' and righthand type '" + exprType + "' are not compatible"
+                + " in assignment");
         }
 
         node.setExprType(exprType);
