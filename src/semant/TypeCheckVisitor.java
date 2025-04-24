@@ -108,40 +108,46 @@ public class TypeCheckVisitor extends SemantVisitor {
     public Object visit(Method node) {
         enterScope();
 
+        String name = node.getName();
+
         // type check and add formals
         node.getFormalList().accept(this);
 
         // type check and add local vars
         node.getStmtList().accept(this);
 
-        // check that return types conform
-        ReturnStmt returnStmt = null;
+        // check that return type validity
         String expectedReturnType = node.getReturnType();
-        String actualReturnType = "";
-        Iterator<ASTNode> bodyStmts = node.getStmtList().getIterator();
+        if (!isValidReturnType(expectedReturnType))
+            registerSemanticError(node, "return type '" + expectedReturnType + "' of method '"
+                    + name + "' is undefined");
 
-        // check that return stmt should be the last stmt
+        // check that method name is valid
+        if (isReserved(name))
+            registerSemanticError(node, "methods cannot be named '" + name + "'");
+
+        // check return conformity
+        Iterator<ASTNode> bodyStmts = node.getStmtList().getIterator();
+        boolean returnedExpression = false;
+
         while (bodyStmts.hasNext()) {
             Stmt stmt = (Stmt) bodyStmts.next();
             if (stmt instanceof ReturnStmt) {
-                returnStmt = (ReturnStmt) stmt;
-                actualReturnType = (String) returnStmt.accept(this);
+                ReturnStmt returnStmt = (ReturnStmt) stmt;
+                String actualReturnType = (String) returnStmt.accept(this);
                 // verify expected and actual return types match
-                if(!conformsTo(expectedReturnType, actualReturnType))
-                {
+                if (!expectedReturnType.equals(VOID) && actualReturnType.equals(VOID))
+                    continue;
+                else if (!conformsTo(actualReturnType, expectedReturnType))
                     registerSemanticError(returnStmt, "return type '" + actualReturnType +
-                    "' is not compatible with declared return type '" + 
-                    expectedReturnType + "' in method " + node.getName());
-                }
+                            "' is not compatible with declared return type '" +
+                            expectedReturnType + "' in method '" + name + "'");
+                returnedExpression = true;
             }
         }
-
-        // ! I don't think this is something Furcy wants us to check !
-        // check that there are no expressions after the returnStmt
-        //if (bodyStmts.hasNext()) {
-        //    registerSemanticError(node, "Unreachable statement of type '" +
-        //            bodyStmts.next().getClass().getSimpleName() + "' after return statement");
-        //}
+        if (!expectedReturnType.equals(VOID) && !returnedExpression)
+            registerSemanticError(node, "declared return type of method '" + name + "' is '"
+                    + expectedReturnType + "' but method body is not returning any expression");
 
         exitScope();
         return null;
@@ -1049,8 +1055,7 @@ public class TypeCheckVisitor extends SemantVisitor {
      * @return result of the visit
      */
     public Object visit(BreakStmt node) {
-        if(loopDepth == 0)
-        {
+        if (loopDepth == 0) {
             registerSemanticError(node, "break statement is not inside a loop");
         }
         return null;

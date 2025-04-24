@@ -125,7 +125,7 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     protected boolean isValidReturnType(String type) {
-        return typeExists(type) || isPrimitive(type) || type.equals("void");
+        return typeExists(type) || type.equals(VOID);
     }
 
     protected void addVar(String name, String type) {

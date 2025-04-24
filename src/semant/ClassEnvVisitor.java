@@ -78,10 +78,9 @@ public class ClassEnvVisitor extends SemantVisitor {
             errorHandler.register(errorHandler.SEMANT_ERROR,
                     classTreeNode.getASTNode().getFilename(),
                     method.getLineNum(),
-                    "Error in BuildClassTree: Invalid Override. Return type: "
-                            + method.getReturnType() +
-                            " does not match original return type: "
-                            + originalMethod.getReturnType());
+                    "overriding method '" + method.getName() + "' has return type '" + method.getReturnType()
+                            + "', which differs from the inherited method's return type '"
+                            + originalMethod.getReturnType() + "'");
             isValid = false;
         }
 
