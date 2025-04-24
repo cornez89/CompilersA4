@@ -267,7 +267,7 @@ public class SemanticAnalyzer {
         updateBuiltins();
 
         Iterator<ASTNode> iterator = classList.getIterator();
-        ArrayList<ASTNode> classNodes = new ArrayList<>();
+        ArrayList<Class_> classNodes = new ArrayList<>();
 
         for (ClassTreeNode classTreeNode : classMap.values()) {
             if (!classTreeNode.getName().equals("Object")) {
@@ -276,18 +276,18 @@ public class SemanticAnalyzer {
         }
 
         while (iterator.hasNext()) {
-            classNodes.add(iterator.next());
+            classNodes.add((Class_) iterator.next());
         }
         boolean classesChanged = true;
 
-        //cycle through classNodes and add it to the map if its parent exists
+        // cycle through classNodes and add it to the map if its parent exists
         while (!classNodes.isEmpty() && classesChanged) {
             // track the number of nodes prior removing any
             int beforeLoopSize = classNodes.size();
 
             for (int i = 0; i < classNodes.size();) {
                 // make class tree node
-                Class_ classNode = (Class_) classNodes.get(i);
+                Class_ classNode = classNodes.get(i);
                 ClassTreeNode classTreeNode = new ClassTreeNode(
                         classNode,
                         false, // never built in
@@ -295,12 +295,18 @@ public class SemanticAnalyzer {
                         classMap);
 
                 // check if name already exists
-                if (classMap.keySet().contains((classNode.getName()))) {
-                    // Error duplicate class name
-                    errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0,
-                            "Error in BuildClassTree: Duplicate name: "
-                                    + classNode.getName() +
-                                    " found in class hiearchy.");
+                if (classMap.containsKey((classNode.getName()))) {
+                    ClassTreeNode old = classMap.get(classNode.getName());
+                    if (old.isBuiltIn()) {
+                        errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(),
+                                classNode.getLineNum(), "built-in class '" + old.getName() + "' cannot be redefined");
+
+                    } else {
+                        errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(),
+                                classNode.getLineNum(), "duplicate class '" + old.getName()
+                                        + "' (originally defined at line " + old.getASTNode().getLineNum() + ")");
+
+                    }
 
                     // disregard
                     classNodes.remove(i);
@@ -308,22 +314,21 @@ public class SemanticAnalyzer {
 
                     // ensure classes have default parent object if nothing else
                     String parentName = classNode.getParent();
-                    if(parentName == null || parentName.isEmpty())
-                    {
+                    if (parentName == null || parentName.isEmpty()) {
                         parentName = "Object";
                     }
 
                     // check if parent exists
                     if (!classMap.keySet().contains(parentName)) {
                         // No parent class found
-                        // no Need to register an error here,
-                        // just report classes with no parent after the loop
+                        // either hasn't gotten there yet or is in loop
                         i++;
                     } else if (!classMap.get(parentName).isExtendable()) {
                         errorHandler.register(errorHandler.SEMANT_ERROR,
-                                classNode.getFilename(), 0,
-                                "Parent class: " + classNode.getParent()
-                                        + " is not extendable.");
+                                classNode.getFilename(), classNode
+                                        .getLineNum(),
+                                "class '" + classNode.getName() + "' extends non-extendable class '" + parentName
+                                        + "'");
                         classNodes.remove(i);
                     } else {
                         // update parent link
@@ -333,26 +338,6 @@ public class SemanticAnalyzer {
                         // add to classMap
                         classMap.put(classNode.getName(), classTreeNode);
 
-                        // check for cycles
-                        int numOfNodes = classMap.size();
-                        int nodesTraversed = 0;
-                        ClassTreeNode currTreeNode = classTreeNode;
-                        while (currTreeNode != null && nodesTraversed <= numOfNodes) {
-                            currTreeNode = currTreeNode.getParent();
-                            nodesTraversed++;
-                        }
-
-                        boolean isCycle = nodesTraversed > numOfNodes;
-
-                        if (isCycle) {
-                            errorHandler.register(errorHandler.SEMANT_ERROR,
-                                    classNode.getFilename(), 0,
-                                    "Error in BuildClassTree: Cycle found in class hiearchy after adding class: "
-                                            + classNode.getName() +
-                                            " with parent: "
-                                            + classNode.getParent() + ".");
-                        }
-
                         // add to ordered list
                         classNodes.remove(i);
                         orderedClassList.add(classTreeNode);
@@ -361,14 +346,35 @@ public class SemanticAnalyzer {
             }
             classesChanged = beforeLoopSize != classNodes.size();
         }
-        // The remaining nodes do not have a parent class
-        for (ASTNode node : classNodes) {
-            Class_ classNode = (Class_) node;
-            errorHandler.register(errorHandler.SEMANT_ERROR, classNode.getFilename(), 0,
-                    "Error in BuildClassTree: Parent class: " + classNode.getParent() +
-                            " does not exist in the class hiearchy.");
-        }
 
+        Map<String, Class_> remainingNodes = new HashMap<>();
+        for (Class_ node : classNodes) {
+            remainingNodes.put(node.getName(), node);
+        }
+        // The remaining nodes do not have a parent class or are in a cycle
+        for (Class_ node : remainingNodes.values()) {
+            Class_ tortise = node;
+            Class_ hare = node;
+            boolean inLoop = false;
+            while (tortise != null && hare != null) {
+                tortise = remainingNodes.get(tortise.getParent());
+                hare = remainingNodes.get(hare.getParent());
+                if (hare != null) {
+                    hare = remainingNodes.get(hare.getParent());
+                }
+                if (tortise == hare && tortise != null) {
+                    inLoop = tortise == node;
+                    break;
+                }
+            }
+            if (inLoop)
+                errorHandler.register(errorHandler.SEMANT_ERROR,
+                        node.getFilename(), node.getLineNum(),
+                        "inheritance cycle found involving class '" + node.getName() + "'");
+            else
+                errorHandler.register(errorHandler.SEMANT_ERROR, node.getFilename(), node.getLineNum(),
+                        "class '" + node.getName() + "' extends non-existent class '" + node.getParent() + "'");
+        }
     }
 
     /**
@@ -427,10 +433,7 @@ public class SemanticAnalyzer {
             }
         } else {
             // Error main method is not defined
-            errorHandler.register(errorHandler.SEMANT_ERROR,
-                    "Error in CheckMain: Main class is not defined." +
-                            " There must be a class named Main in" +
-                            " a program.");
+            errorHandler.register(errorHandler.SEMANT_ERROR, "no class 'Main' defined.");
         }
     }
 

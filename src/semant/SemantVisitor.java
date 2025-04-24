@@ -111,17 +111,16 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     protected String removeArray(String type) {
-        if (type.length() > 2 && type.substring(type.length() - 2).equals("[]")) {
+        if (type.endsWith("[]")) {
             return type.substring(0, type.length() - 2);
         }
         return type;
     }
 
     protected boolean isReserved(String name) {
-        for (String word : reservedWordsArray) {
+        for (String word : reservedWordsArray)
             if (word.equals(name))
                 return true;
-        }
         return false;
     }
 
@@ -164,7 +163,6 @@ abstract public class SemantVisitor extends Visitor {
         }
 
         if (classTreeNode == null) {
-            registerSemanticError(null, "Debug! Error in adding class " + className);
             return null;
         }
 

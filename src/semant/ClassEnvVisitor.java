@@ -77,7 +77,7 @@ public class ClassEnvVisitor extends SemantVisitor {
         if (!method.getReturnType().equals(originalMethod.getReturnType())) {
             errorHandler.register(errorHandler.SEMANT_ERROR,
                     classTreeNode.getASTNode().getFilename(),
-                    0,
+                    method.getLineNum(),
                     "Error in BuildClassTree: Invalid Override. Return type: "
                             + method.getReturnType() +
                             " does not match original return type: "
@@ -140,13 +140,11 @@ public class ClassEnvVisitor extends SemantVisitor {
     }
 
     public Object visit(Field node) {
-
         if (classTreeNode.getVarSymbolTable().peek(node.getName()) != null) {
             // name already exists
             errorHandler.register(errorHandler.SEMANT_ERROR,
                     classTreeNode.getASTNode().getFilename(), node.getLineNum(),
-                    "Error in BuildSymbolTable: Variable: " + node.getName() +
-                            " already exists in the current scope.");
+                    "field '" + node.getName() + "' is already defined in class '" + classTreeNode.getName() + "'");
         } else {
             classTreeNode.getVarSymbolTable().add(node.getName(), node.getType());
         }

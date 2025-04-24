@@ -32,6 +32,7 @@ import ast.DispatchExpr;
 import ast.Expr;
 import ast.ExprList;
 import ast.ExprStmt;
+import ast.Field;
 import ast.ForStmt;
 import ast.Formal;
 import ast.FormalList;
@@ -64,15 +65,18 @@ public class TypeCheckVisitor extends SemantVisitor {
         return "Error in " + node.getClass().getSimpleName() + ": ";
     }
 
-    public Object visit(ast.Field node) {
+    public Object visit(Field node) {
+        if (isReserved(node.getName())) {
+            registerSemanticError(node, "fields cannot be named '" + node.getName() + "'");
+        }
+        if (!typeExists(node.getType())) {
+            registerSemanticError(node,
+                    "type '" + node.getType() + "' of field '" + node.getName() + "' is undefined");
+        }
+
         if (node.getInit() != null) {
             Expr initExpr = node.getInit();
             initExpr.accept(this);
-
-            if (!typeExists(node.getType())) {
-                registerSemanticError(node,
-                        "type '" + node.getType() + "' of field '" + node.getName() + "' is undefined");
-            }
 
             if (VOID.equals(initExpr.getExprType())) {
                 registerSemanticError(node, "cannot return an expression of type '" + VOID + "' from a method");
@@ -169,12 +173,12 @@ public class TypeCheckVisitor extends SemantVisitor {
         String type = node.getType();
         String name = node.getName();
 
-        type = (String) checkFormal(name, type, node, "formal");
+        type = checkFormal(name, type, node, "formal");
 
         return type;
     }
 
-    protected Object checkFormal(String name, String type, ASTNode node, String nodeType) {
+    protected String checkFormal(String name, String type, ASTNode node, String nodeType) {
         if (!typeExists(type)) {
             registerSemanticError(node, "type '" + type + "' of " + nodeType + " '" + name + "' is undefined");
             type = "Object";
@@ -215,7 +219,7 @@ public class TypeCheckVisitor extends SemantVisitor {
         // same as formal
         String declaredType = node.getType();
         String name = node.getName();
-        declaredType = (String) checkFormal(name, declaredType, node, "declaration");
+        declaredType = checkFormal(name, declaredType, node, "variable");
 
         // check that init type conforms to declared type
         node.getInit().accept(this);
@@ -424,7 +428,7 @@ public class TypeCheckVisitor extends SemantVisitor {
      * @return result of the visit
      */
     public Object visit(ExprList node) {
-        for (Iterator it = node.getIterator(); it.hasNext();)
+        for (Iterator<ASTNode> it = node.getIterator(); it.hasNext();)
             ((Expr) it.next()).accept(this);
         return null;
     }
