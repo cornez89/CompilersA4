@@ -36,7 +36,7 @@ abstract public class SemantVisitor extends Visitor {
     }
 
     public boolean isPrimitive(String type) {
-        return type.equals(BOOL) || type.equals(INT);
+        return type != null && (type.equals(BOOL) || type.equals(INT));
     }
 
     private boolean isArray(String type) {
