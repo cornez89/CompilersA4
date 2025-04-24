@@ -350,12 +350,13 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         String ref = node.getRefName();
         String declaredType = checkTypeOfAssignment(name, ref, node);
+        declaredType = declaredType.substring( 0, declaredType.length() -2);
 
         // check that return type of expr conforms to type of array
         node.getExpr().accept(this);
         String exprType = node.getExpr().getExprType();
 
-        if (!conformsTo(exprType, declaredType)) {
+        if (!conformsTo(exprType, declaredType.substring(0))) {
             registerSemanticError(node, "the lefthand type '" + declaredType +
                     "' and righthand type '" + exprType + "' are not compatible in assignment");
         }
@@ -670,26 +671,28 @@ public class TypeCheckVisitor extends SemantVisitor {
 
         node.getLeftExpr().accept(this);
         node.getRightExpr().accept(this);
-
-        Expr leftOperand = (Expr) node.getLeftExpr();
-        Expr rightOperand = (Expr) node.getRightExpr();
-        if (!leftOperand.equals(node.getOperandType())) {
-            registerSemanticError(node,
-                    "the lefthand type '" + leftOperand.getExprType() + "' in the binary operation ('"
-                            + node.getOpName() + "') is incorrect; should have been: " + node.getOperandType());
-        }
-        if (!rightOperand.equals(node.getOperandType())) {
-            registerSemanticError(node,
-                    "the righthand type '" + rightOperand.getExprType() + "' in the binary operation ('"
-                            + node.getOpName() + "') is incorrect; should have been: " + node.getOperandType());
-        }
-
-        if (!conformsTo(leftOperand.getExprType(), rightOperand.getExprType()) &&
-                !conformsTo(rightOperand.getExprType(), leftOperand.getExprType())) {
-            registerSemanticError(node,
-                    "the lefthand type '" + leftOperand.getExprType() + "' in the binary operation ('"
-                            + node.getOpName() + "') does not match the righthand type '" + rightOperand.getExprType()
-                            + "'");
+        String leftType =  node.getLeftExpr().getExprType();
+        String rightType = node.getRightExpr().getExprType();
+        
+        if (node.getOperandType() != null) {
+            if (!leftType.equals(node.getOperandType())) {
+                registerSemanticError(node,
+                        "the lefthand type '" + leftType + "' in the binary operation ('"
+                                + node.getOpName() + "') is incorrect; should have been: " + node.getOperandType());
+            }
+            if (!rightType.equals(node.getOperandType())) {
+                registerSemanticError(node,
+                        "the righthand type '" + rightType + "' in the binary operation ('"
+                                + node.getOpName() + "') is incorrect; should have been: " + node.getOperandType());
+            }
+        } else {
+            if (!conformsTo(leftType, rightType) &&
+                !conformsTo(rightType, leftType)) {
+                registerSemanticError(node,
+                    "the lefthand type '" + leftType + "' in the binary operation ('"
+                    + node.getOpName() + "') does not match the righthand type '" + rightType
+                    + "'");
+            }
         }
 
         node.setExprType(node.getOpType());
