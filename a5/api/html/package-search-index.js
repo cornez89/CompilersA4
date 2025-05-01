@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"ast"},{"l":"codegenjvm"},{"l":"parser"},{"l":"semant"},{"l":"util"},{"l":"visitor"}];updateSearchResults();
