@@ -1,0 +1,749 @@
+<?xml version="1.0"?>
+<project name="tests" default="compile-all" basedir=".">
+
+  <!-- customizable properties -->
+  
+  <property name="TARGET"  value="jvm"/> <!-- values: mips, x86, or jvm  -->
+  <property name="FLAGS"   value=""/>    <!-- values: -gc, -sl, sp, etc. -->
+
+
+  <!-- condition for performing code generation -->
+
+  <condition property="perform.code.generation" value="">
+    <not>
+      <or>
+	<contains string="${FLAGS}" substring="-sl"/>
+	<contains string="${FLAGS}" substring="-sp"/>
+	<contains string="${FLAGS}" substring="-ss"/>
+      </or>
+    </not>
+  </condition>
+
+  <!-- set flag for current target: target-is-${TARGET} -->
+
+  <property name="target-is-${TARGET}" value="on"/>
+
+  <!-- determine the host operating system -->
+
+  <condition property="this.is.unix">
+    <os family="unix"/>
+  </condition>
+
+  <condition property="this.is.windows">
+    <os family="windows"/>
+  </condition>
+
+  <!-- additional source files (beyond the Main class file) -->
+
+  <property name="A"  value=""/>
+
+  <!-- additional Jasmin files (beyond Main.j) -->
+
+  <property name="J"  value=""/>
+
+  <!-- the bantamc executable: ${BTMC} -->
+
+  <condition property="BTMC" value="${basedir}/../bin/bantamc">
+    <isset property="this.is.unix"/>
+  </condition>
+
+  <condition property="BTMC" value="${basedir}\..\bin\bantamc.bat">
+    <isset property="this.is.windows"/>
+  </condition>
+
+  <!-- the directory containing the runtime system: ${RUNTIME} -->
+
+  <property name="RUNTIME"  value="${basedir}/../lib"/>
+
+  <!-- additional Jasmin files (beyond Main.j) -->
+
+  <property name="exceptions.file"  value="${RUNTIME}/exceptions.s"/>
+
+  <!-- compile any Bantam Java program to MIPS -->
+
+  <target name="compile-to-mips">
+    <exec executable="${BTMC}">
+      <arg line="${FLAGS}"/>
+      <arg value="-t"/>
+      <arg value="mips"/>
+      <arg value="${M}"/>      <!-- main .btm file -->
+      <arg line ="${A}"/>      <!-- additional .btm files -->
+      <arg value="-o"/>
+      <arg value="${N}.asm"/>  <!-- output file -->
+    </exec>      
+  </target>
+
+  <!-- compile any Bantam Java program to x86 -->
+
+  <target name="compile-to-x86">
+
+    <!-- compile .btm file(s) -->
+    <exec executable="${BTMC}"> 
+      <arg line="${FLAGS}"/>
+      <arg value="-t"/>
+      <arg value="x86"/>
+      <arg value="${M}"/>      <!-- main .btm file -->
+      <arg line ="${A}"/>      <!-- additional .btm files -->
+      <arg value="-o"/>
+      <arg value="${N}.s"/>    <!-- output file -->
+    </exec>      
+
+    <antcall target="gcc">
+      <param name="N" value="${N}"/>
+    </antcall>
+  </target>
+
+  <target name="gcc" if="perform.code.generation">
+    <!-- compile .s file(s) -->
+    <exec executable="gcc">   
+      <arg value="${N}.s"/>    <!-- input file -->
+      <arg line="${RUNTIME}/runtime.s"/>
+      <arg value="-o"/>
+      <arg value="${N}.bin"/>  <!-- output file -->
+    </exec>
+  </target>
+
+  <!-- compile any Bantam Java program to the JVM -->
+
+  <target name="compile-to-jvm">   
+
+    <exec executable="${BTMC}"> <!-- generate jasmin assembly files -->
+      <arg line="${FLAGS}"/>
+      <arg value="${M}"/>
+      <arg line ="${A}"/>
+    </exec>      
+
+    <antcall target="generate.class.files">
+      <param name="J" value="${J}"/>
+      <param name="C" value="${C}"/>
+    </antcall>
+  </target>
+
+  <target name="generate.class.files" if="perform.code.generation">
+
+    <exec executable="java">         <!-- generate class files -->
+      <arg value="-jar"/>
+      <arg value="${RUNTIME}/jasmin.jar"/>
+      <arg value="Main.j"/>
+      <arg line ="${J}"/>
+    </exec>
+
+    <copy todir=".">     <!-- make runtime system available locally -->
+      <fileset dir="${RUNTIME}">
+	<include name="*.class"/>
+      </fileset>
+    </copy>
+
+    <jar destfile="${N}.jar">              <!-- generate a jar file -->
+      <manifest>
+	<attribute name="Main-Class" value="Main"/>
+      </manifest>
+      <fileset file="*.class"/>
+    </jar>
+
+    <delete>                         <!-- delete intermediate files -->
+      <fileset dir ="." defaultexcludes="no">
+	<include name="*.class"/>
+	<include name="*.j"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <!-- compile ALL Bantam Java programs -->
+
+  <target name="compile-all">
+    <antcall target="empty-program"/>
+    <antcall target="hello-world"/>
+    <antcall target="simple-calc"/>
+    <antcall target="repeat"/>
+    <antcall target="repeat-num"/>
+    <antcall target="io"/>
+    <antcall target="file-io"/>
+    <antcall target="find-min"/>
+    <antcall target="strings"/>
+    <antcall target="super"/>
+    <antcall target="divide-by-zero"/>
+    <antcall target="mod-by-zero"/>
+    <antcall target="class-cast-error"/>
+    <antcall target="clone"/>
+    <antcall target="instanceof-cast-test1"/>
+    <antcall target="instanceof-cast-test2"/>
+    <antcall target="io-read-error"/>
+    <antcall target="io-write-error"/>
+    <antcall target="assign"/>
+    <antcall target="substring-error1"/>    
+    <antcall target="substring-error2"/>    
+    <antcall target="substring-error3"/>    
+    <antcall target="count-divisors"/>
+    <antcall target="fact"/>
+    <antcall target="fib"/>
+    <antcall target="primes"/>
+    <antcall target="primes-sieves"/>
+    <antcall target="vector-test"/>
+    <antcall target="nim"/>
+    <antcall target="gc-test"/>
+    <antcall target="concat"/>
+    <antcall target="array-index-negative"/>
+    <antcall target="array-index-too-large"/>
+    <antcall target="array-size-negative"/>
+    <antcall target="array-size-too-large"/>
+    <antcall target="null-array-assign"/>
+    <antcall target="null-array-use"/>
+    <antcall target="array-store-error1"/>
+    <antcall target="array-store-error2"/>
+    <antcall target="array-store-error3"/>
+    <antcall target="for-break-inc-dec-test1"/>
+    <antcall target="for-break-inc-dec-test2"/>
+    <antcall target="array-test1"/>
+    <antcall target="array-test2"/>
+    <antcall target="array-test3"/>
+    <antcall target="tic-tac-toe"/>
+  </target>
+
+  <!-- run ALL Bantam Java programs   -->
+
+  <target name="run-all"  if="perform.code.generation">
+    <antcall target="run-all-on-mips"/>
+    <antcall target="run-all-on-x86"/>
+    <antcall target="run-all-on-jvm"/>
+  </target>
+
+  <!-- run ALL Bantam Java programs on MIPS -->
+
+  <target name="run-all-on-mips"  if="target-is-mips">
+    <apply executable="../bin/spim" input="${program}.input">
+      <arg value="${exceptions.file}"/>
+      <srcfile/>
+      <fileset dir="." includes="*.asm"/>
+    </apply>
+  </target>
+
+  <!-- run one Bantam Java programs on MIPS -->
+
+  <target name="run-on-mips"  if="target-is-mips">
+    <echo  message="${program}"/>
+    <exec executable="../bin/spim" input="${program}.input">
+      <arg value="${exceptions.file}"/>
+      <arg value="${program}.asm"/>
+    </exec>
+  </target>
+
+  <!-- run ALL Bantam Java programs on x86 -->
+
+  <target name="run-all-on-x86"  if="target-is-x86">
+    <echo message="not implemented yet"/>
+  </target>
+
+  <!-- run ALL Bantam Java programs on the JVM-->
+
+  <target name="run-all-on-jvm" if="target-is-${TARGET}">
+    <antcall target="run-on-jvm">
+      <param name="program" value="empty-program"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="hello-world"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="simple-calc"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="repeat"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="repeat-num"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="io"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="file-io"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="find-min"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="strings"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="super"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="divide-by-zero"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="mod-by-zero"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="class-cast-error"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="clone"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="instanceof-cast-test1"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="instanceof-cast-test2"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="io-read-error"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="io-write-error"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="assign"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="substring-error1"/>    </antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="substring-error2"/>    </antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="substring-error3"/>    </antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="count-divisors"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="fact"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="fib"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="primes"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="primes-sieves"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="vector-test"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="nim"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="gc-test"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="concat"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-index-negative"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-index-too-large"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-size-negative"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-size-too-large"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="null-array-assign"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="null-array-use"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-store-error1"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-store-error2"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-store-error3"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="for-break-inc-dec-test1"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="for-break-inc-dec-test2"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-test1"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-test2"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="array-test3"/></antcall>
+    <antcall target="run-on-jvm">
+      <param name="program" value="tic-tac-toe"/></antcall>
+  </target>
+
+  <!-- run a Bantam Java program on the JVM -->
+
+  <target name="run-on-jvm" if="perform.code.generation">
+    <echo message="${program}" />
+    <exec executable="java" input="${program}.input">
+      <arg value="-cp"/>
+      <arg value="${program}.jar"/>
+      <arg value="Main"/>
+    </exec>
+  </target>
+  
+  <!-- compile each Bantam Java program to the current target -->
+
+  <target name="empty-program">           <!-- COMPILE 'EmptyProgram.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="EmptyProgram.btm"/>
+      <param name="N"     value="empty-program"/>
+    </antcall>
+  </target>
+
+  <target name="hello-world">               <!-- COMPILE 'HelloWorld.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="HelloWorld.btm"/>
+      <param name="N"     value="hello-world"/>
+    </antcall>
+  </target>
+
+  <target name="simple-calc">               <!-- COMPILE 'SimpleCalc.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="SimpleCalc.btm"/>
+      <param name="N"     value="simple-calc"/>
+    </antcall>
+  </target>
+
+  <target name="repeat">                        <!-- COMPILE 'Repeat.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Repeat.btm"/>
+      <param name="N"     value="repeat"/>
+    </antcall>
+  </target>
+
+  <target name="repeat-num">                 <!-- COMPILE 'RepeatNum.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="RepeatNum.btm"/>
+      <param name="N"     value="repeat-num"/>
+    </antcall>
+  </target>
+
+  <target name="io">                               <!-- COMPILE 'IO.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="IO.btm"/>
+      <param name="N"     value="io"/>
+    </antcall>
+  </target>
+
+  <target name="file-io">                      <!-- COMPILE 'FileIO.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="FileIO.btm"/>
+      <param name="A"     value="Vector.btm"/>
+      <param name="J"     value="Vector.j VectorElement.j"/>
+      <param name="N"     value="file-io"/>
+      <param name="C"     value="Vector.class VectorElement.class"/>
+    </antcall>
+  </target>
+
+  <target name="find-min">                     <!-- COMPILE 'FindMin.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="FindMin.btm"/>
+      <param name="N"     value="find-min"/>
+    </antcall>
+  </target>
+
+  <target name="strings">                      <!-- COMPILE 'Strings.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Strings.btm"/>
+      <param name="N"     value="strings"/>
+    </antcall>
+  </target>
+
+  <target name="super">                          <!-- COMPILE 'Super.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Super.btm"/>
+      <param name="N"     value="super"/>
+      <param name="J"     value="A.j B.j C.j"/>
+      <param name="C"     value="A.class B.class C.class"/>
+    </antcall>
+  </target>
+
+  <target name="divide-by-zero">          <!-- COMPILE 'DivideByZero.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="DivideByZero.btm"/>
+      <param name="N"     value="divide-by-zero"/>
+    </antcall>
+  </target>
+
+  <target name="mod-by-zero">                <!-- COMPILE 'ModByZero.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ModByZero.btm"/>
+      <param name="N"     value="mod-by-zero"/>
+    </antcall>
+  </target>
+
+  <target name="class-cast-error">      <!-- COMPILE 'ClassCastError.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ClassCastError.btm"/>
+      <param name="N"     value="class-cast-error"/>
+    </antcall>
+  </target>
+
+  <target name="clone">                         <!-- COMPILE 'Clone.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Clone.btm"/>
+      <param name="N"     value="clone"/>
+    </antcall>
+  </target>
+
+  <target name="instanceof-cast-test1"> <!-- COMPILE 'InstanceofCastTest1.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="InstanceofCastTest1.btm"/>
+      <param name="N"     value="instanceof-cast-test1"/>
+    </antcall>
+  </target>
+
+  <target name="instanceof-cast-test2"> <!-- COMPILE 'InstanceofCastTest2.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="InstanceofCastTest2.btm"/>
+      <param name="N"     value="instanceof-cast-test2"/>
+    </antcall>
+  </target>
+
+  <target name="io-read-error">            <!-- COMPILE 'IOReadError.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="IOReadError.btm"/>
+      <param name="N"     value="io-read-error"/>
+    </antcall>
+  </target>
+
+  <target name="io-write-error">          <!-- COMPILE 'IOWriteError.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="IOWriteError.btm"/>
+      <param name="N"     value="io-write-error"/>
+    </antcall>
+  </target>
+
+  <target name="assign">                        <!-- COMPILE 'Assign.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Assign.btm"/>
+      <param name="N"     value="assign"/>
+    </antcall>
+  </target>
+
+  <target name="substring-error1">     <!-- COMPILE 'SubStringError1.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="SubStringError1.btm"/>
+      <param name="N"     value="substring-error1"/>
+    </antcall>
+  </target>
+
+  <target name="substring-error2">     <!-- COMPILE 'SubStringError2.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="SubStringError2.btm"/>
+      <param name="N"     value="substring-error2"/>
+    </antcall>
+  </target>
+
+  <target name="substring-error3">     <!-- COMPILE 'SubStringError3.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="SubStringError3.btm"/>
+      <param name="N"     value="substring-error3"/>
+    </antcall>
+  </target>
+
+  <target name="count-divisors">         <!-- COMPILE 'CountDivisors.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="CountDivisors.btm"/>
+      <param name="N"     value="count-divisors"/>
+    </antcall>
+  </target>
+
+  <target name="fact">                            <!-- COMPILE 'Fact.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Fact.btm"/>
+      <param name="N"     value="fact"/>
+    </antcall>
+  </target>
+
+  <target name="fib">                              <!-- COMPILE 'Fib.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Fib.btm"/>
+      <param name="N"     value="fib"/>
+    </antcall>
+  </target>
+
+  <target name="primes">                        <!-- COMPILE 'Primes.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Primes.btm"/>
+      <param name="N"     value="primes"/>
+    </antcall>
+  </target>
+
+  <target name="primes-sieves">           <!-- COMPILE 'PrimesSieves.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="PrimesSieves.btm"/>
+      <param name="N"     value="primes-sieves"/>
+    </antcall>
+  </target>
+
+  <target name="vector-test">               <!-- COMPILE 'VectorTest.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="VectorTest.btm"/>
+      <param name="A"     value="Vector.btm Boolean.btm Integer.btm"/>
+      <param name="J"     value="Vector.j Boolean.j Integer.j"/>
+      <param name="N"     value="vector-test"/>
+      <param name="C"     value="Vector.class Boolean.class Integer.class"/>
+    </antcall>
+    </target>
+
+  <target name="nim">                             <!-- COMPILE 'Nim.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Nim.btm"/>
+      <param name="N"     value="nim"/>
+    </antcall>
+  </target>
+
+  <target name="gc-test">                      <!-- COMPILE 'GCTest.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="GCTest.btm"/>
+      <param name="A"     value="Vector.btm"/>
+      <param name="J"     value="Vector.j VectorElement.j A.j"/>
+      <param name="N"     value="gc-test"/>
+      <param name="C"     value="Vector.class VectorElement.class A.class"/>
+    </antcall>
+  </target>
+
+  <target name="concat">                       <!-- COMPILE 'Concat.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Concat.btm"/>
+      <param name="N"     value="concat"/>
+    </antcall>
+  </target>
+
+  <target name="array-size-negative">  <!-- COMPILE 'ArraySizeNegative.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArraySizeNegative.btm"/>
+      <param name="N"     value="array-size-negative"/>
+    </antcall>
+  </target>
+
+  <target name="array-size-too-large"> <!-- COMPILE 'ArraySizeTooLarge.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArraySizeTooLarge.btm"/>
+      <param name="N"     value="array-size-too-large"/>
+    </antcall>
+  </target>
+
+  <target name="array-index-negative">  <!-- COMPILE 'ArrayIndexNegative.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArrayIndexNegative.btm"/>
+      <param name="N"     value="array-index-negative"/>
+    </antcall>
+  </target>
+
+  <target name="array-index-too-large"> <!-- COMPILE 'ArrayIndexTooLarge.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArrayIndexTooLarge.btm"/>
+      <param name="N"     value="array-index-too-large"/>
+    </antcall>
+  </target>
+
+  <target name="null-array-use">       <!-- COMPILE 'NullArrayUse.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="NullArrayUse.btm"/>
+      <param name="N"     value="null-array-use"/>
+    </antcall>
+  </target>
+
+  <target name="null-array-assign">  <!-- COMPILE 'NullArrayAssign.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="NullArrayAssign.btm"/>
+      <param name="N"     value="null-array-assign"/>
+    </antcall>
+  </target>
+
+  <target name="array-store-error1">  <!-- COMPILE 'ArrayStoreError1.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArrayStoreError1.btm"/>
+      <param name="N"     value="array-store-error1"/>
+    </antcall>
+  </target>
+
+  <target name="array-store-error2">  <!-- COMPILE 'ArrayStoreError2.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArrayStoreError2.btm"/>
+      <param name="J"     value="A.j B.j C.j D.j"/>   
+      <param name="N"     value="array-store-error2"/>
+      <param name="C"     value="A.class B.class C.class D.class"/>
+    </antcall>
+  </target>
+
+  <target name="array-store-error3">  <!-- COMPILE 'ArrayStoreError3.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArrayStoreError3.btm"/>
+      <param name="J"     value="A.j B.j C.j D.j"/>   
+      <param name="N"     value="array-store-error3"/>
+      <param name="C"     value="A.class B.class C.class D.class"/>
+    </antcall>
+  </target>
+
+  <target name="for-break-inc-dec-test1">  <!-- COMPILE 'ForBreakIncDectest1.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ForBreakIncDecTest1.btm"/>
+      <param name="N"     value="for-break-inc-dec-test1"/>
+    </antcall>
+  </target>
+
+  <target name="for-break-inc-dec-test2">  <!-- COMPILE 'ForBreakIncDectest2.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ForBreakIncDecTest2.btm"/>
+      <param name="N"     value="for-break-inc-dec-test2"/>
+    </antcall>
+  </target>
+
+  <target name="array-test1">             <!-- COMPILE 'ArrayTest1.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArrayTest1.btm"/>
+      <param name="N"     value="array-test1"/>
+    </antcall>
+  </target>
+
+  <target name="array-test2">             <!-- COMPILE 'ArrayTest2.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArrayTest2.btm"/>
+      <param name="N"     value="array-test2"/>
+    </antcall>
+  </target>
+
+  <target name="array-test3">             <!-- COMPILE 'ArrayTest3.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="ArrayTest3.btm"/>
+      <param name="N"     value="array-test3"/>
+    </antcall>
+  </target>
+
+  <target name="tic-tac-toe">              <!-- COMPILE 'TicTacToe.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="TicTacToe.btm"/>
+      <param name="N"     value="tic-tac-toe"/>
+    </antcall>
+  </target>
+
+  <!-- clean up the 'tests' directory -->
+
+  <target name="clean">
+    <delete>
+      <fileset dir ="." defaultexcludes="no">
+	<include name="*.asm"/>
+	<include name="*.s"/>
+	<include name="*.bin"/>
+	<include name="*.class"/>
+	<include name="*.jar"/>
+	<include name="*.j"/>
+	<include name="*~"/>
+	<include name="*.o"/>
+	<include name="*#*"/>
+	<include name="a.out"/>
+      </fileset>
+    </delete>
+  </target>
+</project>
+

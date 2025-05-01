@@ -1,0 +1,9 @@
+class Main {
+    void main() {
+	TextIO io = new TextIO();
+	io.putString("Enter a number: ");
+	int n = io.getInt();
+	io.putString("You entered: ").putInt(n).putString("\n");
+	return;
+    }
+}

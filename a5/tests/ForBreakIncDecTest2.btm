@@ -1,0 +1,12 @@
+class Main {
+    void main() {
+	int i = 0;
+	for (;;) {
+	    if (i >= 100)
+		break;
+	    (new TextIO()).putInt(++i).putString("\n");
+	    i++;
+	}
+	return;
+    }
+}

@@ -1,0 +1,173 @@
+/** A program for testing the vector class 
+  * @author: Marc Corliss
+  * */
+class Main {
+    TextIO io = new TextIO();
+    Vector v = new Vector();
+
+    void main() {
+	test1();
+	test2();
+	return;
+    }
+
+    void printVector() {
+	int i = 0;
+	while (i < v.size()) {
+	    io.putString("Element ").putInt(i).putString(": ");
+	    if (v.elementAt(i) instanceof Boolean) {
+		Boolean b = (Boolean)(v.elementAt(i));
+		io.putString("Boolean (");
+		if (b.booleanValue())
+		    io.putString("true)\n");
+		else
+		    io.putString("false)\n");
+	    }
+	    else if (v.elementAt(i) instanceof Integer) {
+		Integer integer = (Integer)(v.elementAt(i));
+		io.putString("Integer (").putInt(integer.intValue()).putString(")\n");
+	    }
+	    else if (v.elementAt(i) instanceof String) {
+		String s = (String)(v.elementAt(i));
+		io.putString("String (").putString(s).putString(")\n");
+	    }
+	    i = i + 1;
+	}
+
+	return;
+    }
+
+    void test1() {
+	Integer integer = (new Integer()).init(5);
+	Boolean b = (new Boolean()).init(true);
+	String s = "abc";
+
+	v.addElement(integer);
+	io.putString("Added Integer (5) to Vector\n");
+
+	io.putString("Printing vector:\n");
+	printVector();
+
+	v.addElementAt(b, 0);
+	io.putString("Added Boolean (true) to first position (0th) of Vector\n");
+
+	io.putString("Printing vector:\n");
+	printVector();
+
+	v.addElement(s);
+	io.putString("Added String (\"abc\") to end of vector\n");
+
+	io.putString("Printing vector:\n");
+	printVector();
+
+	io.putString("Attempting to get Boolean from Vector using elementAt(0)...");
+	Boolean b2 = (Boolean)(v.elementAt(0));
+	if (b != b2) {
+	    io.putString("Error: first element Boolean does not equal original\n");
+	    (new Sys()).exit(1);
+	}
+	else if (!v.contains(b2)) {
+	    io.putString("Error: Vector contains() failed to find Boolean\n");
+	    (new Sys()).exit(1);
+	}
+	io.putString("successful\n");
+	io.putString("Attempting to remove Boolean from Vector using removeElementAt(0)...");
+	v.removeElementAt(0);
+	if (v.contains(b2)) {
+	    io.putString("Error: tried to remove Boolean and still in the Vector\n");
+	    (new Sys()).exit(1);
+	}
+	else if (v.size() != 2) {
+	    io.putString("Error: size should be 2 after removing Boolean\n");
+	    (new Sys()).exit(1);
+	}
+	io.putString("successful\n");
+
+	io.putString("Attempting to get String from Vector using elementAt(1)...");
+	String s2 = (String)(v.elementAt(1));
+	if (s != s2) {
+	    io.putString("Error: second element String does not equal original\n");
+	    (new Sys()).exit(1);
+	}
+	else if (!v.contains(s2)) {
+	    io.putString("Error: Vector contains() failed to find String\n");
+	    (new Sys()).exit(1);
+	}
+	io.putString("successful\n");
+	io.putString("Attempting to remove String from Vector using removeElementAt(1)...");
+	v.removeElementAt(1);
+	if (v.contains(s2)) {
+	    io.putString("Error: tried to remove String and still in the Vector\n");
+	    (new Sys()).exit(1);
+	}
+	else if (v.size() != 1) {
+	    io.putString("Error: size should be 1 after removing String\n");
+	    (new Sys()).exit(1);
+	}
+	io.putString("successful\n");
+
+	io.putString("Attempting to get Integer from Vector using elementAt(0)...");
+	Integer integer2 = (Integer)(v.elementAt(0));
+	if (integer != integer2) {
+	    io.putString("Error: second element Integer does not equal original\n");
+	    (new Sys()).exit(1);
+	}
+	else if (!v.contains(integer2)) {
+	    io.putString("Error: Vector contains() failed to find Integer\n");
+	    (new Sys()).exit(1);
+	}
+	io.putString("successful\n");
+	io.putString("Attempting to remove Integer from Vector using removeElementAt(0)...");
+	v.removeElementAt(0);
+	if (v.contains(integer2)) {
+	    io.putString("Error: tried to remove Integer and still in the Vector\n");
+	    (new Sys()).exit(1);
+	}
+	else if (v.size() != 0) {
+	    io.putString("Error: size should be 0 after removing Integer\n");
+	    (new Sys()).exit(1);
+	}
+	io.putString("successful\n");
+
+	return;
+    }
+    
+    void test2() {
+	int max = 25;
+	int i = max-1;
+	io.putString("Numbers unsorted:\n");
+	while (i >= 0) {
+	    Integer integer = (new Integer()).init(i);
+	    io.putInt(i).putString("\n");
+	    v.addElement(integer);
+	    i = i - 1;
+	}
+	
+	i = 0;
+	while (i < max) {
+	    int j = i + 1;
+	    while (j < max) {
+		Integer n1 = (Integer)(v.elementAt(i));
+		Integer n2 = (Integer)(v.elementAt(j));
+		if (n1.intValue() > n2.intValue()) {
+		    v.removeElementAt(i); 
+		    v.addElementAt(n2, i);
+		    v.removeElementAt(j); 
+		    v.addElementAt(n1, j); 
+		}
+		j = j + 1;
+	    }
+	    i = i + 1;
+	}
+
+	io.putString("Numbers sorted:\n");
+	i = 0;
+	while (i < max) {
+	    Integer n = (Integer)(v.elementAt(i));
+	    io.putInt(n.intValue()).putString("\n");
+	    i = i + 1;
+	}
+
+	return;
+    }
+}

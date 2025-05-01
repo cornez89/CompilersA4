@@ -1,0 +1,13 @@
+class A {}
+class B extends A {}
+class C extends A {}
+class D extends B {}
+
+class Main {
+    void main() {
+	Object[] objects = new B[10];
+	objects[0] = new B();
+	objects[1] = new D();
+	objects[2] = new C();
+    }
+}

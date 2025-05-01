@@ -1,0 +1,48 @@
+/** This program finds the maximum number of divisors between 1 and some user-specified
+    upper-bound, as well as the number that has the maximum number of divisors
+    @author: Marc Corliss
+*/
+class Main {
+    // main method
+    void main() {
+	TextIO io = new TextIO();    // a textio object for reading/writing
+	int upperBound = 1;          // the user-specified upper bound
+	int numWithMostDivisors = 0; // number with maximum number of divisors
+	int maxDivisors = 0;         // maximum number of divisors
+	
+	upperBound = io.putString("Enter a number >= 1: ").getInt();
+	if (upperBound < 1) {
+	    io.putString("Number must be >= 1");
+	    (new Sys()).exit(1);
+	}
+	
+	// loop to find maximum number of divisors
+	int i = 1;
+	while (i <= upperBound) {
+	    // compute the number of divisors of i
+	    int numDivisors = 0;
+	    int j = 1;
+	    while (j <= i) {
+		// if i / j has a remainder of 0 (%), then i is divisible by j
+		if (i % j == 0)
+		    numDivisors = numDivisors + 1;
+		j = j + 1;
+	    }
+	    
+	    // if the number of divisors of i is greater than the max divisors
+	    // then update numWithMostDivisors and maxDivisors
+	    if (numDivisors > maxDivisors) {
+		numWithMostDivisors = i;
+		maxDivisors = numDivisors;
+	    }
+	    
+	    i = i + 1;
+	}
+
+	// Print out number with the most divisors and the most divisors
+	io.putString("Number with most divisors: ").putInt(numWithMostDivisors).putString("\n");
+	io.putString("Number of divisors: ").putInt(maxDivisors).putString("\n");
+	
+	return;
+    }
+}

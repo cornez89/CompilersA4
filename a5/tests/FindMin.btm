@@ -1,0 +1,29 @@
+class Main {
+    void main() {
+	TextIO io = new TextIO();
+	int min = 0;
+
+	int n = -1;
+	while (n < 0) {
+	    io.putString("Enter number of times to repeat: ");
+	    n = io.getInt();
+	    if (n < 0)
+		io.putString("Error: must enter non-negative number\n");
+	}
+	io.putString("\n");       
+
+	int i = 1;
+	while (i <= n) {
+	    io.putString("Enter number ").putInt(i).putString(": ");
+	    int userInput = io.getInt();
+	    if (userInput < min || i == 1)
+		min = userInput;
+	    io.putString("You entered: ").putInt(userInput).putString("\n\n");
+	    i = i + 1;
+	}
+
+	io.putString("The minimum number entered was: ").putInt(min).putString("\n");
+
+	return;
+    }
+}

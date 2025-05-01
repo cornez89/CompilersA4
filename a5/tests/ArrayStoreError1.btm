@@ -1,0 +1,11 @@
+class Main {
+    int length = 3;
+    int abc = 6513249;
+    void main() {
+	Object[] objects = new String[10];
+	// array store error in line below
+	objects[0] = new Main();
+	String[] strings = (String[])(objects);
+	(new TextIO()).putString(strings[0]).putString("\n");
+    }
+}

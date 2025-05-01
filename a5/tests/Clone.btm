@@ -1,0 +1,35 @@
+class Main {
+    TextIO io = new TextIO();
+    int x;
+    int y;
+    void setX(int x) {
+	this.x = x;
+	return;
+    }
+    int getX() {
+	return x;
+    }
+    void setY(int y) {
+	this.y = y;
+	return;
+    }
+    int getY() {
+	return y;
+    }
+    void main() {
+	io.putString("Creating main object (m) and setting X to 5 and Y to 3\n");
+	Main m = new Main();
+	m.setX(5);
+	m.setY(3);
+	io.putString("m.x=").putInt(m.getX()).putString("\n");
+	io.putString("m.y=").putInt(m.getY()).putString("\n");
+	io.putString("Cloning main object (m2) and setting X to 6\n");
+	Main m2 = (Main)(m.clone());
+	m2.setX(6);
+	io.putString("m.x=").putInt(m.getX()).putString("\n");
+	io.putString("m.y=").putInt(m.getY()).putString("\n");
+	io.putString("m2.x=").putInt(m2.getX()).putString("\n");
+	io.putString("m2.y=").putInt(m2.getY()).putString("\n");
+	return;
+    }
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<project name="src" default="create-bantamc" basedir=".">
+
+  <condition property="this.is.unix">
+    <os family="unix"/>
+  </condition>
+
+  <condition property="this.is.windows">
+    <os family="windows"/>
+  </condition>
+
+  <condition property="BTMC" value="../bin/bantamc">
+    <isset property="this.is.unix"/>
+  </condition>
+  <condition property="BTMC" value="..\bin\bantamc.bat">
+    <isset property="this.is.windows"/>
+  </condition>
+
+  <property name="PPKG"       value="parser"/>
+  <property name="PSRC"       value="${PPKG}/parser.jj"/>
+  <property name="SPKG"       value="semant"/>
+  <property name="classpath"  value="${basedir}"/>
+  <property name="JAVACC"     value="../bin/lib"/>
+
+  <target name="build-parser">
+    <javacc target="${PSRC}" outputdirectory="${PPKG}" 
+	    javacchome="${JAVACC}" />
+  </target>
+
+  <target name="build-compiler" depends="build-parser">
+    <javac srcdir="${basedir}" classpath="${classpath}" fork="true"/>
+  </target>
+
+  <target name="create-bantamc" depends="build-compiler">
+    <antcall target="create-bantamc-on-unix"/>
+    <antcall target="create-bantamc-on-windows"/>
+  </target>
+
+  <target name="create-bantamc-on-unix"  if="this.is.unix">
+    <!-- create the script that runs the compiler -->
+    <echo file="${BTMC}" >#!/bin/sh
+      java -classpath ${classpath} Main $$*
+    </echo>
+    <chmod file="${BTMC}" perm="ugo+rx"/>
+  </target>
+
+  <target name="create-bantamc-on-windows" if="this.is.windows">
+    <!-- create the script that runs the compiler -->
+    <echo file="${BTMC}">java -classpath "${classpath}" Main %*
+    </echo>
+    <chmod file="${BTMC}" perm="ugo+rx"/>
+  </target>
+
+  <target name="run-bantamc" depends="build-compiler">
+      <!-- run the compiler by typing (without using the script above):
+	   ant run-bantamc -DFLAGS="..." -DSRC="..." 
+	-->
+     <java classname="Main" fork="true">
+	<classpath path="${classpath}"/>
+	<arg line="${FLAGS}"/>
+	<arg line="${SRC}"/>
+      </java>
+    </target>
+
+
+  <target name="clean">
+    <delete>
+      <fileset dir="." includes="**/*.class"/>	
+      <fileset dir="${PPKG}" includes="*.java"/>
+      <fileset dir="../bin" includes="bantamc*"/>
+      <fileset dir="." includes="**/*.s"/>
+      <fileset dir="." includes="**/*~" defaultexcludes="no"/> 
+      <fileset dir="." includes="**/*#*" defaultexcludes="no"/> 
+    </delete>
+  </target>
+</project>

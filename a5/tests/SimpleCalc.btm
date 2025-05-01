@@ -1,0 +1,8 @@
+class Main {
+    void main() {
+	(new TextIO()).putString("(3%2+(2*5)-6/3): ");
+	(new TextIO()).putInt((3%2+(2*5)-6/3));
+	(new TextIO()).putString("\n");
+	return;
+    }
+}

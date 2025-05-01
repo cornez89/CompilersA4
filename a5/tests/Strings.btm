@@ -1,0 +1,52 @@
+class Main {
+    void main() {
+	String s = "abcdefghijklmnopqrstuvwxyz";
+	String s2 = "abcdefghijklmnopqrstuvwxyz";
+	String s3 = "0123456789";
+
+	(new TextIO()).putString("s: ").putString(s).putString("\n");
+
+	(new TextIO()).putString("s.length(): ").putInt(s.length()).putString("\n");
+
+	(new TextIO()).putString("s2: ").putString(s2).putString("\n");
+	(new TextIO()).putString("s2.length(): ").putInt(s2.length()).putString("\n");
+
+	if (s.equals(s2))
+	    (new TextIO()).putString("s.equals(s2): true\n");
+	else
+	    (new TextIO()).putString("s.equals(s2): false\n");
+	if (s2.equals(s))
+	    (new TextIO()).putString("s2.equals(s): true\n");
+	else
+	    (new TextIO()).putString("s2.equals(s): false\n");
+
+	(new TextIO()).putString("s3: ").putString(s3).putString("\n");
+	(new TextIO()).putString("s3.length(): ").putInt(s3.length()).putString("\n");
+
+	if (s.equals(s3))
+	    (new TextIO()).putString("s.equals(s3): true\n");
+	else
+	    (new TextIO()).putString("s.equals(s3): false\n");
+	if (s3.equals(s))
+	    (new TextIO()).putString("s3.equals(s): true\n");
+	else
+	    (new TextIO()).putString("s3.equals(s): false\n");
+
+	(new TextIO()).putString("s.concat(s2): ").putString(s.concat(s2)).putString("\n");
+	(new TextIO()).putString("s2.concat(s): ").putString(s2.concat(s)).putString("\n");
+
+	(new TextIO()).putString("s.concat(s3): ").putString(s.concat(s3)).putString("\n");
+	(new TextIO()).putString("s3.concat(s): ").putString(s3.concat(s)).putString("\n");
+
+
+
+	(new TextIO()).putString("s.substring(0, 0): ").putString(s.substring(0, 0)).putString("\n");
+	(new TextIO()).putString("s.substring(2, 8): ").putString(s.substring(2, 8)).putString("\n");
+	(new TextIO()).putString("s2.substring(1, 2): ").putString(s2.substring(1, 2)).putString("\n");
+	(new TextIO()).putString("s2.substring(1, 7): ").putString(s2.substring(1, 7)).putString("\n");
+	(new TextIO()).putString("s3.substring(2, 7): ").putString(s3.substring(2, 7)).putString("\n");
+	(new TextIO()).putString("s3.substring(1, 10): ").putString(s3.substring(1, 10)).putString("\n");
+
+	return;
+    }
+}

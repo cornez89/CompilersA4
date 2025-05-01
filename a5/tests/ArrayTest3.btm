@@ -1,0 +1,61 @@
+/** A program for testing the vector class 
+  * @author: Marc Corliss
+  * */
+class Main {
+    TextIO io = new TextIO();
+
+    void main() {
+	int[] array = new int[10];
+	io.putString("Building reverse sorted array...\n");
+	buildArray(array);
+	io.putString("Unsorted array:\n");
+	printArray(array);
+	io.putString("Sorting array...\n");
+	sortArray(array);
+	io.putString("Sorted array:\n");
+	printArray(array);
+	io.putString("Cloning array and setting element 5 to -1...\n");
+	int[] array2 = (int[])(array.clone());
+	array2[5] = -1;
+	io.putString("Cloned array:\n");
+	printArray(array2);
+	io.putString("Original array:\n");
+	printArray(array);
+	return;
+    }
+
+    void buildArray(int[] array) {
+	int i = 0;
+	while (i < array.length) {
+	    array[i] = array.length - i - 1;
+	    i = i + 1;
+	}
+	return;
+    }
+
+    void sortArray(int[] array) {
+	int i = 0; 
+	while (i < array.length) {
+	    int j = i + 1;
+	    while (j < array.length) {
+		if (array[i] > array[j]) {
+		    int tmp = array[i];
+		    array[i] = array[j];
+		    array[j] = tmp;
+		}
+		j = j + 1;
+	    }
+	    i = i + 1;
+	}
+	return;
+    }
+
+    void printArray(int[] array) {
+	int i = 0;
+	while (i < array.length) {
+	    io.putInt(array[i]).putString("\n");
+	    i = i + 1;
+	}
+	return;
+    }
+}

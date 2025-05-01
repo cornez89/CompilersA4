@@ -1,0 +1,50 @@
+class Main {
+    boolean[] goo = null;
+
+    void printElement(Object o, int i) {
+	(new TextIO()).putString("array[").putInt(i).putString("] is ");
+	if (o == null)
+	    (new TextIO()).putString("null (error)\n");
+	else if (!(o instanceof String))
+	    (new TextIO()).putString("not a string (error)\n");
+	else
+	    (new TextIO()).putString(((String)(o))).putString("\n");
+	return;
+    }
+
+    void main() {
+	Object[] array = 
+	    new Object[5*2];
+	array[0+5] = new Object();
+	String s = "abc";
+	array[0] = array[1] = array[2] = s;
+	printElement(array[0], 0);
+	printElement(array[1], 1);
+	printElement(array[2], 2);
+	Object o = array[0];
+	goo = new boolean[5*2];
+	foo(new int[10]);
+	String[] strings = foo(null);
+	int[] array2 = null;
+	int x = array.length;
+	strings = new String[10];
+	int i = 0;
+	while (i < 10) {
+	    strings[i] = "abc";
+	    i = i + 1;
+	}
+	strings[2] = (strings[0].concat(strings[1])).substring(1,4);
+	(new TextIO()).putString(strings[2]).putString("\n");
+	(new TextIO()).putString("(new int[10]).length=").
+	    putInt((new int[10]).length).putString("\n");
+	return;
+    }
+    String[] foo(int[] array) {
+	if (array != null) {
+	    array[3*2] = array[array[2]];
+	    array[array[1]] = array[3*2];
+	    array[array[1]] = array[array[2]];
+	}
+	return null;
+    }
+}

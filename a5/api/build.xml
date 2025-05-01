@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project name="api" default="build" basedir=".">
+
+    <property name="docs.dir" value="html"/>
+    <property name="src.dir"  value="../src"/>
+    <property name="class.dir" value="../src:$../lib"/>
+
+    <target name="clean">
+         <delete dir="${docs.dir}"/>
+	 <delete>
+	   <fileset dir ="." defaultexcludes="no">
+	     <include name="*~"/>
+	     <include name="*#*"/>
+	   </fileset>
+	 </delete>
+    </target>
+
+    <target name="build" depends="clean">
+       <javadoc 
+            classpath="${class.dir}"
+            destdir="${docs.dir}"
+            use="true"
+            splitIndex="true"
+            windowtitle="Bantam Java Compiler API"
+            doctitle="Bantam Java Compiler API"
+	    maxmemory="180m">
+         <fileset dir="../src" includes="**/*.java" />
+       </javadoc>
+    </target>
+</project>
+
+

@@ -1,0 +1,6 @@
+class Main {
+    void main() {
+	int x = 3 / 0;
+	return;
+    }
+}

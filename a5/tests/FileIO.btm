@@ -1,0 +1,67 @@
+class Main {
+    void main() {
+	TextIO io = new TextIO();
+	Vector fileInput = new Vector();
+	Vector stdin = new Vector();
+
+	io.readFile("FileIO-input.txt");
+	boolean eof = false;
+	while (!eof) {
+	    String s = io.getString();
+	    if (s == null)
+		eof = true;
+	    else {
+		io.putString("Read string from FileIO-input.txt: ").putString(s).putString("\n");
+		fileInput.addElement(s);
+	    }
+	}
+
+	io.readStdin();
+	io.putString("\nEnter some text to write to file (empty line to end):\n");
+	boolean endOfInput = false;
+	while (!endOfInput) {
+	    String s = io.getString();
+	    if (s.equals(""))
+		endOfInput = true;
+	    else {
+		io.putString("Read string from FileIO-input.txt: ").putString(s).putString("\n");
+		stdin.addElement(s);
+	    }
+	}
+
+	String s = (String)(stdin.elementAt(0));
+
+	io.writeStderr();
+	io.putString("This string was sent to stderr.\n\n");
+
+	io.writeStdout();
+	io.putString("Writing stdin and input file contents to FileIO-output.txt (stdin first)\n\n"); 
+	io.writeFile("FileIO-output.txt");
+	int i = 0;
+	while (i < stdin.size()) {
+	    io.putString((String)(stdin.elementAt(i))).putString("\n");
+	    i = i + 1;
+	}
+	i = 0;
+	while (i < fileInput.size()) {
+	    io.putString((String)(fileInput.elementAt(i))).putString("\n");
+	    i = i + 1;
+	}
+
+	io.writeStdout();
+	io.putString("Contents of FileIO-output.txt:\n");
+	io.readFile("FileIO-output.txt");
+	eof = false;
+	while (!eof) {
+	    s = io.getString();
+	    if (s == null)
+		eof = true;
+	    else
+		io.putString(s).putString("\n");
+	}
+
+	io.putString("\nFinished.\n");
+
+	return;
+    }
+}

@@ -1,0 +1,100 @@
+class Main {
+    void main() {
+	Object o = new Object();
+	TextIO io = new TextIO();
+	String s = "abc";
+	Sys sys = new Sys();
+	
+	if (o instanceof Object) {
+	    io.putString("Object object instance of Object\n");
+	    io.putString("Casting Object object to Object object...");
+	    Object x = (Object)(o);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Object object not instance of Object\n");
+	if (o instanceof TextIO) {
+	    io.putString("Object object instance of TextIO\n");
+	    io.putString("Casting Object object to TextIO object...");
+	    TextIO x = (TextIO)(o);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Object object not instance of TextIO\n");
+	if (o instanceof String) {
+	    io.putString("Object object instance of String\n");
+	    io.putString("Casting Object object to String object...");
+	    String x = (String)(o);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Object object not instance of String\n");
+	if (o instanceof Sys) {
+	    io.putString("Object object instance of Sys\n");
+	    io.putString("Casting Object object to Sys object...");
+	    Sys x = (Sys)(o);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Object object not instance of Sys\n");
+
+
+
+	if (io instanceof Object) {
+	    io.putString("TextIO object instance of Object\n");
+	    io.putString("Casting TextIO object to Object object...");
+	    Object x = (Object)(io);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("TextIO object not instance of Object\n");
+	if (io instanceof TextIO) {
+	    io.putString("TextIO object instance of TextIO\n");
+	    io.putString("Casting TextIO object to TextIO object...");
+	    TextIO x = (TextIO)(io);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("TextIO object not instance of TextIO\n");
+
+
+
+	if (s instanceof Object) {
+	    io.putString("String object instance of Object\n");
+	    io.putString("Casting String object to Object object...");
+	    Object x = (Object)(s);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("String object not instance of Object\n");
+	if (s instanceof String) {
+	    io.putString("String object instance of String\n");
+	    io.putString("Casting String object to String object...");
+	    String x = (String)(s);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("String object not instance of String\n");
+
+
+
+	if (sys instanceof Object) {
+	    io.putString("Sys object instance of Object\n");
+	    io.putString("Casting Sys object to Object object...");
+	    Object x = (Object)(sys);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Sys object not instance of Object\n");
+	if (sys instanceof Sys) {
+	    io.putString("Sys object instance of Sys\n");
+	    io.putString("Casting Sys object to Sys object...");
+	    Sys x = (Sys)(sys);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Sys object not instance of Sys\n");
+	
+	return;
+    }
+}

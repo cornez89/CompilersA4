@@ -1,0 +1,41 @@
+class A {
+    TextIO io = new TextIO();
+    String name;
+    void setName() {
+	this.name = "A";
+	return;
+    }
+    void foo() {
+	io.putString("Static type = A, dynamic type = ").putString(name).putString("\n");
+	return;
+    }
+}
+
+class B extends A {
+    String name;
+    void setName() {
+	super.name = "B";
+	return;
+    }
+    void foo() {
+	io.putString("Static type = B, dynamic type = ").putString(name).putString("\n");
+	super.foo();
+	return;
+    }
+}
+
+class C extends B {
+    void setName() {
+	this.name = "C";
+	return;
+    }
+}
+
+class Main {
+    void main() {
+	C c = new C();
+	c.setName();
+	c.foo();
+	return;
+    }
+}

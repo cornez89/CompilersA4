@@ -1,0 +1,14 @@
+class Main {
+    void main() {
+	TextIO io = new TextIO();
+	int n = io.putString("Enter the number of repetitions: ").getInt();
+	int i = 0;
+	while (i < n) {
+	    String s = io.putString("> ").getString();
+	    io.putString("You entered: ").putString(s).putString("\n");
+	    i = i + 1;
+	}
+	io.putString("Finished ").putInt(n).putString(" echoes...exiting\n");
+	return;
+    }
+}

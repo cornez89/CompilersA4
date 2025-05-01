@@ -1,0 +1,10 @@
+class Main {
+    void main() {
+	int i = 0;
+	int[] array = new int[1500];
+	array = new int[2000];
+	for (i = 1500; i < 2000; i++)
+	    (new TextIO()).putInt(array[i]).putString("\n");
+	return;
+    }
+}

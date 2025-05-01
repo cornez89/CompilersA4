@@ -1,0 +1,14 @@
+/** A wrapper class for booleans
+  * @author: Marc Corliss
+  * */
+class Boolean {
+    boolean bool;
+    boolean booleanValue() {
+	return bool;
+    }
+    Boolean init(boolean b) {
+	bool = b;
+	return this;
+    }
+}
+

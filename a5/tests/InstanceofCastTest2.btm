@@ -1,0 +1,150 @@
+class Main {
+    void main() {
+	TextIO io = new TextIO();
+	Object[] objects = new Object[10];
+	TextIO[] ios = new TextIO[10];
+	String[] strings = new String[10];
+	Sys[] sys = new Sys[10];
+	int[] ints = new int[10];
+	boolean[] bools = new boolean[10];
+	
+	if (objects instanceof Object) {
+	    io.putString("Object[] object instance of Object\n");
+	    io.putString("Casting Object[] object to Object object...");
+	    Object x = (Object)(objects);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Object[] object not instance of Object\n");
+	if (objects instanceof Object[]) {
+	    io.putString("Object[] object instance of Object[]\n");
+	    io.putString("Casting Object[] object to Object[] object...");
+	    Object[] x = (Object[])(objects);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Object[] object not instance of Object[]\n");
+
+
+
+	if (ios instanceof Object) {
+	    io.putString("TextIO[] object instance of Object\n");
+	    io.putString("Casting TextIO[] object to Object object...");
+	    Object x = (Object)(ios);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("TextIO[] object not instance of Object\n");
+	if (ios instanceof Object[]) {
+	    io.putString("TextIO[] object instance of Object[]\n");
+	    io.putString("Casting TextIO[] object to Object[] object...");
+	    Object[] x = (Object[])(ios);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("TextIO[] object not instance of Object[]\n");
+	if (ios instanceof TextIO[]) {
+	    io.putString("TextIO[] object instance of TextIO[]\n");
+	    io.putString("Casting TextIO[] object to TextIO[] object...");
+	    TextIO[] x = (TextIO[])(ios);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("TextIO[] object not instance of TextIO[]\n");
+
+
+
+	if (strings instanceof Object) {
+	    io.putString("String[] object instance of Object\n");
+	    io.putString("Casting String[] object to Object object...");
+	    Object x = (Object)(strings);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("String[] object not instance of Object\n");
+	if (strings instanceof Object[]) {
+	    io.putString("String[] object instance of Object[]\n");
+	    io.putString("Casting String[] object to Object[] object...");
+	    Object[] x = (Object[])(strings);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("String[] object not instance of Object[]\n");
+	if (strings instanceof String[]) {
+	    io.putString("String[] object instance of String[]\n");
+	    io.putString("Casting String[] object to String[] object...");
+	    String[] x = (String[])(strings);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("String[] object not instance of String[]\n");
+
+
+
+	if (sys instanceof Object) {
+	    io.putString("Sys[] object instance of Object\n");
+	    io.putString("Casting Sys[] object to Object object...");
+	    Object x = (Object)(sys);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Sys[] object not instance of Object\n");
+	if (sys instanceof Object[]) {
+	    io.putString("Sys[] object instance of Object[]\n");
+	    io.putString("Casting Sys[] object to Object[] object...");
+	    Object[] x = (Object[])(sys);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Sys[] object not instance of Object[]\n");
+	if (sys instanceof Sys[]) {
+	    io.putString("Sys[] object instance of Sys[]\n");
+	    io.putString("Casting Sys[] object to Sys[] object...");
+	    Sys[] x = (Sys[])(sys);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("Sys[] object not instance of Sys[]\n");
+	
+
+
+	if (ints instanceof Object) {
+	    io.putString("int[] object instance of Object\n");
+	    io.putString("Casting int[] object to Object object...");
+	    Object x = (Object)(ints);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("int[] object not instance of Object\n");
+	if (ints instanceof int[]) {
+	    io.putString("int[] object instance of int[]\n");
+	    io.putString("Casting int[] object to int[] object...");
+	    int[] x = (int[])((Object)(ints));
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("int[] object not instance of int[]\n");
+	    
+
+
+
+	if (bools instanceof Object) {
+	    io.putString("boolean[] object instance of Object\n");
+	    io.putString("Casting boolean[] object to Object object...");
+	    Object x = (Object)(bools);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("boolean[] object not instance of Object\n");
+	if (bools instanceof boolean[]) {
+	    io.putString("boolean[] object instance of boolean[]\n");
+	    io.putString("Casting boolean[] object to boolean[] object...");
+	    boolean[] x = (boolean[])(bools);
+	    io.putString(" successful\n");
+	}
+	else
+	    io.putString("boolean[] object not instance of boolean[]\n");
+
+	return;
+    }
+}

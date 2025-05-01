@@ -1,0 +1,7 @@
+class Main {
+    void main() {
+	Object[] array = new Object[0];
+	array = new Object[-1];
+	return;
+    }
+}

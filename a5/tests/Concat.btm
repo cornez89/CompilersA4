@@ -1,0 +1,27 @@
+class Main {
+    void main() {
+	String star = "*";
+	String s1 = star.substring(0, 1); // copies star
+	String s2 = "";
+	int i = 1;
+
+	while (i * 2 < 5000) {
+	    s1 = s1.concat(s1);
+	    (new TextIO()).putString("i: ").putInt(i).putString(", s1=").putString(s1).putString("\n");
+	    i = i * 2;
+	}
+
+	while (i < 5000) {
+	    s2 = s2.concat(star);
+	    i = i + 1;
+	}
+
+	s1 = s1.concat(s2);
+	(new TextIO()).putString("i: ").putInt(i).putString(", s1=").putString(s1).putString("\n");
+
+	s1 = s1.concat(star);
+	(new TextIO()).putString("i: ").putInt(i).putString(", s1=").putString(s1).putString("\n");
+
+	return;
+    }
+}

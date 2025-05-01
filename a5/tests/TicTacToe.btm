@@ -1,0 +1,155 @@
+/* A program for playing a text-based version of Tic Tac Toe
+   Author: Marc Corliss */
+class Main {
+    TextIO io = new TextIO(); // io object for reading/writing to the screen
+    int player = 1;           // current player (1 or 2)
+    int[] board = new int[9]; // board of 9 squares (0=empty, 1=x, 2=o)
+
+    // main method
+    void main() {
+	// print out start message
+	io.putString("*** Tic Tac Toe ***\n");
+
+	// repeatedly play each turn until game is over
+	while (true) {
+	    // print the board
+	    printBoard();
+	    
+	    // get the next move and update the board
+	    getMove();
+
+	    // check if game is over -- if so, print end message
+	    if (isGameOver()) {
+		// two cases, either draw or a player has won
+		if (isDraw()) {
+		    printBoard();
+		    io.putString("Game is a draw\n");
+		    break;
+		}
+		else {
+		    printBoard();
+		    io.putString("Player ").putInt(player).putString(" wins!\n");
+		    break;
+		}
+	    }
+	    
+	    // switch player
+	    if (player == 1)
+		player = 2;
+	    else
+		player = 1;
+	}
+    }
+
+    /* checks if game is over - 2 cases: draw or a player has won
+       It returns true if the game is over, false otherwise */
+    boolean isGameOver() {
+	// check if game was won, if so return true
+        if (wasGameWon())
+	    return true;
+	// check if draw, if so return true
+        else if (isDraw())
+	    return true;
+        // otherwise, game not over so return false
+        return false;
+    }
+
+    /* checks if game was won, i.e., one player has all the squares across
+       in any row, vertically in any column, or diagonally.  
+       It returns true if the game was won, false otherwise */
+    boolean wasGameWon() {
+	// check if horizontal win
+	if ((board[0] == board[1] && board[1] == board[2] && board[0] != 0) ||
+	    (board[3] == board[4] && board[4] == board[5] && board[3] != 0) ||
+	    (board[6] == board[7] && board[7] == board[8] && board[6] != 0)) {
+	    return true;
+	}
+	// check if vertical win
+	else if ((board[0] == board[3] && board[3] == board[6] && board[0] != 0) ||
+		 (board[1] == board[4] && board[4] == board[7] && board[1] != 0) ||
+		 (board[2] == board[5] && board[5] == board[8] && board[2] != 0)) {
+	    return true;
+	}
+	// check if diagonal win
+	else if ((board[0] == board[4] && board[4] == board[8] && board[0] != 0) ||
+		 (board[2] == board[4] && board[4] == board[6] && board[2] != 0)) {
+	    return true;
+	}
+	// otherwise return false
+	return false;
+    }
+
+    
+    /* checks if game is draw (i.e., all blocks are taken and game wasn't won).  
+       It returns true if the game is a draw, false otherwise */
+    boolean isDraw() {
+	int i = 0;
+	// check if game was won, if so can't be a draw
+	if (wasGameWon())
+	    return false;
+	// otherwise check if a square is free, in which case not a draw
+	for (i = 0; i < 9; i++) {
+	    // if at least one position free, then not a draw
+	    if (board[i] == 0)
+		return false;
+	}
+	// otherwise it must be a draw
+	return true;
+    }
+    
+    /* prints the entire 3x3 board to the screen.  */
+    void printBoard() {
+	int i = 0;
+	io.putString("\n");
+	for (i = 0; i < 9; i++) {
+	    printSquare(i);
+	    io.putString(" ");
+	    if (i % 3 == 2)
+		io.putString("\n");
+	}
+	io.putString("\n");
+    }
+
+    /* prints a particular square.  takes 1 parameter: the position of
+       that square (1-9). */
+    void printSquare(int position) {
+	// check if square is unoccupied
+	if (board[position] == 0)
+	    io.putInt((position+1));
+	// check if square is owned by 'X'
+	else if (board[position] == 1)
+	    io.putString("X");
+	// otherwise square must be owned by 'O'
+	else
+	    io.putString("O");
+    }
+	    
+    /* get the next move from the current player.  prompts the player and reads
+       in a board position.  it error checks that move, possibly reprompting if
+       the move was illegal, updates board, and then returns. */
+    void getMove() {
+	// repeat until we get a legal move
+	while (true) {
+	    // prompt player for position on board (0-8)
+	    io.putString("Player ").putInt(player).putString(", enter a position (1-9): ");
+	    // read in position
+	    int position = io.getInt();
+	    // check that position is valid
+	    if (position < 1 || position > 9) {
+		// if not print error message and continue
+		io.putString("Position must be between 1 and 9.\n");
+	    }
+	    // check that position is unoccupied
+	    else if (board[(position-1)] != 0) {
+		// if not print error message and continue
+		io.putString("Position already taken.\n");
+	    }
+	    // otherwise update board and break
+	    else {
+		board[(position-1)] = player;
+		// break from loop since move was legal		
+		break;
+	    }
+	}
+    }
+}

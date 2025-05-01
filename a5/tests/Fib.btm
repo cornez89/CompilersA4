@@ -1,0 +1,54 @@
+/** This program calculates the first n Fibonacci numbers where n is 
+  * specified by the user.
+  * @author: Marc Corliss
+  * */
+class Main {
+    /** TextIO object for reading/writing */
+    TextIO io = new TextIO();
+
+    /** main method
+      * */
+    void main() {
+        // prompt for n and read it in using TextIO
+	int n = io.putString("Enter a non-negative number:  ").getInt();
+
+	// make sure n is non-negative
+	if (n < 0) {
+	    // if n is negative report error and exit
+	    io.putString("Number cannot be negative\n");
+	    (new Sys()).exit(1);
+	}
+
+	// loop and compute the first n fibonacci numbers
+	int i = 0; 
+	while (i < n) {
+	    // print the ith fibonacci number
+	    io.putString("Fibonacci number ").putInt(i).putString(": ");
+	    io.putInt(fib(i)).putString("\n");
+	    i = i + 1;
+	}
+
+	return;
+    }
+
+    /** Compute the nth fibonacci number
+      * @param n nth fibonacci number to compute
+      * @return the fibonacci number 
+      * */
+    int fib(int n) {
+	int result = 0;
+
+	// if 0 return 0 (special case)
+	if (n == 0)
+	    result = 0;
+	// if 1 return 1 (special case)
+	else if (n == 1)
+	    result = 1;
+	// otherwise recursively compute the n-1 and n-2 
+	// fibonacci numbers and return their sum
+	else
+	    result = fib(n-1) + fib(n-2);
+
+	return result;
+    }
+}

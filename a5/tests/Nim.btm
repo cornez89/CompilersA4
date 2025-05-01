@@ -1,0 +1,89 @@
+/** Nim plays the game Nim
+  * @author: Marc Corliss
+  * */
+class Main {
+    /** TextIO object for reading/writing */
+    TextIO io = new TextIO();
+
+    /** turn plays one turn of Nim.  
+      * @param name current player's name
+      * @param numBeansLeft number of beans left
+      * @return number of beans picked up 
+      * */
+    int turn(String name, int numBeansLeft) {
+	int pickedBeans = 0; // beans picked up
+
+	// loop until user enters a valid number of beans to pick up 
+	// must (1, 2, or 3) and a number less than the beans remaining
+	while (true) {
+	    // prompt user and read the picked beans
+	    io.putString(name).putString(", how many beans to pick up? (");
+	    io.putInt(numBeansLeft).putString(" left) ");
+	    pickedBeans = io.getInt();
+
+	    // if the picked beans is not 1, 2, 3, then reprompt
+	    if (pickedBeans < 1 || pickedBeans > 3) 
+		io.putString("number of beans must be 1, 2, or 3\n");
+	    // else if the picked beans > remainingg beans then reprompt
+	    else if (pickedBeans > numBeansLeft)
+		io.putString("can't pick up more beans than are left\n");
+	    // otherwise, we have a valid pick, and so return it
+	    else
+		return pickedBeans;
+	}
+
+	// return 0 (needed for compiler)
+	return 0;
+    }
+
+    /** main() plays the game.
+      * it reads both player's names and the total beans to start 
+      * with from the user.  it then continuously calls turn until 
+      * there are no more beans, in which case, it reports the winner 
+      * */
+    void main() {
+	// prompt and read in the player's names and beans to start with
+	io.putString("Player 1, enter your name: ");
+	String player1 = io.getString();
+	io.putString("Player 2, enter your name: ");
+	String player2 = io.getString();
+	io.putString("How many beans to start? ");
+	int totalBeans = io.getInt();
+	
+	// error checking: make sure the total beans is greater than 0
+	while (totalBeans < 1) {
+	    io.putString("Total beans must be > 0.  How many beans to start? ");
+	    totalBeans = io.getInt();
+	}
+	
+	// number of beans remaining (at the beginning it's the total beans)
+	int numBeansLeft = totalBeans;
+	// current player (at beginning it's player 1)
+	String currentPlayer = player1;    
+	
+	// loop until there are no more beans remaining
+	// use a counter to keep track of whether it's an odd or even 
+	// iteration (for selecting between the two players)
+	int i = 0;
+	while (numBeansLeft > 0) {
+	    // call turn to get the beans picked
+	    int pickedBeans = turn(currentPlayer, numBeansLeft);
+	    // update the number of remaining beans
+	    numBeansLeft = numBeansLeft - pickedBeans;
+	    
+	    // only switch players if game isn't already over
+	    if (numBeansLeft > 0) {
+		// if i is even, then switch to player1, else switch to player2
+		currentPlayer = player2;
+		if (i % 2 == 1)
+		    currentPlayer = player1;
+	    }
+	    
+	    i = i + 1;
+	}
+	
+	// after the loop stops, the current player is the winner 
+	// (since that player was the last to take a turn)
+	io.putString(currentPlayer).putString(", you win!\n");
+    }
+}

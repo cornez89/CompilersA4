@@ -1,0 +1,25 @@
+/* Testing multiple assignments in a single expression.
+   @author Marc Corliss
+*/
+class Main {
+    /* main method */
+    void main() {
+	TextIO io = new TextIO();
+	int x = 0;
+	int y = 1;
+	int z = 2;
+
+	io.putString("x=").putInt(x).putString("\n");
+	io.putString("y=").putInt(y).putString("\n");
+	io.putString("z=").putInt(z).putString("\n");
+
+	io.putString("Executing: x = y = z\n");
+	x = y = z;
+
+	io.putString("x=").putInt(x).putString("\n");
+	io.putString("y=").putInt(y).putString("\n");
+	io.putString("z=").putInt(z).putString("\n");
+
+	return;
+    }
+}

@@ -1,0 +1,225 @@
+/** A program for representing Java-like Vectors
+  * Implemented using an array
+  * @author: Marc Corliss 
+  * */
+class Vector {
+    /** TextIO object for reading/writing */
+    TextIO io = new TextIO();
+    /** Array to hold elements (initial size is 10) */
+    Object[] elements = new Object[10];
+    /** Size of vector */
+    int size = 0;
+
+    /** Reports an error and exits
+      * Note: should only be used internally within the vector class
+      * @param message error message
+      * */
+    void error(String message) {
+	io.putString("Vector error: ").putString(message).putString("\n");
+	(new Sys()).exit(1);
+	return;
+    }
+
+    /** Check whether an index is valid, gives an error and exits if not
+      * Note: should only be used internally within the vector class
+      * @param i index to check
+      * @param method name of the calling method for error reporting
+      * @param isSizeIncluded boolean indicating whether size is a valid index
+      * */
+    void checkIndex(int i, String method, boolean isSizeIncluded) {
+	if (!isSizeIncluded) {
+	    if (i < 0 || i >= size) {
+		io.putString("Bad index '").putInt(i).putString("'\n");
+		io.putString("Index must be >= 0 and < size '");
+		io.putInt(size).putString("'\n");
+		error("index out of bounds in method ".concat(method));
+	    }
+	}
+	else {
+	    if (i < 0 || i > size) {
+		io.putString("Bad index '").putInt(i).putString("'\n");
+		io.putString("Index must be >= 0 and <= size '");
+		io.putInt(size).putString("'\n");
+		error("index out of bounds in method ".concat(method));
+	    }
+	}
+
+	return;
+    }
+
+    /** Resize the elements array (doubles the size)
+      * Note: should only be used internally within the vector class
+      * */
+    void resize() {
+	Object[] tmp = new Object[elements.length*2];
+	int i = 0;
+	
+	while (i < elements.length) {
+	    tmp[i] = elements[i];
+	    i = i + 1;
+	}
+	elements = tmp;
+
+	return;
+    }
+
+    /** Get the current size of the vector
+      * @return current size of the vector
+      * */
+    int size() {
+	return size;
+    }
+
+    /** Returns whether this vector contains a specified object
+      * @param o object to check if on vector
+      * @return boolean indicating whether object is on the vector (true) or not (false)
+      * */
+    boolean contains(Object o) {
+	boolean found = false;
+	int i = 0;
+
+	while (i < size) {
+	    if (elements[i] == o)
+		found = true;
+	    i = i + 1;
+	}
+
+	return found;
+    }
+
+    /** Get the ith element
+      * @param i index of the element to get
+      * @return the object at the ith position
+      * */
+    Object elementAt(int i) {
+	checkIndex(i, "elementAt", false);
+	return elements[i];
+    }
+    
+    /** Add an element at the ith position
+      * @param o object to add to the vector
+      * @param i index of position where element will be added
+      * @return this vector
+      * */
+    Vector addElementAt(Object o, int i) {
+	checkIndex(i, "addElementAt", true);
+
+	if (size == elements.length)
+	    resize();
+
+	int j = size;
+	while (j > i) {
+	    elements[j] = elements[j-1];
+	    j = j - 1;
+	}
+	elements[i] = o;
+	size = size + 1;
+
+	return this;
+    }
+
+    /** Set the ith element
+      * @param o object used to set the ith element
+      * @param i index of the element to set
+      * @return this vector
+      * */
+    Vector setElementAt(Object o, int i) {
+	checkIndex(i, "setElementAt", false);
+	addElementAt(o, i);
+	removeElementAt(i+1);
+
+	return this;
+    }
+
+    /** Remove the ith element
+      * @param i index of the element to remove
+      * @return this vector
+      * */
+    Vector removeElementAt(int i) {
+	checkIndex(i, "removeElementAt", false);
+
+	int j = i;
+	while (j + 1 < size) {
+	    elements[j] = elements[j+1];
+	    j = j + 1;
+	}
+	size = size - 1;
+
+	return this;
+    }
+
+    /** Add an object to the vector
+      * @param o object to add
+      * @return this vector
+      * */
+    Vector addElement(Object o) {
+	return addElementAt(o, size);
+    }
+
+    /** Remove first occurrence of an object
+      * @param o object to remove
+      * @return this vector
+      * */
+    Vector removeElement(Object o) {
+	boolean removed = false;
+	int i = 0;
+
+	while (i < size && !removed) {
+	    if (elements[i] == o) {
+		int j = i;
+		while (j + 1 < size) {
+		    elements[j] = elements[j+1];
+		}
+		size = size - 1;
+		removed = true;
+	    }
+	    i = i + 1;
+	}
+	
+	if (!removed)
+	    error("element not found in vector");
+
+	return this;
+    }
+}
+
+/** Class for representing an element in a vector 
+  * Used by Vector class for creating linked lists 
+  * of elements.
+  * */
+class VectorElement {
+    /** Element object */
+    Object element;
+    /** Next pointer */
+    VectorElement next;
+
+    /** Get the element object
+      * @return element
+      * */
+    Object getElement() {
+	return element;
+    }
+
+    /** Set the element object
+      * @param o object used to the set the element
+      * */
+    VectorElement setElement(Object o) {
+	element = o;
+	return this;
+    }
+
+    /** Get the next vector element
+      * @return next vector element
+      * */
+    VectorElement getNext() {
+	return next;
+    }
+
+    /** Set the next vector element
+      * @param ve vector element used to set the next pointer
+      * */
+    VectorElement setNext(VectorElement ve) {
+	next = ve;
+	return this;
+    }
+}

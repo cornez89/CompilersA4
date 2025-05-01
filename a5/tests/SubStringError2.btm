@@ -1,0 +1,7 @@
+class Main {
+    void main() {
+	String s = "abcd";
+	String s2 = s.substring(-1, 4);
+	return;
+    }
+}

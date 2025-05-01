@@ -1,0 +1,14 @@
+/** A wrapper class for ints 
+  * @author: Marc Corliss
+  * */
+class Integer {
+    int num;
+    int intValue() {
+	return num;
+    }
+    Integer init(int n) {
+	num = n;
+	return this;
+    }
+}
+
