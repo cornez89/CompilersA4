@@ -6,9 +6,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import ast.*;
+import semant.SemantVisitor;
 import util.ClassTreeNode;
 
 public class CodeGenVisitor extends Visitor {
@@ -16,8 +19,11 @@ public class CodeGenVisitor extends Visitor {
     PrintWriter out;
     public static String rootFilePath = "java/lang/";
     private int labelCount = 1;
+    private int currStackSize = 0;
+    private int currLocalSize = 1;
     private ClassTreeNode classTreeNode;
 
+    Map<String, Integer> variableToLocalIndex = new HashMap<String, Integer>();
     /*
      * 
      * Helper Methods
@@ -33,6 +39,22 @@ public class CodeGenVisitor extends Visitor {
 
     private void printBytecode(String bytecode) {
         out.println("    " + bytecode);
+    }
+
+    private void printComment(String comment) {
+        out.println("    ;" + comment);
+    }
+
+/**
+ * 
+ * Bytecode Methods
+ * 
+ */
+
+    private void ldc(String constant) {
+        printBytecode("ldc " + constant);
+        currStackSize++;
+        //net stack size + 1
     }
 
     private void iconst(int number) {
@@ -52,13 +74,30 @@ public class CodeGenVisitor extends Visitor {
             printBytecode("bipush " + number);
         else
             printBytecode("ldc " + number);
+        currStackSize++;
+        //net stack size + 1
     }
+
+
 
     private void iload(int index) {
         if (index < 4)
             printBytecode("iload_" + index);
         else
             printBytecode("iload " + index);
+        currStackSize++;
+        //net stack size + 1
+    }
+
+    private void istore(int index) {
+        if (currStackSize <= 0) 
+            throw new RuntimeException("Error: popped from an empty stack");
+        if (index < 4)
+            printBytecode("istore_" + index);
+        else
+            printBytecode("istore " + index);
+        currStackSize--;
+        //net stack size - 1
     }
 
     private void aload(int index) {
@@ -66,21 +105,90 @@ public class CodeGenVisitor extends Visitor {
             printBytecode("aload_" + index);
         else
             printBytecode("aload " + index);
+        currStackSize++;
+        //net stack size + 1
     }
 
-    private void putStatic(String fieldName, String descriptor) {
+    private void astore(int index) {
+        if (currStackSize <= 0) 
+            throw new RuntimeException("Error: popped from an empty stack");
+        if (index == 0)
+            printBytecode("astore_" + index);
+        else
+            printBytecode("astore " + index);
+        currStackSize--;
+        //net stack size - 1
+    }
+
+    private void pop() {
+        if (currStackSize <= 0) 
+            throw new RuntimeException("Error: popped from an empty stack");
+        printBytecode("pop");
+        currStackSize--;
+        //net stack size - 1
+    }
+
+    private void dup() {
+        if (currStackSize <= 0) 
+            throw new RuntimeException("Error: Nothing to dup");
+        printBytecode("dup");
+        currStackSize++;
+        //net stack size + 1
+    }
+
+    private void putStatic(ClassTreeNode classTreeNode, String fieldName, String descriptor) {
         aload(0);
         printBytecode("putfield " + classTreeNode.getName() + "/" + fieldName
                 + " " + descriptor);
+        currStackSize--;
+        currStackSize--;
+        //net stack size - 1
+    }
+
+    private void getStatic(ClassTreeNode classTreeNode, String fieldName, String descriptor) {
+        aload(0);
+        printBytecode("getstatic " + classTreeNode.getName() + "/" + fieldName
+                + " " + descriptor);
+        //net stack size + 1
+    }
+
+    private void putField(int indexOfObjectRef, String field) {
+        aload(indexOfObjectRef);
+        printBytecode("putfield " + field);
+        currStackSize--;
+        currStackSize--;
+        //net stack size + 1
+    }
+
+    private void getField(int indexOfObjectRef, String field) {
+        aload(indexOfObjectRef);
+        printBytecode("getfield " + field);
+        //net stack size - 1
+    }
+
+    private void newClass(String className) {
+        printBytecode("new " + className);
+        currStackSize++;
+        //net stack size + 1
     }
 
     private void callSuper() {
         aload(0);
         printBytecode("invokespecial " + rootFilePath + "/<init>()V");
+        currStackSize--;
+        //net stack size =
     }
 
-    private void printLabel() {
-        out.println("  L" + labelCount++ + ":");
+
+
+    /**
+     * 
+     * Other Helper Methods 
+     * 
+     */
+    private void addLimits(int[] temp, int[] orig) {
+        orig[0] += temp[0];
+        orig[1] += temp[1];
     }
 
     private String getDesciptor(String type) {
@@ -123,7 +231,7 @@ public class CodeGenVisitor extends Visitor {
                     }
                 }
 
-                putStatic(field.getName(), getDesciptor(field.getType()));
+                putStatic(classTreeNode, field.getName(), getDesciptor(field.getType()));
             }
         }
     }
@@ -318,26 +426,19 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(Method node) {
-        int stackLimit = 0;
-        int locals = 1;
-        Iterator<ASTNode> formals = node.getFormalList().getIterator();
+        int[] limits = {0,0};
 
         classTreeNode.getVarSymbolTable().enterScope();
         // print method signature
         out.print(".method " + "public " + node.getName() + "(");
 
-        while (formals.hasNext()) {
-            locals++;
-            Formal formal = (Formal) formals.next();
-            String type = getDesciptor(formal.getType());
-            out.print(type + ";");
-        }
+        addLimits((int[])node.getFormalList().accept(this), limits);
+
         out.print(")" + getDesciptor(node.getReturnType()));
         out.println();
         out.println(".throws java/lang/CloneNotSupportedException");
 
         // return their max stack and local limit
-        node.getFormalList().accept(this);
         node.getStmtList().accept(this);
 
         // go back and print limits
@@ -355,9 +456,11 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(FormalList node) {
-        for (Iterator it = node.getIterator(); it.hasNext();)
-            ((Formal) it.next()).accept(this);
-        return null;
+        int[] limits = {0,0};
+        for (Iterator it = node.getIterator(); it.hasNext();) {
+            addLimits((int[])((Formal) it.next()).accept(this), limits);
+        }
+        return limits;
     }
 
     /**
@@ -368,8 +471,13 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(Formal node) {
-        classTreeNode.getVarSymbolTable().add(node.getName(), node.getType());
-        return null;
+        int[] limits = {0,1};
+        classTreeNode.getVarSymbolTable().add(node.getName(), currLocalSize);
+        
+        //output descriptor
+        String type = getDesciptor(node.getType());
+        out.print(type + ";");
+        return limits;
     }
 
     /**
@@ -405,7 +513,15 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(DeclStmt node) {
+        printComment("Declaration " + node.getName() + " : " + node.getType());
+        classTreeNode.getVarSymbolTable().add(node.getName(), currLocalSize);
+        
+        //should push a value onto the stack
         node.getInit().accept(this);
+        if (SemantVisitor.isPrimitive(node.getType())) {
+            istore(currLocalSize);
+        }
+
         return null;
     }
 
@@ -897,9 +1013,38 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(VarExpr node) {
-        if (node.getRef() != null)
-            node.getRef().accept(this);
-        return null;
+        int[] limits = {0,0};
+        if (node.getRef() != null) {
+            Expr ref = node.getRef();
+            ref.accept(this);
+            
+            if (ref instanceof VarExpr) {
+                ClassTreeNode classToLookUpIn = classTreeNode;
+                String refName = ((VarExpr)ref).getName();
+                switch (refName) {
+                    case "this":
+                        classToLookUpIn = classTreeNode;
+                    case "super":
+                        classToLookUpIn = classTreeNode.getParent();
+                    default: //field, local or formal
+                        getField((int) classTreeNode.getVarSymbolTable().lookup(refName), node.getName());
+                        
+                } 
+            } else if (ref instanceof ArrayExpr) {
+                getField((int) classTreeNode.getVarSymbolTable().lookup(((ArrayExpr)ref).getName()), node.getName());
+            } else {
+                throw new RuntimeException("Error: reference expression should be either var or array expression");
+            }
+        }
+        else {//exists in locals
+            int localIndex = (int) classTreeNode.getVarSymbolTable().lookup(node.getName());
+            if (SemantVisitor.isPrimitive(node.getExprType())) 
+                iload(localIndex);
+            else 
+                aload(localIndex);
+        }
+        limits[0] = 1;
+        return limits;
     }
 
     /**
@@ -936,7 +1081,11 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(ConstIntExpr node) {
-        return null;
+        //adds 1 to the stack and 0 to the locals at its height
+        int[] limits = {1,0};
+        iconst(node.getIntConstant());
+
+        return limits;
     }
 
     /**
@@ -947,7 +1096,11 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(ConstBooleanExpr node) {
-        return null;
+        //adds 1 to the stack and 0 to the locals at its height
+        int[] limits = {1,0};
+        iconst(node.getConstant().equals("true") ? 1 : 0);
+        
+        return limits;
     }
 
     /**
@@ -958,6 +1111,10 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(ConstStringExpr node) {
-        return null;
+        //adds 1 to the stack and 0 to the locals at its height
+        int[] limits = {1,0};
+        ldc(node.getConstant());
+
+        return limits;
     }
 }

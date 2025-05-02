@@ -27,22 +27,22 @@ abstract public class SemantVisitor extends Visitor {
      * 
      * @param type
      */
-    public boolean isPrimitiveOrArray(String type) {
+    public static boolean isPrimitiveOrArray(String type) {
         if (isArray(type)) {
             type = type.substring(0, type.length() - 2);
         }
         return isPrimitive(type);
     }
 
-    public boolean isPrimitive(String type) {
+    public static boolean isPrimitive(String type) {
         return type != null && (type.equals(BOOL) || type.equals(INT));
     }
 
-    public boolean isPrimitiveOrVoid(String type) {
+    public static boolean isPrimitiveOrVoid(String type) {
         return type != null && (isPrimitive(type) || type.equals(VOID));
     }
 
-    private boolean isArray(String type) {
+    private static boolean isArray(String type) {
         return type.length() > 2
             && type.substring(type.length() - 2).equals("[]");
     }
