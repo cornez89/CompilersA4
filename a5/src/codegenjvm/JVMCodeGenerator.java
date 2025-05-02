@@ -19,8 +19,8 @@ public class JVMCodeGenerator {
         Iterator<ClassTreeNode> children = root.getChildrenList();
 
         System.out.printf("Begin generate %s\n", root.getName());
-        codeGenVisitor.visit(root.getASTNode());
-        
+        codeGenVisitor.visit(root);
+
         while(children.hasNext()) {
             root = children.next();
             generate();
