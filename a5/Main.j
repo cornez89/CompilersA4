@@ -1,24 +1,24 @@
-.source .\tests\EmptyProgram.btm
+.source .\tests\HelloWorld.btm
 .class public Main
-.super Object
-.implements java/lang/Clonable
+.super java/lang/Object
 
 
 .method public <init>()V
     .limit stack 1
     .limit locals 1
     aload_0
-    invokespecial Object/<init>()V
-    aload_0
+    invokespecial java/lang/Object/<init>()V
     return
 .end method
 
-.method public main()V
-.throws java/lang/CloneNotSupportedException
+.method public static main([Ljava/lang/String;)V
+    .limit stack 10
+    .limit locals 10
+    new TextIO
+    dup
+    invokespecial TextIO/<init>()V
+    ldc "Hello, World!\n"
+    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
     return
 .end method
 
-.method public <clinit>()V
-    aload_0
-    return
-.end Method

@@ -42,7 +42,7 @@ abstract public class SemantVisitor extends Visitor {
         return type != null && (isPrimitive(type) || type.equals(VOID));
     }
 
-    private static boolean isArray(String type) {
+    public static boolean isArray(String type) {
         return type.length() > 2
             && type.substring(type.length() - 2).equals("[]");
     }
