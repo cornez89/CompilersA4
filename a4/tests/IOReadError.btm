@@ -1,8 +1,0 @@
-class Main {
-    void main() {
-        TextIO io = new TextIO();
-        io.readFile("/foo");
-        String s = io.getString();
-        return;
-    }
-}

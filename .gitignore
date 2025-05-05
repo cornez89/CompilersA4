@@ -13,5 +13,11 @@ tests/*.aast
 # Diff files
 tests/*.diff
 
+# Test jar files
+tests/*.jar
+
 # Generated bantamc.bat
 bin/bantamc.bat
+
+# Jasmine Files
+*.j

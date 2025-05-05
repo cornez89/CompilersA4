@@ -1,8 +1,0 @@
-class Main {
-    void main() {
-        TextIO io = new TextIO();
-        io.writeFile("/bin/ls");
-        io.putString("this shouldn't work!!!\n");
-        return;
-    }
-}

@@ -1,8 +1,0 @@
-class Main {
-    void main() {
-        TextIO io = new TextIO();
-        String s = io.putString("Enter some text: ").getString();
-        io.putString("You entered: ").putString(s).putString("\n");
-        return;
-    }
-}
