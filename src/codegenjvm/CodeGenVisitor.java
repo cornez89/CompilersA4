@@ -42,41 +42,11 @@ public class CodeGenVisitor extends Visitor {
     // Helper method to that indents the input by 4 spaces and puts a \n at
     // the end
     private void printBytecode(String bytecode) {
-        // scan bytecode for special characters like \n and \\
-        // check all two character strings
-        int i = 0;
-        while (i < bytecode.length()) {
-            String secondChar = "";
-            switch (bytecode.charAt(i)) {
-                case '\n':
-                    secondChar = "n";
-                    bytecode = bytecode.substring(0, i) + "\\" + secondChar
-                        + bytecode.substring(i + 1);
-                    i++;
-                    break;
-                case '\t':
-                    secondChar = "t";
-                    bytecode = bytecode.substring(0, i) + "\\" + secondChar
-                        + bytecode.substring(i + 1);
-                    i++;
-                    break;
-                case '\f':
-                    secondChar = "f";
-                    bytecode = bytecode.substring(0, i) + "\\" + secondChar
-                        + bytecode.substring(i + 1);
-                    i++;
-                    break;
-                case '\\':
-                    secondChar = "\\";
-                    bytecode = bytecode.substring(0, i) + "\\" + secondChar
-                        + bytecode.substring(i + 1);
-                    i++;
-                    break;
+        bytecode = bytecode.replace("\n", "\\n");
+        bytecode = bytecode.replace("\t", "\\t");
+        bytecode = bytecode.replace("\f", "\\f");
+        bytecode = bytecode.replace("\\", "\\\\");
 
-            }
-
-            i++;
-        }
         out.println("    " + bytecode);
     }
 
