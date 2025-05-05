@@ -1,5 +1,3 @@
-# Built .class files
-*.class
 
 # Generated parser files
 src/parser/*.java
