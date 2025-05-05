@@ -1,6 +1,7 @@
 .source <built-in class>
 .class public Sys
 .super java/lang/Object
+.implements java/lang/Cloneable
 
 
 .method public <init>()V
@@ -11,7 +12,8 @@
     return
 .end method
 
-.method public exit(I;)V
+.method public exit(.throws java/lang/CloneNotSupportedException
+I;)V
     .limit stack 10
     .limit locals 10
     return

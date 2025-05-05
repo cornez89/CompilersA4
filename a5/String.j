@@ -1,6 +1,7 @@
 .source <built-in class>
 .class public String
 .super java/lang/Object
+.implements java/lang/Cloneable
 
 
 .method public <init>()V
@@ -11,22 +12,26 @@
     return
 .end method
 
-.method public length()I
+.method public length(.throws java/lang/CloneNotSupportedException
+)I
     .limit stack 10
     .limit locals 10
     return
 .end method
-.method public equals(Ljava/lang/Object;;)Z
+.method public equals(.throws java/lang/CloneNotSupportedException
+Ljava/lang/Object;;)Z
     .limit stack 10
     .limit locals 10
     return
 .end method
-.method public substring(I;I;)Ljava/lang/String;
+.method public substring(.throws java/lang/CloneNotSupportedException
+I;I;)Ljava/lang/String;
     .limit stack 10
     .limit locals 10
     return
 .end method
-.method public concat(Ljava/lang/String;;)Ljava/lang/String;
+.method public concat(.throws java/lang/CloneNotSupportedException
+Ljava/lang/String;;)Ljava/lang/String;
     .limit stack 10
     .limit locals 10
     return

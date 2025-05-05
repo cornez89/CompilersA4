@@ -1,5 +1,6 @@
 .source <built-in class>
 .class public Object
+.implements java/lang/Cloneable
 
 
 .method public <init>()V
@@ -8,7 +9,8 @@
     return
 .end method
 
-.method public clone()Ljava/lang/Object;
+.method public clone(.throws java/lang/CloneNotSupportedException
+)Ljava/lang/Object;
     .limit stack 10
     .limit locals 10
     return

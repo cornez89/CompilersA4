@@ -1,6 +1,7 @@
-.source .\tests\HelloWorld.btm
+.source .\tests\ArrayIndexNegative.btm
 .class public Main
 .super java/lang/Object
+.implements java/lang/Cloneable
 
 
 .method public <init>()V
@@ -12,13 +13,22 @@
 .end method
 
 .method public static main([Ljava/lang/String;)V
+.throws java/lang/CloneNotSupportedException
     .limit stack 10
     .limit locals 10
-    new TextIO
-    dup
-    invokespecial TextIO/<init>()V
-    ldc "Hello, World!\n"
-    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
+    ; Declaration array : int[]
+    iconst_3
+    newarray int
+    astore 1
+    aload 1
+    iconst_0
+    iconst_0
+    iastore
+    aload 1
+    iconst_1
+    ineg
+    iconst_1
+    iastore
     return
 .end method
 
