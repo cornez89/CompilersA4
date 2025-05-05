@@ -1,4 +1,4 @@
-.source .\tests\ArrayIndexNegative.btm
+.source .\tests\Assign.btm
 .class public Main
 .super java/lang/Object
 .implements java/lang/Cloneable
@@ -16,19 +16,56 @@
 .throws java/lang/CloneNotSupportedException
     .limit stack 10
     .limit locals 10
-    ; Declaration array : int[]
-    iconst_3
-    newarray int
+    ; Declaration io : TextIO
+    new TextIO
+    dup
+    invokespecial TextIO/<init>()V
     astore 1
-    aload 1
+    ; Declaration x : int
     iconst_0
-    iconst_0
-    iastore
+    istore_1
+    ; Declaration y : int
+    iconst_1
+    istore_1
+    ; Declaration z : int
+    iconst_2
+    istore_1
     aload 1
-    iconst_1
-    ineg
-    iconst_1
-    iastore
+    ldc "x="
+    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
+    iload_1
+    ldc "\n"
+    aload 1
+    ldc "y="
+    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
+    iload_1
+    ldc "\n"
+    aload 1
+    ldc "z="
+    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
+    iload_1
+    ldc "\n"
+    aload 1
+    ldc "Executing: x = y = z\n"
+    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
+    iload_1
+    istore_1
+    istore_1
+    aload 1
+    ldc "x="
+    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
+    iload_1
+    ldc "\n"
+    aload 1
+    ldc "y="
+    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
+    iload_1
+    ldc "\n"
+    aload 1
+    ldc "z="
+    invokevirtual TextIO/putString(Ljava/lang/String;)LTextIO;
+    iload_1
+    ldc "\n"
     return
 .end method
 
