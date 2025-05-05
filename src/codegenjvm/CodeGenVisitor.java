@@ -20,11 +20,11 @@ public class CodeGenVisitor extends Visitor {
     PrintWriter out;
     private ClassTreeNode classTreeNode;
 
-    //might need these to keep track of limits
+    // might need these to keep track of limits
     private int currStackSize = 0;
-    private int currLocalSize = 1; //start at 1 for this reference
-    private int[] sizesAtStart = {0,1};
-    private int[] currLimits = {0,0};
+    private int currLocalSize = 1; // start at 1 for this reference
+    private int[] sizesAtStart = { 0, 1 };
+    private int[] currLimits = { 0, 0 };
     /*
      * 
      * Helper Methods
@@ -39,8 +39,8 @@ public class CodeGenVisitor extends Visitor {
         System.out.println(string);
     }
 
-
-    //Helper method to that indents the input by 4 spaces and puts a \n at the end
+    // Helper method to that indents the input by 4 spaces and puts a \n at
+    // the end
     private void printBytecode(String bytecode) {
         // scan bytecode for special characters like \n and \\
         // check all two character strings
@@ -50,25 +50,29 @@ public class CodeGenVisitor extends Visitor {
             switch (bytecode.charAt(i)) {
                 case '\n':
                     secondChar = "n";
-                    bytecode = bytecode.substring(0, i) + "\\" + secondChar + bytecode.substring(i+1);
+                    bytecode = bytecode.substring(0, i) + "\\" + secondChar
+                        + bytecode.substring(i + 1);
                     i++;
                     break;
                 case '\t':
                     secondChar = "t";
-                    bytecode = bytecode.substring(0, i) + "\\" + secondChar + bytecode.substring(i+1);
+                    bytecode = bytecode.substring(0, i) + "\\" + secondChar
+                        + bytecode.substring(i + 1);
                     i++;
                     break;
                 case '\f':
                     secondChar = "f";
-                    bytecode = bytecode.substring(0, i) + "\\" + secondChar + bytecode.substring(i+1);
+                    bytecode = bytecode.substring(0, i) + "\\" + secondChar
+                        + bytecode.substring(i + 1);
                     i++;
                     break;
                 case '\\':
                     secondChar = "\\";
-                    bytecode = bytecode.substring(0, i) + "\\" + secondChar + bytecode.substring(i+1);
+                    bytecode = bytecode.substring(0, i) + "\\" + secondChar
+                        + bytecode.substring(i + 1);
                     i++;
                     break;
-                    
+
             }
 
             i++;
@@ -85,17 +89,17 @@ public class CodeGenVisitor extends Visitor {
      * Bytecode Methods
      * 
      */
-    
-    //no args
-    //net stack size + 1
+
+    // no args
+    // net stack size + 1
     private void ldc(String constant) {
         printBytecode("ldc " + constant);
         currStackSize++;
         checkLimits();
     }
 
-    //no args
-    //net stack size + 1
+    // no args
+    // net stack size + 1
     private void iconst(int number) {
         if (number < -(2 << 16))
             printBytecode("ldc " + number);
@@ -117,9 +121,9 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
 
     }
-    
-    //no args
-    //net stack size + 1
+
+    // no args
+    // net stack size + 1
     private void iload(int index) {
         if (index < 4)
             printBytecode("iload_" + index);
@@ -129,9 +133,9 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
         // net stack size + 1
     }
-    
-    //1 arg <value>
-    //removes 1 from stack
+
+    // 1 arg <value>
+    // removes 1 from stack
     private void istore(int index) {
         if (currStackSize <= 0)
             throw new RuntimeException("Error: popped from an empty stack");
@@ -143,8 +147,8 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
-    //no args
-    //adds 1 to stack
+    // no args
+    // adds 1 to stack
     private void aload(int index) {
         if (index == 0)
             printBytecode("aload_" + index);
@@ -154,24 +158,24 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
-    //2 args <reference> <index> 
-    //removes 2 from stack
+    // 2 args <reference> <index>
+    // removes 2 from stack
     private void aaload() {
         printBytecode("aastore");
         currStackSize -= 2;
         checkLimits();
     }
 
-    //2 args <reference> <index> 
-    //removes 2 from stack
+    // 2 args <reference> <index>
+    // removes 2 from stack
     private void iaload() {
         printBytecode("iastore");
         currStackSize -= 2;
         checkLimits();
     }
 
-    //1 args <value>
-    //removes 1 from stack
+    // 1 args <value>
+    // removes 1 from stack
     private void astore(int index) {
         if (currStackSize <= 0)
             throw new RuntimeException("Error: popped from an empty stack");
@@ -183,25 +187,24 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
-    //3 args <reference> <index> <value>
-    //removes 3 from stack
+    // 3 args <reference> <index> <value>
+    // removes 3 from stack
     private void aastore() {
         printBytecode("aastore");
         currStackSize -= 3;
         checkLimits();
     }
 
-    //3 args <reference> <index> <value>
-    //removes 3 from stack
+    // 3 args <reference> <index> <value>
+    // removes 3 from stack
     private void iastore() {
         printBytecode("iastore");
         currStackSize -= 3;
         checkLimits();
     }
 
-
-    //1 arg <anything>
-    //removes 1 from stack
+    // 1 arg <anything>
+    // removes 1 from stack
     private void pop() {
         if (currStackSize <= 0)
             throw new RuntimeException("Error: popped from an empty stack");
@@ -210,8 +213,8 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
-    //1 arg anything
-    //adds 1 to stack
+    // 1 arg anything
+    // adds 1 to stack
     private void dup() {
         if (currStackSize <= 0)
             throw new RuntimeException("Error: Nothing to dup");
@@ -221,25 +224,25 @@ public class CodeGenVisitor extends Visitor {
 
     // //
     // private void putStatic(ClassTreeNode classTreeNode, String fieldName,
-    //         String descriptor) {
-    //     aload(0);
-    //     printBytecode("putfield " + classTreeNode.getName() + "/" + fieldName
-    //             + " " + descriptor);
-    //     currStackSize--;
-    //     currStackSize--;
-    //     // net stack size - 1
+    // String descriptor) {
+    // aload(0);
+    // printBytecode("putfield " + classTreeNode.getName() + "/" + fieldName
+    // + " " + descriptor);
+    // currStackSize--;
+    // currStackSize--;
+    // // net stack size - 1
     // }
 
     // private void getStatic(ClassTreeNode classTreeNode, String fieldName,
-    //         String descriptor) {
-    //     aload(0);
-    //     printBytecode("getstatic " + classTreeNode.getName() + "/" + fieldName
-    //             + " " + descriptor);
-    //     // net stack size + 1
+    // String descriptor) {
+    // aload(0);
+    // printBytecode("getstatic " + classTreeNode.getName() + "/" + fieldName
+    // + " " + descriptor);
+    // // net stack size + 1
     // }
 
-    //2 arg <reference> <value>
-    //removes 2 from stack
+    // 2 arg <reference> <value>
+    // removes 2 from stack
     private void putField(String field) {
         printBytecode("putfield " + field);
         currStackSize--;
@@ -247,165 +250,171 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
-    //1 arg reference 
-    //net equal stack
+    // 1 arg reference
+    // net equal stack
     private void getField(String field) {
         printBytecode("getfield " + field);
     }
 
-    //new array:
+    // new array:
     // 1 arg <count>
     // net equal stack
-    //new:
-    //no arg
+    // new:
+    // no arg
     // add 1 to stack
     private void newObject(String className) {
         String type;
 
         type = getDescriptor(className);
-        type = type.substring(1, type.length() -1);
+        type = type.substring(1, type.length() - 1);
         printBytecode("new " + type);
 
         println("new " + type);
-        
+
         currStackSize++;
         checkLimits();
-        //call constructor if its an object
+        // call constructor if its an object
         if (!SemantVisitor.isPrimitive(className)) {
             dup();
-            String initSignature = (String) classTreeNode.lookupClass(className).getMethodSymbolTable().lookup("<init>");
+            String initSignature = (String) classTreeNode
+                .lookupClass(className).getMethodSymbolTable()
+                .lookup("<init>");
             println(initSignature);
             invokeSpecial(initSignature);
             currStackSize--;
         }
-        
+
         // net stack size + 1
     }
 
     private void newArray(String className) {
         String type;
-        
+
         if (SemantVisitor.isPrimitive(className))
             printBytecode("newarray " + className);
-        else {//if its a class, we need to call the constructor too
+        else {// if its a class, we need to call the constructor too
             type = getDescriptor(className);
-            type = type.substring(1, type.length() -1);
+            type = type.substring(1, type.length() - 1);
             printBytecode("anewarray " + type);
         }
-        
+
         currStackSize++;
         checkLimits();
     }
-    //1 arg <reference>
-    //remove 1 from stack
+
+    // 1 arg <reference>
+    // remove 1 from stack
     private void callSuper() {
         aload(0);
-        invokeSpecial(getClass(classTreeNode.getParent().getName()) + "/<init>()V");
+        invokeSpecial(
+            getClass(classTreeNode.getParent().getName()) + "/<init>()V");
     }
 
-    //n+1 for <reference>  args for each <param>
-    //remove n+1 - 1(if it returns something)
+    // n+1 for <reference> args for each <param>
+    // remove n+1 - 1(if it returns something)
     private void invokeSpecial(String method) {
         printBytecode("invokespecial " + method);
         int numOfParameters = 1;
         if (!method.endsWith("V"))
             numOfParameters--;
-        
-        numOfParameters += method.substring(0,method .length() -1) 
-            //remove the last character in case the return type had another ';' delimiter
-            .split(";").length - 1 ;
-        
-        currStackSize -= numOfParameters;//for the reference
+
+        numOfParameters += method.substring(0, method.length() - 1)
+            // remove the last character in case the return type had another
+            // ';' delimiter
+            .split(";").length - 1;
+
+        currStackSize -= numOfParameters;// for the reference
         checkLimits();
     }
-    
-    //n+1 for <reference>  args for each <param>
-    //remove n+1 - 1(if it returns something)
+
+    // n+1 for <reference> args for each <param>
+    // remove n+1 - 1(if it returns something)
     private void invokeVirtual(String method) {
-        
+
         printBytecode("invokevirtual " + method);
         int numOfParameters = 1;
         if (!method.endsWith("V"))
             numOfParameters--;
-        
-        numOfParameters += method.substring(0,method .length() -1) 
-            //remove the last character in case the return type had another ';' delimiter
-            .split(";").length - 1 ;
-        currStackSize -= numOfParameters + 1;//for the reference
+
+        numOfParameters += method.substring(0, method.length() - 1)
+            // remove the last character in case the return type had another
+            // ';' delimiter
+            .split(";").length - 1;
+        currStackSize -= numOfParameters + 1;// for the reference
         checkLimits();
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void iadd() {
         printBytecode("iadd");
         currStackSize -= 1;
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void isub() {
         printBytecode("isub");
         currStackSize -= 1;
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void imul() {
         printBytecode("imul");
         currStackSize -= 1;
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void idiv() {
         printBytecode("idiv");
         currStackSize -= 1;
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void irem() {
         printBytecode("irem");
         currStackSize -= 1;
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void ineg() {
         printBytecode("ineg");
         currStackSize -= 1;
     }
 
-    //2 args <index of local> <const to add>
-    //no change to stack  
+    // 2 args <index of local> <const to add>
+    // no change to stack
     private void iinc() {
         printBytecode("iinc");
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void iand() {
         printBytecode("iand");
         currStackSize -= 1;
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void ior() {
         printBytecode("ior");
         currStackSize -= 1;
     }
 
-    //no args
-    //remove 1 from stack
+    // no args
+    // remove 1 from stack
     private void ixor() {
         printBytecode("ixor");
         currStackSize -= 1;
     }
 
-    //no args
-    //nothing
+    // no args
+    // nothing
     private void returnStmt() {
         printBytecode("return");
     }
@@ -421,8 +430,10 @@ public class CodeGenVisitor extends Visitor {
     }
 
     private void checkLimits() {
-        currLimits[0] = Math.max(currLimits[0], currStackSize - sizesAtStart[0]);
-        currLimits[1] = Math.max(currLimits[1], currLocalSize - sizesAtStart[1]);
+        currLimits[0] = Math.max(currLimits[0],
+            currStackSize - sizesAtStart[0]);
+        currLimits[1] = Math.max(currLimits[1],
+            currLocalSize - sizesAtStart[1]);
     }
 
     private String getDescriptor(String type) {
@@ -441,22 +452,24 @@ public class CodeGenVisitor extends Visitor {
                 return "Ljava/lang/String;";
             case "Object":
                 return "Ljava/lang/Object;";
-            default:    
+            default:
                 return "L" + type + ";";
         }
     }
 
-    
-    //recursively creates a file path as so   filepath/etc.../ParentOfParentClass/parentClass/class
+    // recursively creates a file path as so
+    // filepath/etc.../ParentOfParentClass/parentClass/class
     private String getFilePath(ClassTreeNode classNode, String filePath) {
-        return filePath + getFilePathHelper(classNode.getParent()) + classNode.getName();
+        return filePath + getFilePathHelper(classNode.getParent())
+            + classNode.getName();
     }
 
     private String getFilePathHelper(ClassTreeNode classNode) {
         if (classNode == null)
             return "";
-        else 
-            return getFilePathHelper(classNode.getParent()) + classNode.getName() + "/";
+        else
+            return getFilePathHelper(classNode.getParent())
+                + classNode.getName() + "/";
     }
 
     ///
@@ -477,7 +490,7 @@ public class CodeGenVisitor extends Visitor {
                     switch (getDescriptor(field.getType())) {
                         case "I":
                         case "Z":
-                        
+
                             iconst(0);
                             break;
                         case "S":
@@ -494,57 +507,59 @@ public class CodeGenVisitor extends Visitor {
      * Visit an AST node (should never be called)
      * 
      * @param node
-     *        the AST node
+     *            the AST node
      * @return result of the visit
      */
     public Object visit(ASTNode node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a list node (should never be called)
      * 
      * @param node
-     *        the list node
+     *            the list node
      * @return result of the visit
      */
     public Object visit(ListNode node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a program node
      * 
      * @param node
-     *        the program node
+     *            the program node
      * @return result of the visit
      */
     public Object visit(Program node) {
-        throw new RuntimeException("This visitor method should not be called");
+        throw new RuntimeException(
+            "This visitor method should not be called");
     }
 
     /**
      * Visit a list node of classes
      * 
      * @param node
-     *        the class list node
+     *            the class list node
      * @return result of the visit
      */
     public Object visit(ClassList node) {
-        throw new RuntimeException("This visitor method should not be called");
+        throw new RuntimeException(
+            "This visitor method should not be called");
     }
 
     /**
      * Visit a class node
      * 
      * @param node
-     *        the class node
+     *            the class node
      * @return result of the visit
      */
     public Object visit(ClassTreeNode node) {
-        //start
+        // start
         println("ClassTree object start: " + node.getName());
         classTreeNode = node;
         classTreeNode.getASTNode().accept(this);
@@ -553,19 +568,19 @@ public class CodeGenVisitor extends Visitor {
 
     private String getClass(String className) {
         String descriptor = getDescriptor(className);
-        return descriptor.substring(1, descriptor.length() -1);
+        return descriptor.substring(1, descriptor.length() - 1);
     }
 
     public Object visit(Class_ node) {
         try {
             out = new PrintWriter(new File(node.getName() + ".j"));
 
-
             // print top of file info
             out.println(".source " + node.getFilename());
             out.println(".class " + "public " + node.getName());
             if (classTreeNode.getParent() != null) {
-                out.println(".super " + getClass(classTreeNode.getParent().getName()));
+                out.println(".super "
+                    + getClass(classTreeNode.getParent().getName()));
             }
             out.println(".implements " + "java/lang/" + "Cloneable");
             out.println();
@@ -586,28 +601,30 @@ public class CodeGenVisitor extends Visitor {
             }
 
             int stackLimit = 0;
-            int localLimit = fields.size() + 1; //plus 1 for this reference
+            int localLimit = fields.size() + 1; // plus 1 for this reference
 
-            //calculate stack and local limits
+            // calculate stack and local limits
             if (fields.size() > 0 || node.getParent() != null)
                 stackLimit++;
 
-            //fields
+            // fields
             for (int i = 0; i < fields.size(); i++)
-                out.println(".field " + "protected " + fields.get(i)
-                        .getName() + getDescriptor(fields.get(i).getType()));
-            
+                out.println(".field " + "protected " + fields.get(i).getName()
+                    + getDescriptor(fields.get(i).getType()));
+
             out.println();
 
             // write constructor
-            String initSignature = "<init>()V"; 
+            String initSignature = "<init>()V";
             out.println(".method " + "public " + initSignature);
-            classTreeNode.getMethodSymbolTable().add("<init>", getClass(classTreeNode.getName()) + "/" +  initSignature);
+            classTreeNode.getMethodSymbolTable().add("<init>",
+                getClass(classTreeNode.getName()) + "/" + initSignature);
             printBytecode(".limit " + "stack " + stackLimit);
             printBytecode(".limit " + "locals " + 1);
             if (classTreeNode.getParent() != null)
                 callSuper();
-            initializeFields(fields); //calls accept on each field and assigns default values
+            initializeFields(fields); // calls accept on each field and
+                                      // assigns default values
             printBytecode("return");
             out.println(".end method");
             out.println();
@@ -635,7 +652,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a list node of members
      * 
      * @param node
-     *        the member list node
+     *            the member list node
      * @return result of the visit
      */
     public Object visit(MemberList node) {
@@ -648,12 +665,12 @@ public class CodeGenVisitor extends Visitor {
      * Visit a member node (should never be calle)
      * 
      * @param node
-     *        the member node
+     *            the member node
      * @return result of the visit
      */
     public Object visit(Member node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
 
     }
 
@@ -661,7 +678,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a field node
      * 
      * @param node
-     *        the field node
+     *            the field node
      * @return result of the visit
      */
     public Object visit(Field node) {
@@ -674,39 +691,40 @@ public class CodeGenVisitor extends Visitor {
      * Visit a method node
      * 
      * @param node
-     *        the method node
+     *            the method node
      * @return result of the visit
      */
     public Object visit(Method node) {
-        int[] sizesAtStart = {currLocalSize, currStackSize};
+        int[] sizesAtStart = { currLocalSize, currStackSize };
         this.sizesAtStart = sizesAtStart;
-        int[] currLimits = {0, 0};
+        int[] currLimits = { 0, 0 };
         this.currLimits = currLimits;
 
         classTreeNode.getVarSymbolTable().enterScope();
         if (node.getName().equals("main")) {
             println("main method");
             out.println(".method public static main([Ljava/lang/String;)V");
-            
-            //newClass("String[]");
+
+            // newClass("String[]");
             out.println(".throws java/lang/CloneNotSupportedException");
-        } else {    
+        } else {
             // print method signature
             out.print(".method " + "public " + node.getName() + "(");
             out.println(".throws java/lang/CloneNotSupportedException");
 
-            //print formals and 
+            // print formals and
             node.getFormalList().accept(this);
 
-            //print return type
+            // print return type
             out.print(")" + getDescriptor(node.getReturnType()));
             out.println();
         }
-        
-        //add method signature to symbol table
-        String signature = getClass(classTreeNode.getName()) + "/" + node.getName() + "(";
+
+        // add method signature to symbol table
+        String signature = getClass(classTreeNode.getName()) + "/"
+            + node.getName() + "(";
         Iterator<ASTNode> formals = node.getFormalList().getIterator();
-        while(formals.hasNext()) {
+        while (formals.hasNext()) {
             Formal formal = (Formal) formals.next();
             signature += getDescriptor(formal.getType());
         }
@@ -722,7 +740,6 @@ public class CodeGenVisitor extends Visitor {
 
         // go back and print curr limits TODO
 
-
         out.println(".end method");
         classTreeNode.getVarSymbolTable().exitScope();
         return null;
@@ -732,7 +749,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a list node of formals
      * 
      * @param node
-     *        the formal list node
+     *            the formal list node
      * @return result of the visit
      */
     public Object visit(FormalList node) {
@@ -746,7 +763,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a formal node
      * 
      * @param node
-     *        the formal node
+     *            the formal node
      * @return result of the visit
      */
     public Object visit(Formal node) {
@@ -762,7 +779,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a list node of statements
      * 
      * @param node
-     *        the statement list node
+     *            the statement list node
      * @return result of the visit
      */
     public Object visit(StmtList node) {
@@ -776,23 +793,24 @@ public class CodeGenVisitor extends Visitor {
      * Visit a statement node (should never be calle)
      * 
      * @param node
-     *        the statement node
+     *            the statement node
      * @return result of the visit
      */
     public Object visit(Stmt node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a declaration statement node
      * 
      * @param node
-     *        the declaration statement node
+     *            the declaration statement node
      * @return result of the visit
      */
     public Object visit(DeclStmt node) {
-        printComment("Declaration " + node.getName() + " : " + node.getType());
+        printComment(
+            "Declaration " + node.getName() + " : " + node.getType());
         classTreeNode.getVarSymbolTable().add(node.getName(), currLocalSize);
 
         // should push a value onto the stack
@@ -810,7 +828,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit an expression statement node
      * 
      * @param node
-     *        the expression statement node
+     *            the expression statement node
      * @return result of the visit
      */
     public Object visit(ExprStmt node) {
@@ -823,7 +841,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit an if statement node
      * 
      * @param node
-     *        the if statement node
+     *            the if statement node
      * @return result of the visit
      */
     public Object visit(IfStmt node) {
@@ -837,7 +855,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a while statement node
      * 
      * @param node
-     *        the while statement node
+     *            the while statement node
      * @return result of the visit
      */
     public Object visit(WhileStmt node) {
@@ -850,7 +868,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a for statement node
      * 
      * @param node
-     *        the for statement node
+     *            the for statement node
      * @return result of the visit
      */
     public Object visit(ForStmt node) {
@@ -868,7 +886,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a break statement node
      * 
      * @param node
-     *        the break statement node
+     *            the break statement node
      * @return result of the visit
      */
     public Object visit(BreakStmt node) {
@@ -879,7 +897,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a block statement node
      * 
      * @param node
-     *        the block statement node
+     *            the block statement node
      * @return result of the visit
      */
     public Object visit(BlockStmt node) {
@@ -891,7 +909,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a return statement node
      * 
      * @param node
-     *        the return statement node
+     *            the return statement node
      * @return result of the visit
      */
     public Object visit(ReturnStmt node) {
@@ -906,7 +924,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a list node of expressions
      * 
      * @param node
-     *        the expression list node
+     *            the expression list node
      * @return result of the visit
      */
     public Object visit(ExprList node) {
@@ -919,38 +937,38 @@ public class CodeGenVisitor extends Visitor {
      * Visit an expression node (should never be called)
      * 
      * @param node
-     *        the expression node
+     *            the expression node
      * @return result of the visit
      */
     public Object visit(Expr node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a dispatch expression node
      * 
      * @param node
-     *        the dispatch expression node
+     *            the dispatch expression node
      * @return result of the visit
      */
     public Object visit(DispatchExpr node) {
         println("DispatchExpr");
-        
-        //push reference to stack
+
+        // push reference to stack
         node.getRefExpr().accept(this);
-        
-        //push parameters to stack
+
+        // push parameters to stack
         node.getActualList().accept(this);
 
         if (node.getRefExpr() instanceof ArrayExpr) {
             if (node.getMethodName().equals("clone")) {
-                invokeVirtual((String) classTreeNode.lookupClass("Object").
-                    getMethodSymbolTable().lookup("clone"));
+                invokeVirtual((String) classTreeNode.lookupClass("Object")
+                    .getMethodSymbolTable().lookup("clone"));
             } else {
-                throw new RuntimeException("Error: the only supported method" +
-                "for arrays is clone. Attempted to dispatch method name: " + 
-                node.getMethodName());
+                throw new RuntimeException("Error: the only supported method"
+                    + "for arrays is clone. Attempted to dispatch method name: "
+                    + node.getMethodName());
             }
             return null;
         } else if (node.getRefExpr() instanceof VarExpr) {
@@ -961,10 +979,11 @@ public class CodeGenVisitor extends Visitor {
                 invokeVirtual((String) refClass.getMethodSymbolTable()
                     .lookup(node.getMethodName()));
             } else if (refExpr.getName().equals("super")) {
-                invokeSpecial(classTreeNode.getParent() + "." + node.getMethodName());
+                invokeSpecial(
+                    classTreeNode.getParent() + "." + node.getMethodName());
             } else {
-                refClass = classTreeNode.lookupClass(node.getRefExpr()
-                    .getExprType());
+                refClass = classTreeNode
+                    .lookupClass(node.getRefExpr().getExprType());
                 invokeVirtual((String) refClass.getMethodSymbolTable()
                     .lookup(node.getMethodName()));
             }
@@ -977,7 +996,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a new expression node
      * 
      * @param node
-     *        the new expression node
+     *            the new expression node
      * @return result of the visit
      */
     public Object visit(NewExpr node) {
@@ -990,7 +1009,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a new array expression node
      * 
      * @param node
-     *        the new array expression node
+     *            the new array expression node
      * @return result of the visit
      */
     public Object visit(NewArrayExpr node) {
@@ -1005,7 +1024,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit an instanceof expression node
      * 
      * @param node
-     *        the instanceof expression node
+     *            the instanceof expression node
      * @return result of the visit
      */
     public Object visit(InstanceofExpr node) {
@@ -1017,7 +1036,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a cast expression node
      * 
      * @param node
-     *        the cast expression node
+     *            the cast expression node
      * @return result of the visit
      */
     public Object visit(CastExpr node) {
@@ -1029,12 +1048,13 @@ public class CodeGenVisitor extends Visitor {
      * Visit an assignment expression node
      * 
      * @param node
-     *        the assignment expression node
+     *            the assignment expression node
      * @return result of the visit
      */
     public Object visit(AssignExpr node) {
         node.getExpr().accept(this);
-        int indexOfVar = (int)classTreeNode.getVarSymbolTable().lookup(node.getName());
+        int indexOfVar = (int) classTreeNode.getVarSymbolTable()
+            .lookup(node.getName());
 
         if (SemantVisitor.isPrimitive(node.getExprType())) {
             istore(indexOfVar);
@@ -1048,31 +1068,32 @@ public class CodeGenVisitor extends Visitor {
      * Visit an array assignment expression node
      * 
      * @param node
-     *        the array assignment expression node
+     *            the array assignment expression node
      * @return result of the visit
      */
-    
+
     public Object visit(ArrayAssignExpr node) {
-        //load reference
+        // load reference
         ClassTreeNode classToLookupIn = classTreeNode;
 
         if (node.getRefName() == null) {
 
         } else {
-            
+
             if (node.getRefName().equals("this")) {
             } else if (node.getRefName().equals("super")) {
                 classToLookupIn = classTreeNode.getParent();
             } else {
             }
         }
-        aload((int) classToLookupIn.getVarSymbolTable().lookup(node.getName()));
-        
+        aload(
+            (int) classToLookupIn.getVarSymbolTable().lookup(node.getName()));
+
         node.getIndex().accept(this);
         node.getExpr().accept(this);
         if (SemantVisitor.isPrimitive(node.getExprType()))
             iastore();
-        else 
+        else
             aastore();
         return null;
     }
@@ -1081,35 +1102,35 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary expression node (should never be called)
      * 
      * @param node
-     *        the binary expression node
+     *            the binary expression node
      * @return result of the visit
      */
     public Object visit(BinaryExpr node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a binary comparison expression node (should never be called)
      * 
      * @param node
-     *        the binary comparison expression node
+     *            the binary comparison expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompExpr node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a binary comparison equals expression node
      * 
      * @param node
-     *        the binary comparison equals expression node
+     *            the binary comparison equals expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompEqExpr node) {
-        //short circuit
+        // short circuit
         node.getLeftExpr().accept(this);
 
         node.getRightExpr().accept(this);
@@ -1120,7 +1141,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary comparison not equals expression node
      * 
      * @param node
-     *        the binary comparison not equals expression node
+     *            the binary comparison not equals expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompNeExpr node) {
@@ -1133,7 +1154,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary comparison less than expression node
      * 
      * @param node
-     *        the binary comparison less than expression node
+     *            the binary comparison less than expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompLtExpr node) {
@@ -1146,7 +1167,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary comparison less than or equal to expression node
      * 
      * @param node
-     *        the binary comparison less than or equal to expression node
+     *            the binary comparison less than or equal to expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompLeqExpr node) {
@@ -1159,7 +1180,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary comparison greater than expression node
      * 
      * @param node
-     *        the binary comparison greater than expression node
+     *            the binary comparison greater than expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompGtExpr node) {
@@ -1172,7 +1193,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary comparison greater than or equal to expression node
      * 
      * @param node
-     *        the binary comparison greater to or equal to expression node
+     *            the binary comparison greater to or equal to expression node
      * @return result of the visit
      */
     public Object visit(BinaryCompGeqExpr node) {
@@ -1185,19 +1206,19 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary arithmetic expression node (should never be called)
      * 
      * @param node
-     *        the binary arithmetic expression node
+     *            the binary arithmetic expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithExpr node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a binary arithmetic plus expression node
      * 
      * @param node
-     *        the binary arithmetic plus expression node
+     *            the binary arithmetic plus expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithPlusExpr node) {
@@ -1210,7 +1231,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary arithmetic minus expression node
      * 
      * @param node
-     *        the binary arithmetic minus expression node
+     *            the binary arithmetic minus expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithMinusExpr node) {
@@ -1223,7 +1244,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary arithmetic times expression node
      * 
      * @param node
-     *        the binary arithmetic times expression node
+     *            the binary arithmetic times expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithTimesExpr node) {
@@ -1236,7 +1257,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary arithmetic divide expression node
      * 
      * @param node
-     *        the binary arithmetic divide expression node
+     *            the binary arithmetic divide expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithDivideExpr node) {
@@ -1249,7 +1270,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary arithmetic modulus expression node
      * 
      * @param node
-     *        the binary arithmetic modulus expression node
+     *            the binary arithmetic modulus expression node
      * @return result of the visit
      */
     public Object visit(BinaryArithModulusExpr node) {
@@ -1262,19 +1283,19 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary logical expression node (should never be called)
      * 
      * @param node
-     *        the binary logical expression node
+     *            the binary logical expression node
      * @return result of the visit
      */
     public Object visit(BinaryLogicExpr node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a binary logical AND expression node
      * 
      * @param node
-     *        the binary logical AND expression node
+     *            the binary logical AND expression node
      * @return result of the visit
      */
     public Object visit(BinaryLogicAndExpr node) {
@@ -1287,7 +1308,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a binary logical OR expression node
      * 
      * @param node
-     *        the binary logical OR expression node
+     *            the binary logical OR expression node
      * @return result of the visit
      */
     public Object visit(BinaryLogicOrExpr node) {
@@ -1300,19 +1321,19 @@ public class CodeGenVisitor extends Visitor {
      * Visit a unary expression node
      * 
      * @param node
-     *        the unary expression node
+     *            the unary expression node
      * @return result of the visit
      */
     public Object visit(UnaryExpr node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit a unary negation expression node
      * 
      * @param node
-     *        the unary negation expression node
+     *            the unary negation expression node
      * @return result of the visit
      */
     public Object visit(UnaryNegExpr node) {
@@ -1325,7 +1346,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a unary NOT expression node
      * 
      * @param node
-     *        the unary NOT expression node
+     *            the unary NOT expression node
      * @return result of the visit
      */
     public Object visit(UnaryNotExpr node) {
@@ -1337,7 +1358,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a unary increment expression node
      * 
      * @param node
-     *        the unary increment expression node
+     *            the unary increment expression node
      * @return result of the visit
      */
     public Object visit(UnaryIncrExpr node) {
@@ -1349,7 +1370,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a unary decrement expression node
      * 
      * @param node
-     *        the unary decrement expression node
+     *            the unary decrement expression node
      * @return result of the visit
      */
     public Object visit(UnaryDecrExpr node) {
@@ -1361,7 +1382,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a variable expression node
      * 
      * @param node
-     *        the variable expression node
+     *            the variable expression node
      * @return result of the visit
      */
     public Object visit(VarExpr node) {
@@ -1376,12 +1397,12 @@ public class CodeGenVisitor extends Visitor {
                 switch (refName) {
                     case "this":
                         classToLookUpIn = classTreeNode;
-                        
+
                         getField(node.getName());
                         break;
                     case "super":
                         classToLookUpIn = classTreeNode.getParent();
-                        
+
                         getField(node.getName());
                         break;
                     default: // field, local or formal
@@ -1392,11 +1413,11 @@ public class CodeGenVisitor extends Visitor {
                 getField(node.getName());
             } else {
                 throw new RuntimeException(
-                        "Error: reference expression should be either var or array expression");
+                    "Error: reference expression should be either var or array expression");
             }
         } else {// exists in locals
             int localIndex = (int) classTreeNode.getVarSymbolTable()
-                    .lookup(node.getName());
+                .lookup(node.getName());
             if (SemantVisitor.isPrimitive(node.getExprType()))
                 iload(localIndex);
             else
@@ -1409,7 +1430,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit an array expression node
      * 
      * @param node
-     *        the array expression node
+     *            the array expression node
      * @return result of the visit
      */
     public Object visit(ArrayExpr node) {
@@ -1418,7 +1439,7 @@ public class CodeGenVisitor extends Visitor {
         node.getIndex().accept(this);
         if (SemantVisitor.isPrimitive(node.getExprType()))
             iaload();
-        else 
+        else
             aaload();
         return null;
     }
@@ -1427,19 +1448,19 @@ public class CodeGenVisitor extends Visitor {
      * Visit a constant expression node (should never be called)
      * 
      * @param node
-     *        the constant expression node
+     *            the constant expression node
      * @return result of the visit
      */
     public Object visit(ConstExpr node) {
         throw new RuntimeException(
-                "This visitor method should not be called (node is abstract)");
+            "This visitor method should not be called (node is abstract)");
     }
 
     /**
      * Visit an int constant expression node
      * 
      * @param node
-     *        the int constant expression node
+     *            the int constant expression node
      * @return result of the visit
      */
     public Object visit(ConstIntExpr node) {
@@ -1452,7 +1473,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a boolean constant expression node
      * 
      * @param node
-     *        the boolean constant expression node
+     *            the boolean constant expression node
      * @return result of the visit
      */
     public Object visit(ConstBooleanExpr node) {
@@ -1465,7 +1486,7 @@ public class CodeGenVisitor extends Visitor {
      * Visit a string constant expression node
      * 
      * @param node
-     *        the string constant expression node
+     *            the string constant expression node
      * @return result of the visit
      */
     public Object visit(ConstStringExpr node) {

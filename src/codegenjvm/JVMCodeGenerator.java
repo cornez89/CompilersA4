@@ -21,7 +21,7 @@ public class JVMCodeGenerator {
         System.out.printf("Begin generate %s\n", root.getName());
         codeGenVisitor.visit(root);
 
-        while(children.hasNext()) {
+        while (children.hasNext()) {
             root = children.next();
             generate();
         }
