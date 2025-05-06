@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 import ast.*;
@@ -19,12 +20,13 @@ public class CodeGenVisitor extends Visitor {
 
     PrintWriter out;
     private ClassTreeNode classTreeNode;
+    LinkedList bytecodeBuffer = new LinkedList<String>();
 
     // might need these to keep track of limits
     private int currStackSize = 0;
     private int currLocalSize = 1; // start at 1 for this reference
     private int[] sizesAtStart = { 0, 1 };
-    private int[] currLimits = { 0, 0 };
+    private int[] currLimits = { 0, 1 };
     /*
      * 
      * Helper Methods
@@ -47,7 +49,14 @@ public class CodeGenVisitor extends Visitor {
         bytecode = bytecode.replace("\f", "\\f");
         bytecode = bytecode.replace("\\", "\\\\");
 
-        out.println("    " + bytecode);
+        println(bytecode);
+        bytecodeBuffer.add("    " + bytecode);
+    }
+
+    private void emptyQueue() {
+        while(!bytecodeBuffer.isEmpty()) {
+            out.println(bytecodeBuffer.remove());
+        }
     }
 
     private void printComment(String comment) {
@@ -127,7 +136,8 @@ public class CodeGenVisitor extends Visitor {
         currStackSize++;
         checkLimits();
     }
-
+//TODO add an index for aaload, iaload, aa store and iastore
+//TODO Check if there are dedicated bytcodes for index 0, 1 etc.
     // 2 args <reference> <index>
     // removes 2 from stack
     private void aaload() {
@@ -190,6 +200,7 @@ public class CodeGenVisitor extends Visitor {
             throw new RuntimeException("Error: Nothing to dup");
         printBytecode("dup");
         currStackSize++;
+        checkLimits();
     }
 
     // //
@@ -257,6 +268,8 @@ public class CodeGenVisitor extends Visitor {
         // net stack size + 1
     }
 
+    //args <size>
+    //removes 1 from the stack but adds reference so =
     private void newArray(String className) {
         String type;
 
@@ -268,7 +281,6 @@ public class CodeGenVisitor extends Visitor {
             printBytecode("anewarray " + type);
         }
 
-        currStackSize++;
         checkLimits();
     }
 
@@ -404,13 +416,16 @@ public class CodeGenVisitor extends Visitor {
             currStackSize - sizesAtStart[0]);
         currLimits[1] = Math.max(currLimits[1],
             currLocalSize - sizesAtStart[1]);
+        
+            println("CurrStackSize: " +currLocalSize + " currLocalSize: " + currLocalSize);
+        
+            println("CurrLimits[0]: " + currLimits[0] + " currLimits[1]: " + currLimits[1]);
     }
 
     private String getDescriptor(String type) {
         if (type == null) {
             println("Null type");
         }
-        println("get descriptor for :" + type);
         switch (type) {
             case "int":
                 return "I";
@@ -425,6 +440,21 @@ public class CodeGenVisitor extends Visitor {
             default:
                 return "L" + type + ";";
         }
+    }
+
+    private String getMethodSignature(Method node) {
+        String signature = getClass(classTreeNode.getName()) + "/"
+            + node.getName() + "(";
+        Iterator<ASTNode> formals = node.getFormalList().getIterator();
+        while (formals.hasNext()) {
+            Formal formal = (Formal) formals.next();
+            signature += getDescriptor(formal.getType());
+        }
+        signature += ")";
+        signature += getDescriptor(node.getReturnType());
+        classTreeNode.getMethodSymbolTable().add(node.getName(), signature);
+        
+        return signature;
     }
 
     // recursively creates a file path as so
@@ -570,13 +600,6 @@ public class CodeGenVisitor extends Visitor {
                     methods.add((Method) member);
             }
 
-            int stackLimit = 0;
-            int localLimit = fields.size() + 1; // plus 1 for this reference
-
-            // calculate stack and local limits
-            if (fields.size() > 0 || node.getParent() != null)
-                stackLimit++;
-
             // fields
             for (int i = 0; i < fields.size(); i++)
                 out.println(".field " + "protected " + fields.get(i).getName()
@@ -589,13 +612,15 @@ public class CodeGenVisitor extends Visitor {
             out.println(".method " + "public " + initSignature);
             classTreeNode.getMethodSymbolTable().add("<init>",
                 getClass(classTreeNode.getName()) + "/" + initSignature);
-            printBytecode(".limit " + "stack " + stackLimit);
-            printBytecode(".limit " + "locals " + 1);
-            if (classTreeNode.getParent() != null)
-                callSuper();
             initializeFields(fields); // calls accept on each field and
                                       // assigns default values
+            if (classTreeNode.getParent() != null)
+                callSuper();
             printBytecode("return");
+            out.println("    .limit " + "stack " + currLimits[0]);
+            out.println("    .limit " + "locals " + currLimits[1]);
+            emptyQueue();
+
             out.println(".end method");
             out.println();
 
@@ -664,13 +689,15 @@ public class CodeGenVisitor extends Visitor {
      *            the method node
      * @return result of the visit
      */
-    public Object visit(Method node) {
-        int[] sizesAtStart = { currLocalSize, currStackSize };
+    public Object visit(Method node) { 
+        int[] sizesAtStart = {currStackSize, currLocalSize};
         this.sizesAtStart = sizesAtStart;
-        int[] currLimits = { 0, 0 };
-        this.currLimits = currLimits;
+        currLimits = sizesAtStart.clone();
 
         classTreeNode.getVarSymbolTable().enterScope();
+        classTreeNode.getMethodSymbolTable().enterScope();
+
+        //print the method signature
         if (node.getName().equals("main")) {
             println("main method");
             out.println(".method public static main([Ljava/lang/String;)V");
@@ -691,27 +718,25 @@ public class CodeGenVisitor extends Visitor {
         }
 
         // add method signature to symbol table
-        String signature = getClass(classTreeNode.getName()) + "/"
-            + node.getName() + "(";
-        Iterator<ASTNode> formals = node.getFormalList().getIterator();
-        while (formals.hasNext()) {
-            Formal formal = (Formal) formals.next();
-            signature += getDescriptor(formal.getType());
-        }
-        signature += ")";
-        signature += getDescriptor(node.getReturnType());
-        classTreeNode.getMethodSymbolTable().add(node.getName(), signature);
+        String signature = getMethodSignature(node);
         println(signature);
 
-        printBytecode(".limit stack 10");
-        printBytecode(".limit locals 10");
-        // return their max stack and local limit
+        //deal with statements
+        //for each bytecode that adds something to the stack, increment currStackSize
+        //decrement if it pops
+        //find max currstack size after each bytecode and track that through the method
         node.getStmtList().accept(this);
+        
+        //print max sizes
+        out.println("    .limit stack " + currLimits[0]);
+        out.println("    .limit locals " + currLimits[1]);
 
-        // go back and print curr limits TODO
-
+        //printbytecodes
+        emptyQueue();
+        
         out.println(".end method");
         classTreeNode.getVarSymbolTable().exitScope();
+        classTreeNode.getMethodSymbolTable().exitScope();
         return null;
     }
 
