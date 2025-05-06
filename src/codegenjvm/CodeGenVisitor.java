@@ -131,26 +131,26 @@ public class CodeGenVisitor extends Visitor {
     private void aload(int index) {
         if (index == 0)
             printBytecode("aload_" + index);
+        if (index < 4)
+            printBytecode("aload_" + index);
         else
             printBytecode("aload " + index);
         currStackSize++;
         checkLimits();
     }
-//TODO add an index for aaload, iaload, aa store and iastore
-//TODO Check if there are dedicated bytcodes for index 0, 1 etc.
     // 2 args <reference> <index>
-    // removes 2 from stack
+    // removes 2 from stack pushes a ref. net -1
     private void aaload() {
         printBytecode("aastore");
-        currStackSize -= 2;
+        currStackSize--;
         checkLimits();
     }
 
     // 2 args <reference> <index>
-    // removes 2 from stack
+    // removes 2 from stack pushes an int. net -1
     private void iaload() {
         printBytecode("iastore");
-        currStackSize -= 2;
+        currStackSize--;
         checkLimits();
     }
 
@@ -159,7 +159,7 @@ public class CodeGenVisitor extends Visitor {
     private void astore(int index) {
         if (currStackSize <= 0)
             throw new RuntimeException("Error: popped from an empty stack");
-        if (index == 0)
+        if (index < 4)
             printBytecode("astore_" + index);
         else
             printBytecode("astore " + index);
@@ -170,7 +170,7 @@ public class CodeGenVisitor extends Visitor {
     // 3 args <reference> <index> <value>
     // removes 3 from stack
     private void aastore() {
-        printBytecode("aastore");
+        printBytecode("aastore ");
         currStackSize -= 3;
         checkLimits();
     }
@@ -262,7 +262,6 @@ public class CodeGenVisitor extends Visitor {
                 .lookup("<init>");
             println(initSignature);
             invokeSpecial(initSignature);
-            currStackSize--;
         }
 
         // net stack size + 1
@@ -305,6 +304,7 @@ public class CodeGenVisitor extends Visitor {
             // ';' delimiter
             .split(";").length - 1;
 
+        println("invokespecial removed " + numOfParameters + " items from stack");
         currStackSize -= numOfParameters;// for the reference
         checkLimits();
     }
@@ -576,7 +576,7 @@ public class CodeGenVisitor extends Visitor {
             out = new PrintWriter(new File(node.getName() + ".j"));
 
             // print top of file info
-            out.println(".source " + node.getFilename());
+            out.println(".source " + node.getFilename().substring(8));
             out.println(".class " + "public " + node.getName());
             if (classTreeNode.getParent() != null) {
                 out.println(".super "
@@ -948,7 +948,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(DispatchExpr node) {
-        println("DispatchExpr");
+        println("DispatchExpr on " + node.getMethodName());
 
         // push reference to stack
         node.getRefExpr().accept(this);
@@ -968,19 +968,33 @@ public class CodeGenVisitor extends Visitor {
             return null;
         } else if (node.getRefExpr() instanceof VarExpr) {
             VarExpr refExpr = (VarExpr) node.getRefExpr();
+            print("ref = " + refExpr.getName());
             ClassTreeNode refClass;
             if (refExpr.getName().equals("this")) {
                 refClass = classTreeNode;
-                invokeVirtual((String) refClass.getMethodSymbolTable()
-                    .lookup(node.getMethodName()));
+                Object returnValue = refClass.getMethodSymbolTable()
+                .lookup(node.getMethodName());
+                if (returnValue instanceof String) {
+                    String signature = (String) returnValue;
+                    invokeVirtual(signature);
+                } else {
+                    println("Error return value of getMethodSymbolTable is not a String. type = " + returnValue.getClass().getSimpleName());
+                }
             } else if (refExpr.getName().equals("super")) {
                 invokeSpecial(
                     classTreeNode.getParent() + "." + node.getMethodName());
             } else {
-                refClass = classTreeNode
-                    .lookupClass(node.getRefExpr().getExprType());
-                invokeVirtual((String) refClass.getMethodSymbolTable()
-                    .lookup(node.getMethodName()));
+                //Is a class type reference so we need to look up the class and find its method
+                refClass = classTreeNode.lookupClass(refExpr.getExprType());
+                println("ref class " + refClass.getName());
+                Object returnValue = refClass.getMethodSymbolTable()
+                .lookup(node.getMethodName());
+                if (returnValue instanceof String) {
+                    String signature = (String) returnValue;
+                    invokeVirtual(signature);
+                } else {
+                    println("Error return value of getMethodSymbolTable is not a String. type = ");
+                }
             }
         }
 
