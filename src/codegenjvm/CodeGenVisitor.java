@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Stack;
 
 import ast.*;
 import parser.JavaCharStream;
@@ -20,13 +21,33 @@ public class CodeGenVisitor extends Visitor {
 
     PrintWriter out;
     private ClassTreeNode classTreeNode;
-    LinkedList bytecodeBuffer = new LinkedList<String>();
+    LinkedList<String> bytecodeBuffer = new LinkedList<String>();
 
     // might need these to keep track of limits
     private int currStackSize = 0;
     private int currLocalSize = 1; // start at 1 for this reference
     private int[] sizesAtStart = { 0, 1 };
     private int[] currLimits = { 0, 1 };
+    
+
+    private static class ConditionEntry {
+        private String condLabel, elseLabel, exitLabel;
+
+        /**
+         * @param condLabel The condition/exit label for where to go after the body statement
+         * @param elseLabel The else/exit label for where to go when the condition is false
+         * @param exitLabel The exit label for where to go on a break statement
+         */
+        ConditionEntry(String condLabel, String elseLabel, String exitLabel) {
+            this.condLabel = condLabel;
+            this.elseLabel = elseLabel;
+            this.exitLabel = exitLabel;
+        }
+    }
+    private Stack<ConditionEntry> labelStack = new Stack<ConditionEntry>();
+    private int labelNumber = 0;
+
+    
     /*
      * 
      * Helper Methods
@@ -54,13 +75,19 @@ public class CodeGenVisitor extends Visitor {
     }
 
     private void emptyQueue() {
-        while(!bytecodeBuffer.isEmpty()) {
+        while (!bytecodeBuffer.isEmpty()) {
             out.println(bytecodeBuffer.remove());
         }
     }
 
     private void printComment(String comment) {
         out.println("    ; " + comment);
+    }
+
+    private String createLabel() {
+        String newLabel = "L" + labelNumber;
+        labelNumber++;
+        return newLabel;
     }
 
     /**
@@ -138,6 +165,7 @@ public class CodeGenVisitor extends Visitor {
         currStackSize++;
         checkLimits();
     }
+
     // 2 args <reference> <index>
     // removes 2 from stack pushes a ref. net -1
     private void aaload() {
@@ -267,8 +295,8 @@ public class CodeGenVisitor extends Visitor {
         // net stack size + 1
     }
 
-    //args <size>
-    //removes 1 from the stack but adds reference so =
+    // args <size>
+    // removes 1 from the stack but adds reference so =
     private void newArray(String className) {
         String type;
 
@@ -304,7 +332,8 @@ public class CodeGenVisitor extends Visitor {
             // ';' delimiter
             .split(";").length - 1;
 
-        println("invokespecial removed " + numOfParameters + " items from stack");
+        println(
+            "invokespecial removed " + numOfParameters + " items from stack");
         currStackSize -= numOfParameters;// for the reference
         checkLimits();
     }
@@ -401,6 +430,10 @@ public class CodeGenVisitor extends Visitor {
         printBytecode("return");
     }
 
+    private void label(String label) {
+        bytecodeBuffer.add("  " + label + ":");
+    }
+
     /**
      * 
      * Other Helper Methods
@@ -416,10 +449,12 @@ public class CodeGenVisitor extends Visitor {
             currStackSize - sizesAtStart[0]);
         currLimits[1] = Math.max(currLimits[1],
             currLocalSize - sizesAtStart[1]);
-        
-            println("CurrStackSize: " +currLocalSize + " currLocalSize: " + currLocalSize);
-        
-            println("CurrLimits[0]: " + currLimits[0] + " currLimits[1]: " + currLimits[1]);
+
+        println("CurrStackSize: " + currLocalSize + " currLocalSize: "
+            + currLocalSize);
+
+        println("CurrLimits[0]: " + currLimits[0] + " currLimits[1]: "
+            + currLimits[1]);
     }
 
     private String getDescriptor(String type) {
@@ -453,7 +488,7 @@ public class CodeGenVisitor extends Visitor {
         signature += ")";
         signature += getDescriptor(node.getReturnType());
         classTreeNode.getMethodSymbolTable().add(node.getName(), signature);
-        
+
         return signature;
     }
 
@@ -689,15 +724,15 @@ public class CodeGenVisitor extends Visitor {
      *            the method node
      * @return result of the visit
      */
-    public Object visit(Method node) { 
-        int[] sizesAtStart = {currStackSize, currLocalSize};
+    public Object visit(Method node) {
+        int[] sizesAtStart = { currStackSize, currLocalSize };
         this.sizesAtStart = sizesAtStart;
         currLimits = sizesAtStart.clone();
 
         classTreeNode.getVarSymbolTable().enterScope();
         classTreeNode.getMethodSymbolTable().enterScope();
 
-        //print the method signature
+        // print the method signature
         if (node.getName().equals("main")) {
             println("main method");
             out.println(".method public static main([Ljava/lang/String;)V");
@@ -721,19 +756,21 @@ public class CodeGenVisitor extends Visitor {
         String signature = getMethodSignature(node);
         println(signature);
 
-        //deal with statements
-        //for each bytecode that adds something to the stack, increment currStackSize
-        //decrement if it pops
-        //find max currstack size after each bytecode and track that through the method
+        // deal with statements
+        // for each bytecode that adds something to the stack, increment
+        // currStackSize
+        // decrement if it pops
+        // find max currstack size after each bytecode and track that through
+        // the method
         node.getStmtList().accept(this);
-        
-        //print max sizes
+
+        // print max sizes
         out.println("    .limit stack " + currLimits[0]);
         out.println("    .limit locals " + currLimits[1]);
 
-        //printbytecodes
+        // printbytecodes
         emptyQueue();
-        
+
         out.println(".end method");
         classTreeNode.getVarSymbolTable().exitScope();
         classTreeNode.getMethodSymbolTable().exitScope();
@@ -840,9 +877,17 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(IfStmt node) {
+        String elseLabel = createLabel();
+        String exitLabel = createLabel();
+        labelStack.add(new ConditionEntry(exitLabel, elseLabel, exitLabel));
+
         node.getPredExpr().accept(this);
         node.getThenStmt().accept(this);
+        label(elseLabel);
         node.getElseStmt().accept(this);
+        label(exitLabel);
+
+        labelStack.pop();
         return null;
     }
 
@@ -854,8 +899,16 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(WhileStmt node) {
+        String condLabel = createLabel();
+        String exitLabel = createLabel();
+        labelStack.add(new ConditionEntry(condLabel, exitLabel, exitLabel));
+
+        label(condLabel);
         node.getPredExpr().accept(this);
         node.getBodyStmt().accept(this);
+        label(exitLabel);
+
+        labelStack.pop();
         return null;
     }
 
@@ -867,13 +920,21 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(ForStmt node) {
+        String condLabel = createLabel();
+        String exitLabel = createLabel();
+        labelStack.add(new ConditionEntry(condLabel, exitLabel, exitLabel));
+
         if (node.getInitExpr() != null)
             node.getInitExpr().accept(this);
+        label(condLabel);
         if (node.getPredExpr() != null)
             node.getPredExpr().accept(this);
+        node.getBodyStmt().accept(this);
         if (node.getUpdateExpr() != null)
             node.getUpdateExpr().accept(this);
-        node.getBodyStmt().accept(this);
+        label(exitLabel);
+
+        labelStack.pop();
         return null;
     }
 
@@ -973,27 +1034,31 @@ public class CodeGenVisitor extends Visitor {
             if (refExpr.getName().equals("this")) {
                 refClass = classTreeNode;
                 Object returnValue = refClass.getMethodSymbolTable()
-                .lookup(node.getMethodName());
+                    .lookup(node.getMethodName());
                 if (returnValue instanceof String) {
                     String signature = (String) returnValue;
                     invokeVirtual(signature);
                 } else {
-                    println("Error return value of getMethodSymbolTable is not a String. type = " + returnValue.getClass().getSimpleName());
+                    println(
+                        "Error return value of getMethodSymbolTable is not a String. type = "
+                            + returnValue.getClass().getSimpleName());
                 }
             } else if (refExpr.getName().equals("super")) {
                 invokeSpecial(
                     classTreeNode.getParent() + "." + node.getMethodName());
             } else {
-                //Is a class type reference so we need to look up the class and find its method
+                // Is a class type reference so we need to look up the class
+                // and find its method
                 refClass = classTreeNode.lookupClass(refExpr.getExprType());
                 println("ref class " + refClass.getName());
                 Object returnValue = refClass.getMethodSymbolTable()
-                .lookup(node.getMethodName());
+                    .lookup(node.getMethodName());
                 if (returnValue instanceof String) {
                     String signature = (String) returnValue;
                     invokeVirtual(signature);
                 } else {
-                    println("Error return value of getMethodSymbolTable is not a String. type = ");
+                    println(
+                        "Error return value of getMethodSymbolTable is not a String. type = ");
                 }
             }
         }
