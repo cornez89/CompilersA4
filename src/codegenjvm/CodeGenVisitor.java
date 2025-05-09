@@ -27,6 +27,7 @@ public class CodeGenVisitor extends Visitor {
     private int currLocalSize = 1; // start at 1 for this reference
     private int[] sizesAtStart = { 0, 1 };
     private int[] currLimits = { 0, 1 };
+
     /*
      * 
      * Helper Methods
@@ -118,7 +119,7 @@ public class CodeGenVisitor extends Visitor {
     private void istore(int index) {
         if (currStackSize <= 0)
             throw new RuntimeException("Error: popped from an empty stack");
-        if (index < 4)
+        else if (index < 4)
             printBytecode("istore_" + index);
         else
             printBytecode("istore " + index);
@@ -131,7 +132,7 @@ public class CodeGenVisitor extends Visitor {
     private void aload(int index) {
         if (index == 0)
             printBytecode("aload_" + index);
-        if (index < 4)
+        else if (index < 4)
             printBytecode("aload_" + index);
         else
             printBytecode("aload " + index);
@@ -159,7 +160,7 @@ public class CodeGenVisitor extends Visitor {
     private void astore(int index) {
         if (currStackSize <= 0)
             throw new RuntimeException("Error: popped from an empty stack");
-        if (index < 4)
+        else if (index < 4)
             printBytecode("astore_" + index);
         else
             printBytecode("astore " + index);
