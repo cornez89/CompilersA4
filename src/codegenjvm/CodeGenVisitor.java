@@ -65,10 +65,10 @@ public class CodeGenVisitor extends Visitor {
     // Helper method to that indents the input by 4 spaces and puts a \n at
     // the end
     private void printBytecode(String bytecode) {
+        bytecode = bytecode.replace("\\", "\\\\");
         bytecode = bytecode.replace("\n", "\\n");
         bytecode = bytecode.replace("\t", "\\t");
         bytecode = bytecode.replace("\f", "\\f");
-        bytecode = bytecode.replace("\\", "\\\\");
 
         println(bytecode);
         bytecodeBuffer.add("    " + bytecode);
@@ -278,8 +278,6 @@ public class CodeGenVisitor extends Visitor {
         type = type.substring(1, type.length() - 1);
         printBytecode("new " + type);
 
-        println("new " + type);
-
         currStackSize++;
         checkLimits();
         // call constructor if its an object
@@ -288,8 +286,7 @@ public class CodeGenVisitor extends Visitor {
             String initSignature = (String) classTreeNode
                 .lookupClass(className).getMethodSymbolTable()
                 .lookup("<init>");
-            println(initSignature);
-            invokeSpecial(initSignature);
+            invokeSpecial(className + "" + "/<init>" + "" + initSignature);
         }
 
         // net stack size + 1
@@ -478,8 +475,7 @@ public class CodeGenVisitor extends Visitor {
     }
 
     private String getMethodSignature(Method node) {
-        String signature = getClass(classTreeNode.getName()) + "/"
-            + node.getName() + "(";
+        String signature = "(";
         Iterator<ASTNode> formals = node.getFormalList().getIterator();
         while (formals.hasNext()) {
             Formal formal = (Formal) formals.next();
@@ -643,10 +639,10 @@ public class CodeGenVisitor extends Visitor {
             out.println();
 
             // write constructor
-            String initSignature = "<init>()V";
-            out.println(".method " + "public " + initSignature);
-            classTreeNode.getMethodSymbolTable().add("<init>",
-                getClass(classTreeNode.getName()) + "/" + initSignature);
+            String methodName = "<init>";
+            String initSignature = "()V";
+            out.println(".method " + "public " + "<init>" + initSignature);
+            classTreeNode.getMethodSymbolTable().add(methodName, initSignature);
             initializeFields(fields); // calls accept on each field and
                                       // assigns default values
             if (classTreeNode.getParent() != null)
@@ -728,6 +724,10 @@ public class CodeGenVisitor extends Visitor {
         int[] sizesAtStart = { currStackSize, currLocalSize };
         this.sizesAtStart = sizesAtStart;
         currLimits = sizesAtStart.clone();
+        
+        String signature = getMethodSignature(node);
+        classTreeNode.getMethodSymbolTable().add(node.getName(), signature);
+        println(signature);
 
         classTreeNode.getVarSymbolTable().enterScope();
         classTreeNode.getMethodSymbolTable().enterScope();
@@ -751,10 +751,6 @@ public class CodeGenVisitor extends Visitor {
             out.print(")" + getDescriptor(node.getReturnType()));
             out.println();
         }
-
-        // add method signature to symbol table
-        String signature = getMethodSignature(node);
-        println(signature);
 
         // deal with statements
         // for each bytecode that adds something to the stack, increment
@@ -1017,51 +1013,49 @@ public class CodeGenVisitor extends Visitor {
         // push parameters to stack
         node.getActualList().accept(this);
 
-        if (node.getRefExpr() instanceof ArrayExpr) {
+        //find class of method
+        ClassTreeNode refClass;
+        String signature;
+        if (node.getRefExpr() == null) {
+            refClass = classTreeNode;
+        } else if (node.getRefExpr() instanceof ArrayExpr) {
             if (node.getMethodName().equals("clone")) {
-                invokeVirtual((String) classTreeNode.lookupClass("Object")
-                    .getMethodSymbolTable().lookup("clone"));
+                refClass = classTreeNode.lookupClass("Object");
             } else {
+                // refClass = classTreeNode;
                 throw new RuntimeException("Error: the only supported method"
                     + "for arrays is clone. Attempted to dispatch method name: "
                     + node.getMethodName());
             }
-            return null;
         } else if (node.getRefExpr() instanceof VarExpr) {
             VarExpr refExpr = (VarExpr) node.getRefExpr();
-            print("ref = " + refExpr.getName());
-            ClassTreeNode refClass;
             if (refExpr.getName().equals("this")) {
                 refClass = classTreeNode;
-                Object returnValue = refClass.getMethodSymbolTable()
-                    .lookup(node.getMethodName());
-                if (returnValue instanceof String) {
-                    String signature = (String) returnValue;
-                    invokeVirtual(signature);
-                } else {
-                    println(
-                        "Error return value of getMethodSymbolTable is not a String. type = "
-                            + returnValue.getClass().getSimpleName());
-                }
             } else if (refExpr.getName().equals("super")) {
-                invokeSpecial(
-                    classTreeNode.getParent() + "." + node.getMethodName());
+                refClass = classTreeNode.getParent();
             } else {
-                // Is a class type reference so we need to look up the class
-                // and find its method
-                refClass = classTreeNode.lookupClass(refExpr.getExprType());
+                refClass = classTreeNode.lookupClass(refExpr.getName());
                 println("ref class " + refClass.getName());
-                Object returnValue = refClass.getMethodSymbolTable()
-                    .lookup(node.getMethodName());
-                if (returnValue instanceof String) {
-                    String signature = (String) returnValue;
-                    invokeVirtual(signature);
-                } else {
-                    println(
-                        "Error return value of getMethodSymbolTable is not a String. type = ");
-                }
             }
+        } else {
+            // Is a class type reference so we need to look up the class
+            // and find its method
+            refClass = classTreeNode.lookupClass(node.getExprType());
         }
+        try {
+            Object temp = refClass.getMethodSymbolTable().lookup(node.getMethodName());
+            if (temp instanceof String) {
+                signature = (String) temp;
+            } else if (temp instanceof Method) {
+                signature = getMethodSignature((Method) temp);
+            } else {
+                throw new RuntimeException("Error: Return type of MethodSymbolTable lookup was invalid: " + temp.getClass().getSimpleName());
+            } 
+        } catch (Exception e) {
+            println(e.getMessage());
+            signature = "";
+        }
+        invokeVirtual(refClass.getName() + "." +  node.getMethodName() + ""+ signature);
 
         return null;
     }
