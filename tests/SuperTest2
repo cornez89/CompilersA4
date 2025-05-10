@@ -1,0 +1,8 @@
+package tests;
+
+public class SuperTest2 extends SuperTest{
+    public static void main(String[] args) {
+        super.num = 5;
+        super.num;
+    }
+}

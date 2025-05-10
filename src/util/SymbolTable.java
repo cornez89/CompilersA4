@@ -27,6 +27,8 @@ package util;
 
 import java.util.*;
 
+import ast.Method;
+
 /** Class for representing a class symbol table */
 public class SymbolTable {
     /** Hash table that maps strings to Objects.  The object value corresponds to
@@ -168,5 +170,18 @@ public class SymbolTable {
 	if (parent != null)
 	    return scopes.size() + parent.getCurrScopeLevel();
 	return scopes.size();
+    }
+
+    public void print() {
+      if (parent != null)
+        parent.print();
+      
+        System.out.println("SymbolTable:");
+      for(Hashtable hash : scopes) {
+        System.out.println("  Scope Level 1");
+        for (Object key : hash.keySet()) {
+          System.out.println("    " + key.toString()+ ", " + ((hash.get(key) instanceof Method) ? ((Method) hash.get(key)).getName() : hash.get(key).toString()));
+        }
+      }
     }
 }

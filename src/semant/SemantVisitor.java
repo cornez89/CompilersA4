@@ -138,6 +138,15 @@ abstract public class SemantVisitor extends Visitor {
             name) == classTreeNode.getVarSymbolTable().getCurrScopeLevel();
     }
 
+    static public boolean existsInClass(String name, ClassTreeNode classTreeNode) {
+        if (classTreeNode.getParent() != null)
+            return classTreeNode.getVarSymbolTable().getScopeLevel(name)
+                - classTreeNode.getParent().getVarSymbolTable()
+                    .getCurrScopeLevel() > -1;
+        else
+            return classTreeNode.getVarSymbolTable().getScopeLevel(name) > -1;
+    }
+
     protected boolean existsInCurrentMethodScope(String name) {
         return classTreeNode.getMethodSymbolTable().getScopeLevel(
             name) == classTreeNode.getMethodSymbolTable().getCurrScopeLevel();
