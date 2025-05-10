@@ -6,14 +6,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Stack;
+import java.util.function.Consumer;
 
 import ast.*;
-import parser.JavaCharStream;
 import semant.SemantVisitor;
 import util.ClassTreeNode;
 
@@ -31,20 +29,20 @@ public class CodeGenVisitor extends Visitor {
     
 
     private static class ConditionEntry {
-        private String condLabel, elseLabel, exitLabel;
+        private String exitLabel;
+        private int startStackHeight;
 
         /**
          * @param condLabel The condition/exit label for where to go after the body statement
-         * @param elseLabel The else/exit label for where to go when the condition is false
          * @param exitLabel The exit label for where to go on a break statement
+         * @param startStackHeight The height of the stack before the loop started
          */
-        ConditionEntry(String condLabel, String elseLabel, String exitLabel) {
-            this.condLabel = condLabel;
-            this.elseLabel = elseLabel;
+        ConditionEntry(String exitLabel, int startStackHeight) {
             this.exitLabel = exitLabel;
+            this.startStackHeight = startStackHeight;
         }
     }
-    private Stack<ConditionEntry> labelStack = new Stack<ConditionEntry>();
+    private Stack<ConditionEntry> conditionStack = new Stack<ConditionEntry>();
     private int labelNumber = 0;
 
     
@@ -95,6 +93,92 @@ public class CodeGenVisitor extends Visitor {
      * Bytecode Methods
      * 
      */
+
+    // 1 arg <label>
+    // net stack size unchanged
+    private void goto_label(String label) {
+        printBytecode("goto " + label);
+    }
+
+    // 1 arg <label>
+    // net stack size - 1
+    private void ifeq(String label) {
+        printBytecode("ifeq " + label);
+        currStackSize--;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 1
+    private void ifne(String label) {
+        printBytecode("ifne " + label);
+        currStackSize--;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 2
+    private void if_icmpeq(String label) {
+        printBytecode("if_icmpeq " + label);
+        currStackSize -= 2;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 2
+    private void if_icmpne(String label) {
+        printBytecode("if_icmpne " + label);
+        currStackSize -= 2;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 2
+    private void if_icmpge(String label) {
+        printBytecode("if_icmpge " + label);
+        currStackSize -= 2;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 2
+    private void if_icmpgt(String label) {
+        printBytecode("if_icmpgt " + label);
+        currStackSize -= 2;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 2
+    private void if_icmple(String label) {
+        printBytecode("if_icmple " + label);
+        currStackSize -= 2;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 2
+    private void if_icmplt(String label) {
+        printBytecode("if_icmplt " + label);
+        currStackSize -= 2;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 2
+    private void if_acmpeq(String label) {
+        printBytecode("if_acmpeq " + label);
+        currStackSize -= 2;
+        checkLimits();
+    }
+
+    // 1 arg <label>
+    // net stack size - 2
+    private void if_acmpne(String label) {
+        printBytecode("if_acmpne " + label);
+        currStackSize -= 2;
+        checkLimits();
+    }
 
     // no args
     // net stack size + 1
@@ -873,17 +957,26 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(IfStmt node) {
+        print("if: " + node.getLineNum());
         String elseLabel = createLabel();
         String exitLabel = createLabel();
-        labelStack.add(new ConditionEntry(exitLabel, elseLabel, exitLabel));
+        conditionStack.add(new ConditionEntry(exitLabel, currStackSize));
 
+        printComment("if statement predicate");
         node.getPredExpr().accept(this);
+        ifne(elseLabel);
+
+        printComment("if statement then block");
         node.getThenStmt().accept(this);
+        goto_label(exitLabel);
+
         label(elseLabel);
+        printComment("if statement else block");
         node.getElseStmt().accept(this);
+
         label(exitLabel);
 
-        labelStack.pop();
+        conditionStack.pop();
         return null;
     }
 
@@ -895,16 +988,23 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(WhileStmt node) {
+        print("while: " + node.getLineNum());
         String condLabel = createLabel();
         String exitLabel = createLabel();
-        labelStack.add(new ConditionEntry(condLabel, exitLabel, exitLabel));
+        conditionStack.add(new ConditionEntry(exitLabel, currStackSize));
 
         label(condLabel);
+        printComment("while statement predicate");
         node.getPredExpr().accept(this);
+        ifne(exitLabel);
+
+        printComment("while statement body");
         node.getBodyStmt().accept(this);
+        goto_label(condLabel);
+
         label(exitLabel);
 
-        labelStack.pop();
+        conditionStack.pop();
         return null;
     }
 
@@ -916,21 +1016,35 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(ForStmt node) {
+        print("for: " + node.getLineNum());
         String condLabel = createLabel();
         String exitLabel = createLabel();
-        labelStack.add(new ConditionEntry(condLabel, exitLabel, exitLabel));
+        conditionStack.add(new ConditionEntry(exitLabel, currStackSize));
 
-        if (node.getInitExpr() != null)
+        if (node.getInitExpr() != null) {
+            printComment("for statement initialization");
             node.getInitExpr().accept(this);
+        }
+
         label(condLabel);
-        if (node.getPredExpr() != null)
+        if (node.getPredExpr() != null) {
+            printComment("for statement predicate");
             node.getPredExpr().accept(this);
+            ifne(exitLabel);
+        }
+
+        printComment("for statement body");
         node.getBodyStmt().accept(this);
-        if (node.getUpdateExpr() != null)
+
+        if (node.getUpdateExpr() != null) {
+            printComment("for statement update");
             node.getUpdateExpr().accept(this);
+        }
+        goto_label(condLabel);
+
         label(exitLabel);
 
-        labelStack.pop();
+        conditionStack.pop();
         return null;
     }
 
@@ -942,6 +1056,13 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BreakStmt node) {
+        ConditionEntry top = conditionStack.pop();
+        int numPops = currStackSize - top.startStackHeight;
+        for (int i = 0; i > numPops; i++) {
+            pop();
+            currStackSize--;
+        }
+        goto_label(top.exitLabel);
         return null;
     }
 
@@ -1190,6 +1311,21 @@ public class CodeGenVisitor extends Visitor {
             "This visitor method should not be called (node is abstract)");
     }
 
+    public void visitBinaryComp(BinaryCompExpr node, Consumer<String> if_comparison) {
+        node.getLeftExpr().accept(this);
+        node.getRightExpr().accept(this);
+        String thenLabel = createLabel();
+        String exitLabel = createLabel();
+
+        if_comparison.accept(thenLabel);
+        iconst(0);
+        goto_label(exitLabel);
+        label(thenLabel);
+        iconst(1);
+        label(exitLabel);
+
+    }
+
     /**
      * Visit a binary comparison equals expression node
      * 
@@ -1198,10 +1334,11 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryCompEqExpr node) {
-        // short circuit
-        node.getLeftExpr().accept(this);
-
-        node.getRightExpr().accept(this);
+        String type = node.getExprType();
+        if (type.equals("int") || type.equals("bool"))
+            visitBinaryComp(node, this::if_icmpeq);
+        else
+            visitBinaryComp(node, this::if_acmpeq);
         return null;
     }
 
@@ -1213,8 +1350,11 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryCompNeExpr node) {
-        node.getLeftExpr().accept(this);
-        node.getRightExpr().accept(this);
+        String type = node.getExprType();
+        if (type.equals("int") || type.equals("bool"))
+            visitBinaryComp(node, this::if_icmpne);
+        else
+            visitBinaryComp(node, this::if_acmpne);
         return null;
     }
 
@@ -1226,8 +1366,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryCompLtExpr node) {
-        node.getLeftExpr().accept(this);
-        node.getRightExpr().accept(this);
+        visitBinaryComp(node, this::if_icmplt);
         return null;
     }
 
@@ -1239,8 +1378,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryCompLeqExpr node) {
-        node.getLeftExpr().accept(this);
-        node.getRightExpr().accept(this);
+        visitBinaryComp(node, this::if_icmple);
         return null;
     }
 
@@ -1252,8 +1390,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryCompGtExpr node) {
-        node.getLeftExpr().accept(this);
-        node.getRightExpr().accept(this);
+        visitBinaryComp(node, this::if_icmpgt);
         return null;
     }
 
@@ -1265,8 +1402,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryCompGeqExpr node) {
-        node.getLeftExpr().accept(this);
-        node.getRightExpr().accept(this);
+        visitBinaryComp(node, this::if_icmpge);
         return null;
     }
 
@@ -1367,8 +1503,17 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryLogicAndExpr node) {
+        String shortCircuitLabel = createLabel();
+        String exitLabel = createLabel();
+
         node.getLeftExpr().accept(this);
-        node.getRightExpr().accept(this);
+        ifne(shortCircuitLabel);          // if left expr is false, short
+        node.getRightExpr().accept(this); // otherwise eval right expr
+        goto_label(exitLabel);
+        label(shortCircuitLabel);
+        iconst(0);                        // if shorted, false
+        label(exitLabel);
+
         return null;
     }
 
@@ -1380,8 +1525,17 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryLogicOrExpr node) {
+        String shortCircuitLabel = createLabel();
+        String exitLabel = createLabel();
+
         node.getLeftExpr().accept(this);
-        node.getRightExpr().accept(this);
+        ifeq(shortCircuitLabel);          // if left expr is true, short
+        node.getRightExpr().accept(this); // otherwise eval right expr
+        goto_label(exitLabel);
+        label(shortCircuitLabel);
+        iconst(1);                        // if shorted, true
+        label(exitLabel);
+
         return null;
     }
 
@@ -1419,6 +1573,11 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(UnaryNotExpr node) {
         node.getExpr().accept(this);
+
+        ineg();
+        iconst(1);
+        iadd();
+
         return null;
     }
 
