@@ -72,6 +72,20 @@ public class CodeGenVisitor extends Visitor {
         bytecodeBuffer.add("    " + bytecode);
     }
 
+    private void checkLimits() {
+        currLimits[0] = Math.max(currLimits[0],
+            currStackSize);
+        currLimits[1] = Math.max(currLimits[1],
+            currLocalSize);
+
+        println("CurrStackSize: " + currStackSize + " currLocalSize: "
+            + currLocalSize);
+
+        println("CurrLimits[0]: " + currLimits[0] + " currLimits[1]: "
+            + currLimits[1]);
+    }
+
+
     private void emptyQueue() {
         while (!bytecodeBuffer.isEmpty()) {
             out.println(bytecodeBuffer.remove());
@@ -234,6 +248,7 @@ public class CodeGenVisitor extends Visitor {
         else
             printBytecode("istore " + index);
         currStackSize--;
+        currLocalSize = Math.max(index + 1, currLocalSize);
         checkLimits();
     }
 
@@ -276,6 +291,7 @@ public class CodeGenVisitor extends Visitor {
         else
             printBytecode("astore " + index);
         currStackSize--;
+        currLocalSize = Math.max(index + 1, currLocalSize);
         checkLimits();
     }
 
@@ -367,10 +383,16 @@ public class CodeGenVisitor extends Visitor {
         // call constructor if its an object
         if (!SemantVisitor.isPrimitive(className)) {
             dup();
-            String initSignature = (String) classTreeNode
+            Object temp = classTreeNode
                 .lookupClass(className).getMethodSymbolTable()
                 .lookup("<init>");
-            invokeSpecial(className + "" + "/<init>" + "" + initSignature);
+            println("DEBUG: return type of MethodSymbolTableLookup is: " + temp.getClass().getSimpleName());
+            
+            if (temp instanceof Method) {
+                invokeSpecial(getFullMethodCall((Method) temp, className));
+            } else {
+                throw new RuntimeException("Invalid return value of MethodSymbolTableLookup");
+            }
         }
 
         // net stack size + 1
@@ -419,20 +441,22 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
+    private String getFullMethodCall(Method method, String methodClass) {
+        return methodClass + "/" + method.getName() + getMethodSignature(method);
+    }
+    
     // n+1 for <reference> args for each <param>
     // remove n+1 - 1(if it returns something)
-    private void invokeVirtual(String method) {
+    private void invokeVirtual(Method method, String className) {
 
-        printBytecode("invokevirtual " + method);
-        int numOfParameters = 1;
-        if (!method.endsWith("V"))
+        printBytecode("invokevirtual " + getFullMethodCall(method, className));
+        int numOfParameters = 1; //for reference
+        
+        if (!method.getReturnType().equals("void"))
             numOfParameters--;
-
-        numOfParameters += method.substring(0, method.length() - 1)
-            // remove the last character in case the return type had another
-            // ';' delimiter
-            .split(";").length - 1;
-        currStackSize -= numOfParameters + 1;// for the reference
+        
+        numOfParameters += method.getFormalList().getSize();
+        currStackSize -= numOfParameters;
         checkLimits();
     }
 
@@ -525,18 +549,7 @@ public class CodeGenVisitor extends Visitor {
         orig[1] += temp[1];
     }
 
-    private void checkLimits() {
-        currLimits[0] = Math.max(currLimits[0],
-            currStackSize - sizesAtStart[0]);
-        currLimits[1] = Math.max(currLimits[1],
-            currLocalSize - sizesAtStart[1]);
-
-        println("CurrStackSize: " + currLocalSize + " currLocalSize: "
-            + currLocalSize);
-
-        println("CurrLimits[0]: " + currLimits[0] + " currLimits[1]: "
-            + currLimits[1]);
-    }
+    
 
     private String getDescriptor(String type) {
         if (type == null) {
@@ -567,7 +580,7 @@ public class CodeGenVisitor extends Visitor {
         }
         signature += ")";
         signature += getDescriptor(node.getReturnType());
-        classTreeNode.getMethodSymbolTable().add(node.getName(), signature);
+        classTreeNode.getMethodSymbolTable().add(node.getName(), node);
 
         return signature;
     }
@@ -724,9 +737,10 @@ public class CodeGenVisitor extends Visitor {
 
             // write constructor
             String methodName = "<init>";
-            String initSignature = "()V";
-            out.println(".method " + "public " + "<init>" + initSignature);
-            classTreeNode.getMethodSymbolTable().add(methodName, initSignature);
+            Method initMethod = new Method(node.getLineNum(), "void", methodName, new FormalList(node.getLineNum()), new StmtList(node.getLineNum()));
+            String signature = getMethodSignature(initMethod);
+            out.println(".method " + "public " + "<init>" + signature);
+            classTreeNode.getMethodSymbolTable().add(methodName, initMethod);
             initializeFields(fields); // calls accept on each field and
                                       // assigns default values
             if (classTreeNode.getParent() != null)
@@ -810,7 +824,7 @@ public class CodeGenVisitor extends Visitor {
         currLimits = sizesAtStart.clone();
         
         String signature = getMethodSignature(node);
-        classTreeNode.getMethodSymbolTable().add(node.getName(), signature);
+        classTreeNode.getMethodSymbolTable().add(node.getName(), node);
         println(signature);
 
         classTreeNode.getVarSymbolTable().enterScope();
@@ -945,7 +959,8 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(ExprStmt node) {
         println("ExprStmt");
-        node.getExpr().accept(this);
+        node.getExpr().accept(this); 
+        pop(); // Need this because expressions add to the stack
         return null;
     }
 
@@ -1155,28 +1170,22 @@ public class CodeGenVisitor extends Visitor {
             } else if (refExpr.getName().equals("super")) {
                 refClass = classTreeNode.getParent();
             } else {
-                refClass = classTreeNode.lookupClass(refExpr.getName());
-                println("ref class " + refClass.getName());
+                refClass = classTreeNode.lookupClass(refExpr.getExprType());
+                println("ref class " + refExpr.getName());
             }
         } else {
             // Is a class type reference so we need to look up the class
             // and find its method
             refClass = classTreeNode.lookupClass(node.getExprType());
         }
-        try {
-            Object temp = refClass.getMethodSymbolTable().lookup(node.getMethodName());
-            if (temp instanceof String) {
-                signature = (String) temp;
-            } else if (temp instanceof Method) {
-                signature = getMethodSignature((Method) temp);
-            } else {
-                throw new RuntimeException("Error: Return type of MethodSymbolTable lookup was invalid: " + temp.getClass().getSimpleName());
-            } 
-        } catch (Exception e) {
-            println(e.getMessage());
-            signature = "";
-        }
-        invokeVirtual(refClass.getName() + "." +  node.getMethodName() + ""+ signature);
+        Object temp = refClass.getMethodSymbolTable().lookup(node.getMethodName());
+        println("Return type of MethodSymbolTable.lookup() was: " + temp.getClass().getSimpleName());
+        
+        if (temp instanceof Method) {
+            invokeVirtual((Method) temp, refClass.getName());
+        } else {
+            throw new RuntimeException("Error: Return type of MethodSymbolTable lookup was invalid: " + temp.getClass().getSimpleName());
+        } 
 
         return null;
     }
@@ -1242,6 +1251,7 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(AssignExpr node) {
         node.getExpr().accept(this);
+        dup();
         int indexOfVar = (int) classTreeNode.getVarSymbolTable()
             .lookup(node.getName());
 
@@ -1277,7 +1287,7 @@ public class CodeGenVisitor extends Visitor {
         }
         aload(
             (int) classToLookupIn.getVarSymbolTable().lookup(node.getName()));
-
+        
         node.getIndex().accept(this);
         node.getExpr().accept(this);
         if (SemantVisitor.isPrimitive(node.getExprType()))
