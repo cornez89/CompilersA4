@@ -14,6 +14,13 @@ tests/*.diff
 # Test jar files
 tests/*.jar
 
+# I think these whole folders can be ignored
+bin/*.*
+tests/*.*
+
+# Idk prolly
+src/**/*.class
+
 # Generated bantamc.bat
 bin/bantamc.bat
 
