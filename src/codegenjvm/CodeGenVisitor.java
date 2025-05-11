@@ -238,12 +238,6 @@ public class CodeGenVisitor extends Visitor {
         currStackSize++;
     }
 
-    //no args
-    //adds a ref to the stack
-    private void aconstNull() {
-        printBytecode("aconst_null");
-        currStackSize++;
-    }
 
     // no args
     // net stack size + 1
