@@ -238,6 +238,11 @@ public class CodeGenVisitor extends Visitor {
         currStackSize++;
     }
 
+    //1 arg <reference>
+    //returns new type, net = stack
+    private void checkCast(String type) {
+        printBytecode("checkcast " + getDescriptor(type));
+    }
 
     // no args
     // net stack size + 1
@@ -1188,8 +1193,11 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(ExprList node) {
-        for (Iterator it = node.getIterator(); it.hasNext();)
-            ((Expr) it.next()).accept(this);
+        for (Iterator it = node.getIterator(); it.hasNext();) {
+            Expr arg = (Expr) it.next();
+            printComment("argt type: " + arg.getExprType(), node);
+            arg.accept(this);
+        }
         return null;
     }
 
@@ -1224,44 +1232,6 @@ public class CodeGenVisitor extends Visitor {
 
         //find class of method
         ClassTreeNode refClass;
-        String signature;
-
-        if (node.getRefExpr() == null) {
-            refClass = classTreeNode;
-        } else if (node.getRefExpr() instanceof ArrayExpr) {
-            ArrayExpr refExpr = (ArrayExpr)node.getRefExpr();
-            refClass = classTreeNode.lookupClass(refExpr.getExprType());
-        } else if (node.getRefExpr() instanceof VarExpr) {
-            VarExpr refExpr = (VarExpr) node.getRefExpr();
-            if (refExpr.getName().equals("this")) {
-                refClass = classTreeNode;
-            } else if (refExpr.getName().equals("super")) {
-                refClass = classTreeNode.getParent();
-            } else if (SemantVisitor.isArray(refExpr.getExprType()) && !node.getMethodName().equals("clone")) {
-                throw new RuntimeException("Invalid dispatch: " + 
-                node.getMethodName() + " on type arrray. Only applicable method for arrays is clone().");
-            } else {
-                refClass = classTreeNode.lookupClass(refExpr.getExprType());
-                println("ref class " + refExpr.getName());
-            }
-        } else {
-            // Is a class type reference so we need to look up the class
-            // and find its method
-            refClass = classTreeNode.lookupClass(node.getExprType());
-        }
-
-        printComment("dispatch " + "(" + node.getMethodName() + ", " + refClass.getName() + ")", node);
-
-        // push reference to stack
-        node.getRefExpr().accept(this);
-        println(node.getRefExpr().getExprType());
-
-        // push parameters to stack
-        node.getActualList().accept(this);
-        //and to locals
-        
-
-        
         
         // see if the method is being called on an array or not
         if(recieverType.endsWith("[]")) {
@@ -1280,12 +1250,23 @@ public class CodeGenVisitor extends Visitor {
         node.getRefExpr().accept(this);
         println(node.getRefExpr().getExprType());
 
+        
         // push parameters to stack
-        node.getActualList().accept(this);
+        // cast null into correct reference type
+        Method method = (Method) refClass.getMethodSymbolTable().lookup(node.getMethodName());
+        Iterator paramIt = method.getFormalList().getIterator();
+        for (Iterator argIt = node.getActualList().getIterator(); argIt.hasNext();  ) {
+            Expr arg = (Expr) argIt.next();
+            Formal param = (Formal) paramIt.next(); 
+            
+            arg.accept(this);
+            if (arg.getExprType().equals("null")) {
+                checkCast(param.getType());
+            }
+        }
+        // node.getActualList().accept(this);
+        
         //and to locals
-        
-
-        
         Object temp = refClass.getMethodSymbolTable().lookup(node.getMethodName());
         println("Return type of MethodSymbolTable.lookup() was: " + temp.getClass().getSimpleName());
         
