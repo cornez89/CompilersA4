@@ -452,6 +452,12 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
+    //1 arg <reference>
+    //net = stack size
+    private void arrayLength() {
+        printBytecode("arraylength");
+    }
+
     // 1 arg <reference>
     // remove 1 from stack
     private void callSuper() {
@@ -1760,7 +1766,7 @@ public class CodeGenVisitor extends Visitor {
             aload(0);
         } else if (node.getName().equals("length")) {
             node.getRef().accept(this);
-            getField(getClass(classTreeNode.getName()) + ".length:I");
+            arrayLength();
         } else if (node.getRef() != null) {
             String refClass = "";
             Expr refExpr = node.getRef();
