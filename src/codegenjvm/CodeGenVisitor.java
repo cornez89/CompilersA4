@@ -375,8 +375,14 @@ public class CodeGenVisitor extends Visitor {
 
     // 2 arg <reference> <value>
     // removes 2 from stack
-    private void putField(String field) {
-        printBytecode("putfield " + field);
+    private void putField(String className, String name, String type) {
+        
+        className = getClass(className); 
+        String descriptor = getDescriptor(type);
+        if (descriptor.equals("Z") || descriptor.equals("[Z"))
+            descriptor = descriptor.replace("Z", "I");
+            //We only have int types
+        printBytecode("putfield " + className + "." + name + " " + descriptor);
         currStackSize--;
         currStackSize--;
         checkLimits();
@@ -441,9 +447,10 @@ public class CodeGenVisitor extends Visitor {
     private void newArray(String className) {
         String type;
 
-        if (SemantVisitor.isPrimitive(className))
-            printBytecode("newarray " + className);
-        else {// if its a class, we need to call the constructor too
+        if (SemantVisitor.isPrimitive(className)) {
+            type = "int"; //atype for int according to java reference
+            printBytecode("newarray " + type);
+        } else {// if its a class, we need to call the constructor too
             type = getDescriptor(className);
             type = type.substring(1, type.length() - 1);
             printBytecode("anewarray " + type);
@@ -677,9 +684,7 @@ public class CodeGenVisitor extends Visitor {
                            aconstNull();
                     }
                 }
-                putField(getClass(classTreeNode.getName()) + "." + 
-                    field.getName() + ":" + 
-                    getDescriptor(field.getType()));
+                putField(classTreeNode.getName(), field.getName(), field.getType());
             }
         }
     }
@@ -923,10 +928,14 @@ public class CodeGenVisitor extends Visitor {
 
         // printbytecodes
         emptyQueue();
-
         out.println(".end method");
         classTreeNode.getVarSymbolTable().exitScope();
         classTreeNode.getMethodSymbolTable().exitScope();
+
+        //bring stack and local size down to where it should be
+        if (node.getReturnType().equals(signature))
+        currStackSize = sizesAtStart[0];
+        currLocalSize = sizesAtStart[1];
         return null;
     }
 
@@ -1378,10 +1387,7 @@ public class CodeGenVisitor extends Visitor {
         aload(0);
         node.getExpr().accept(this);
         dupx1();
-        putField(getClass(refClass) + "." + 
-            node.getName() + "" 
-            //+ getDescriptor(node.getExprType())
-            );     
+        putField(getClass(refClass), node.getName(), node.getExprType());     
 
         return null;
     }
