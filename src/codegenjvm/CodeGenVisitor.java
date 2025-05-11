@@ -93,8 +93,9 @@ public class CodeGenVisitor extends Visitor {
     }
 
     private void printComment(String comment, ASTNode node) {
-        out.println("    ; " + comment);
+        printBytecode(" ; " + comment);
         println("    ; " + comment + " - line " + node.getLineNum());
+        
     }
 
     private String createLabel() {
@@ -339,6 +340,16 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
+    // 1 arg anything
+    // adds 1 to stack
+    private void dupx1() {
+        if (currStackSize <= 0)
+            throw new RuntimeException("Error: Nothing to dup");
+        printBytecode("dup_x1");
+        currStackSize++;
+        checkLimits();
+    }
+
     // //
     // private void putStatic(ClassTreeNode classTreeNode, String fieldName,
     // String descriptor) {
@@ -373,6 +384,21 @@ public class CodeGenVisitor extends Visitor {
         printBytecode("getfield " + field);
     }
 
+    // 1 arg <value>
+    // removes 1 from stack
+    private void putStatic(String field) {
+        printBytecode("putstatic " + field);
+        currStackSize--;
+        checkLimits();
+    }
+
+    // no args
+    // adds one element to the stack
+    private void getStatic(String field) {
+        printBytecode("getstatic " + field);
+        currStackSize++;
+        checkLimits();
+    }
     // new array:
     // 1 arg <count>
     // net equal stack
@@ -563,20 +589,27 @@ public class CodeGenVisitor extends Visitor {
         if (type == null) {
             println("Null type");
         }
+        String descriptor = "";
+        if (SemantVisitor.isArray(type)) {
+            descriptor += "[";
+            type = type.substring(0,type.length() - 2);
+        }
+
         switch (type) {
             case "int":
-                return "I";
+                descriptor += "I"; break;
             case "boolean":
-                return "Z";
+                descriptor += "Z"; break;
             case "void":
-                return "V";
+                descriptor +="V"; break;
             case "String":
-                return "Ljava/lang/String;";
+                descriptor += "Ljava/lang/String;"; break;
             case "Object":
-                return "Ljava/lang/Object;";
+                descriptor += "Ljava/lang/Object;"; break;
             default:
-                return "L" + type + ";";
+                descriptor += "L" + type + ";"; 
         }
+        return descriptor;
     }
 
     private String getMethodSignature(Method node) {
@@ -634,7 +667,9 @@ public class CodeGenVisitor extends Visitor {
                            aconstNull();
                     }
                 }
-                putField(field.getName());
+                putField(getClass(classTreeNode.getName()) + "." + 
+                    field.getName() + ":" + 
+                    getDescriptor(field.getType()));
             }
         }
     }
@@ -739,7 +774,7 @@ public class CodeGenVisitor extends Visitor {
             // fields
             for (int i = 0; i < fields.size(); i++) {
                 //DEBUG
-                String line = ".field " + "protected " + fields.get(i).getName()
+                String line = ".field " + "protected " + fields.get(i).getName() + " "
                     + getDescriptor(fields.get(i).getType());
                 println(line);
                 out.println(line);
@@ -854,7 +889,6 @@ public class CodeGenVisitor extends Visitor {
         } else {
             // print method signature
             out.print(".method " + "public " + node.getName() + "(");
-            out.println(".throws java/lang/CloneNotSupportedException");
 
             // print formals and
             node.getFormalList().accept(this);
@@ -862,6 +896,7 @@ public class CodeGenVisitor extends Visitor {
             // print return type
             out.print(")" + getDescriptor(node.getReturnType()));
             out.println();
+            out.println(".throws java/lang/CloneNotSupportedException");
         }
 
         // deal with statements
@@ -907,14 +942,14 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(Formal node) {
-        printComment("local var: " + node.getName() + "/" + node.getType(), node);
+        //printComment("local var: " + node.getName() + "/" + node.getType(), node);
         classTreeNode.getVarSymbolTable().add(node.getName(), currLocalSize++);
         classTreeNode.getVarSymbolTable().print();
         
         // output descriptor
         String type = getDescriptor(node.getType());
         
-        out.print(type + ";");
+        out.print(type);
         return null;
     }
 
@@ -1167,20 +1202,17 @@ public class CodeGenVisitor extends Visitor {
         if (node.getRefExpr() == null) {
             refClass = classTreeNode;
         } else if (node.getRefExpr() instanceof ArrayExpr) {
-            if (node.getMethodName().equals("clone")) {
-                refClass = classTreeNode.lookupClass("Object");
-            } else {
-                // refClass = classTreeNode;
-                throw new RuntimeException("Error: the only supported method"
-                    + "for arrays is clone. Attempted to dispatch method name: "
-                    + node.getMethodName());
-            }
+            ArrayExpr refExpr = (ArrayExpr)node.getRefExpr();
+            refClass = classTreeNode.lookupClass(refExpr.getExprType());
         } else if (node.getRefExpr() instanceof VarExpr) {
             VarExpr refExpr = (VarExpr) node.getRefExpr();
             if (refExpr.getName().equals("this")) {
                 refClass = classTreeNode;
             } else if (refExpr.getName().equals("super")) {
                 refClass = classTreeNode.getParent();
+            } else if (SemantVisitor.isArray(refExpr.getExprType()) && !node.getMethodName().equals("clone")) {
+                throw new RuntimeException("Invalid dispatch: " + 
+                node.getMethodName() + " on type arrray. Only applicable method for arrays is clone().");
             } else {
                 refClass = classTreeNode.lookupClass(refExpr.getExprType());
                 println("ref class " + refExpr.getName());
@@ -1276,17 +1308,17 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(AssignExpr node) {
         printComment("Variable Assignment  " + node.getName() + "/" + node.getExprType(), node);
-        node.getExpr().accept(this);
-        dup();
-
-        String refClass = "";
+        
+        String refClass = classTreeNode.getName();
         if (node.getRefName() != null) {
             switch(node.getRefName()) {
                 case "this":
                     // is local var
                     if (!SemantVisitor.existsInClass("this." + node.getName(), classTreeNode)) {
-                            int indexOfVar = (int) classTreeNode.getVarSymbolTable().lookup(node.getName());
-                        if (SemantVisitor.isPrimitive(node.getExprType())) {
+                        int indexOfVar = (int) classTreeNode.getVarSymbolTable().lookup(node.getName());
+                        node.getExpr().accept(this);
+                        dup();   
+                        if (SemantVisitor.isPrimitive(node.getExprType())) {    
                             istore(indexOfVar);
                         } else {
                             astore(indexOfVar);
@@ -1294,15 +1326,20 @@ public class CodeGenVisitor extends Visitor {
                     }   
                     return null;
                 case "super":
-                    refClass = classTreeNode.getParent().getName() + "/";
+                    refClass = classTreeNode.getParent().getName();
                     break;
                 default:
-                    refClass = node.getRefName() + "/";
+                    refClass = node.getRefName();
             }
         }
 
         aload(0);
-        putField(refClass+ node.getName());     
+        node.getExpr().accept(this);
+        dupx1();
+        putField(getClass(refClass) + "." + 
+            node.getName() + "" 
+            //+ getDescriptor(node.getExprType())
+            );     
 
         return null;
     }
@@ -1687,7 +1724,7 @@ public class CodeGenVisitor extends Visitor {
             aload(0);
         } else if (node.getName().equals("length")) {
             node.getRef().accept(this);
-            getField("length");
+            getField(getClass(classTreeNode.getName()) + ".length:I");
         } else if (node.getRef() != null) {
             String refClass = "";
             Expr refExpr = node.getRef();
