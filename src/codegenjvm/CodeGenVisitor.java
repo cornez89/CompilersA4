@@ -2,8 +2,11 @@ package codegenjvm;
 
 import visitor.Visitor;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -226,6 +229,13 @@ public class CodeGenVisitor extends Visitor {
         currStackSize++;
         checkLimits();
 
+    }
+
+    //no args
+    //adds a ref to the stack
+    private void aconstNull() {
+        printBytecode("aconst_null");
+        currStackSize++;
     }
 
     //no args
@@ -774,8 +784,8 @@ public class CodeGenVisitor extends Visitor {
             // fields
             for (int i = 0; i < fields.size(); i++) {
                 //DEBUG
-                String line = ".field " + "protected " + fields.get(i).getName() + " "
-                    + getDescriptor(fields.get(i).getType());
+                String line = ".field " + "protected " + fields.get(i).getName()
+                    + " " + getDescriptor(fields.get(i).getType());
                 println(line);
                 out.println(line);
             }
@@ -804,7 +814,7 @@ public class CodeGenVisitor extends Visitor {
 
             // methods
             while (!methods.isEmpty())
-                methods.removeFirst().accept(this);
+                methods.remove(0).accept(this);
             out.println();
 
             // doesn't work and doesn't complain if I get rid of it so yeah
@@ -1195,6 +1205,14 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(DispatchExpr node) {
 
+        // find the type of object the method is being called on
+        String recieverType;
+        if(node.getRefExpr() == null) {
+            recieverType = classTreeNode.getName();
+        } else {
+            recieverType = node.getRefExpr().getExprType();
+        }
+
         //find class of method
         ClassTreeNode refClass;
         String signature;
@@ -1221,6 +1239,30 @@ public class CodeGenVisitor extends Visitor {
             // Is a class type reference so we need to look up the class
             // and find its method
             refClass = classTreeNode.lookupClass(node.getExprType());
+        }
+
+        printComment("dispatch " + "(" + node.getMethodName() + ", " + refClass.getName() + ")", node);
+
+        // push reference to stack
+        node.getRefExpr().accept(this);
+        println(node.getRefExpr().getExprType());
+
+        // push parameters to stack
+        node.getActualList().accept(this);
+        //and to locals
+        
+
+        
+        
+        // see if the method is being called on an array or not
+        if(recieverType.endsWith("[]")) {
+            if(!node.getMethodName().equals("clone")) {
+                throw new RuntimeException("Error: the only supported method" +
+                " for arrays is clone. Tried: " + node.getMethodName());
+            }
+            refClass = classTreeNode.lookupClass("Object");
+        } else {
+            refClass = classTreeNode.lookupClass(recieverType);
         }
 
         printComment("dispatch " + "(" + node.getMethodName() + ", " + refClass.getName() + ")", node);
@@ -1784,13 +1826,20 @@ public class CodeGenVisitor extends Visitor {
             if (node.getRef() instanceof VarExpr) {
                 VarExpr refExpr = (VarExpr) node.getRef();
                 switch (refExpr.getName()) {
-                    case "this": aload(0); break;
-                    case "super" : getField(classTreeNode.getParent().getName() + "." + node.getName());;
+                    case "this": 
+                        aload(0); 
+                        getField(classTreeNode.getName() + "/" + node.getName());
+                        break;
+                    case "super" : 
+                        aload(0);
+                        getField(classTreeNode.getParent().getName() + "/" + node.getName());
+                        break;
                     default: throw new RuntimeException("Reference to array " + node.getName() + " is not this, super or null.");
                 }
+            } else {
+                throw new RuntimeException("Reference to array" + 
+                node.getName() + " is not a varexpr");
             }
-            //push array ref
-            getField(node.getName());
         } else {
             println(node.getName());
             classTreeNode.getVarSymbolTable().print();
@@ -1798,12 +1847,17 @@ public class CodeGenVisitor extends Visitor {
             aload(indexOfVar);
         }
         
-            
         node.getIndex().accept(this);
+
         if (SemantVisitor.isPrimitive(node.getExprType()))
             iaload();
         else
             aaload();
+
+        // make sure we update the type of element for the expression
+        String arrayElementType = node.getExprType().replaceFirst("\\[\\]$","");
+        node.setExprType(arrayElementType);
+
         return null;
     }
 
