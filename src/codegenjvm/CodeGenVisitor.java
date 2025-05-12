@@ -241,7 +241,7 @@ public class CodeGenVisitor extends Visitor {
     //1 arg <reference>
     //returns new type, net = stack
     private void checkCast(String type) {
-        printBytecode("checkcast " + getDescriptor(type));
+        printBytecode("checkcast " + getDescriptorShort(type));
     }
 
     // no args
@@ -591,6 +591,20 @@ public class CodeGenVisitor extends Visitor {
         printBytecode("return");
     }
 
+    // no args
+    // adds a primitive to the caller's stack
+    private void ireturnStmt() {
+        printBytecode("ireturn");
+        currStackSize++;
+    }
+
+    // no args
+    // adds a primitive to the caller's stack
+    private void areturnStmt() {
+        printBytecode("areturn");
+        currStackSize++;
+    }
+
     private void label(String label) {
         bytecodeBuffer.add("  " + label + ":");
     }
@@ -630,6 +644,33 @@ public class CodeGenVisitor extends Visitor {
                 descriptor += "Ljava/lang/Object;"; break;
             default:
                 descriptor += "L" + type + ";"; 
+        }
+        return descriptor;
+    }
+
+    private String getDescriptorShort(String type) {
+        if (type == null) {
+            println("Null type");
+        }
+        String descriptor = "";
+        if (SemantVisitor.isArray(type)) {
+            descriptor += "[";
+            type = type.substring(0,type.length() - 2);
+        }
+
+        switch (type) {
+            case "int":
+                descriptor += "I"; break;
+            case "boolean":
+                descriptor += "Z"; break;
+            case "void":
+                descriptor +="V"; break;
+            case "String":
+                descriptor += "java/lang/String"; break;
+            case "Object":
+                descriptor += "java/lang/Object"; break;
+            default:
+                descriptor += type; 
         }
         return descriptor;
     }
@@ -888,6 +929,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(Method node) {
+        printComment("Stack size at start = " + currStackSize + ". Local size = " + currLocalSize, node);
         int[] sizesAtStart = { currStackSize, currLocalSize };
         this.sizesAtStart = sizesAtStart;
         currLimits = sizesAtStart.clone();
@@ -938,9 +980,10 @@ public class CodeGenVisitor extends Visitor {
         classTreeNode.getMethodSymbolTable().exitScope();
 
         //bring stack and local size down to where it should be
-        if (node.getReturnType().equals(signature))
         currStackSize = sizesAtStart[0];
         currLocalSize = sizesAtStart[1];
+        if (!node.getReturnType().equals("void"))
+            currStackSize++;
         return null;
     }
 
@@ -1178,8 +1221,13 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(ReturnStmt node) {
-        if (node.getExpr() != null)
+        if (node.getExpr() != null) {
             node.getExpr().accept(this);
+            if (SemantVisitor.isPrimitive(node.getExpr().getExprType()))
+                ireturnStmt();
+            else
+                areturnStmt();
+        }
 
         returnStmt();
         return null;
@@ -1316,6 +1364,7 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(InstanceofExpr node) {
         node.getExpr().accept(this);
+
         return null;
     }
 
@@ -1328,6 +1377,7 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(CastExpr node) {
         node.getExpr().accept(this);
+        checkCast(node.getType());
         return null;
     }
 
