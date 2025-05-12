@@ -213,17 +213,17 @@ public class CodeGenVisitor extends Visitor {
         if (number < -(2 << 16))
             printBytecode("ldc " + number);
         else if (number < -(2 << 8))
-            printBytecode("bipush " + number);
-        else if (number < -1)
             printBytecode("sipush " + number);
+        else if (number < -1)
+            printBytecode("bipush " + number);
         else if (number == -1)
             printBytecode("iconst_m1");
         else if (number < 6)
             printBytecode("iconst_" + number);
         else if (number < (2 << 8))
-            printBytecode("sipush " + number);
-        else if (number < (2 << 16))
             printBytecode("bipush " + number);
+        else if (number < (2 << 16))
+            printBytecode("sipush " + number);
         else
             printBytecode("ldc " + number);
         currStackSize++;
@@ -355,6 +355,15 @@ public class CodeGenVisitor extends Visitor {
         if (currStackSize <= 0)
             throw new RuntimeException("Error: Nothing to dup");
         printBytecode("dup_x1");
+        currStackSize++;
+        checkLimits();
+    }
+
+    // duplicates the top item and puts them 2-3 items under
+    private void dupx2() {
+        if (currStackSize <= 1)
+            throw new RuntimeException("Error: Nothing to dup");
+        printBytecode("dup_x2");
         currStackSize++;
         checkLimits();
     }
@@ -551,11 +560,9 @@ public class CodeGenVisitor extends Visitor {
         currStackSize -= 1;
     }
 
-    // no args
-    // remove 1 from stack
+    // no args, doesn't do anything on the stack
     private void ineg() {
         printBytecode("ineg");
-        currStackSize -= 1;
     }
 
     // 2 args <index of local> <const to add>
@@ -708,8 +715,10 @@ public class CodeGenVisitor extends Visitor {
     /// All the fields in a class get initalized here with there actual/default values
     /// 
     void initializeFields(ArrayList<Field> fields) {
-        if (fields.isEmpty()) {
+        if (!fields.isEmpty()) {
             for (int i = 0; i < fields.size(); i++) {
+                aload(0);
+
                 Field field = fields.get(i);
                 Expr init = field.getInit();
 
@@ -849,10 +858,11 @@ public class CodeGenVisitor extends Visitor {
             String signature = getMethodSignature(initMethod);
             out.println(".method " + "public " + "<init>" + signature);
             classTreeNode.getMethodSymbolTable().add(methodName, initMethod);
-            initializeFields(fields); // calls accept on each field and
-                                      // assigns default values
             if (classTreeNode.getParent() != null)
                 callSuper();
+            initializeFields(fields); // calls accept on each field and
+                                      // assigns default values
+
             printBytecode("return");
             out.println("    .limit " + "stack " + currLimits[0]);
             println("    .limit " + "stack " + currLimits[0]);
@@ -1131,7 +1141,7 @@ public class CodeGenVisitor extends Visitor {
         label(condLabel);
         printComment("while statement predicate", node);
         node.getPredExpr().accept(this);
-        ifne(exitLabel);
+        ifeq(exitLabel);
 
         printComment("while statement body", node);
         node.getBodyStmt().accept(this);
@@ -1365,6 +1375,8 @@ public class CodeGenVisitor extends Visitor {
     public Object visit(InstanceofExpr node) {
         node.getExpr().accept(this);
 
+        printBytecode("instanceof " + node.getType());
+
         return null;
     }
 
@@ -1395,30 +1407,40 @@ public class CodeGenVisitor extends Visitor {
         if (node.getRefName() != null) {
             switch(node.getRefName()) {
                 case "this":
-                    // is local var
-                    if (!SemantVisitor.existsInClass("this." + node.getName(), classTreeNode)) {
-                        int indexOfVar = (int) classTreeNode.getVarSymbolTable().lookup(node.getName());
-                        node.getExpr().accept(this);
-                        dup();   
-                        if (SemantVisitor.isPrimitive(node.getExprType())) {    
-                            istore(indexOfVar);
-                        } else {
-                            astore(indexOfVar);
-                        }
-                    }   
-                    return null;
+                    break;
                 case "super":
                     refClass = classTreeNode.getParent().getName();
                     break;
                 default:
                     refClass = node.getRefName();
             }
+
+            aload(0);
+            node.getExpr().accept(this);
+            dupx1();
+            putField(refClass, node.getName(), node.getExprType());
+            return null;
         }
 
-        aload(0);
-        node.getExpr().accept(this);
-        dupx1();
-        putField(getClass(refClass), node.getName(), node.getExprType());     
+        boolean isLocalVar = !SemantVisitor.existsInClass("this." + node.
+        getName(),classTreeNode) && SemantVisitor.existsInClass(node.
+        getName(), classTreeNode);
+
+        if (isLocalVar) {
+            node.getExpr().accept(this);
+            dup();
+            int localIndex = (int) classTreeNode.getVarSymbolTable()
+            .lookup(node.getName());
+            if (SemantVisitor.isPrimitive(node.getExprType()))
+                istore(localIndex);
+            else
+                astore(localIndex);
+        } else {
+            aload(0);
+            node.getExpr().accept(this);
+            dupx1();
+            putField(refClass, node.getName(), node.getExprType());
+        }
 
         return null;
     }
@@ -1451,7 +1473,7 @@ public class CodeGenVisitor extends Visitor {
         
         node.getIndex().accept(this);
         node.getExpr().accept(this);
-        dup();
+        dupx2();
         if (SemantVisitor.isPrimitive(node.getExprType()))
             iastore();
         else
