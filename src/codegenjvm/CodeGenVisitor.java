@@ -1864,12 +1864,12 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(UnaryIncrExpr node) {
         node.getExpr().accept(this);
-        AssignExpr assign;
+        Expr assign;
         BinaryArithPlusExpr increment = new BinaryArithPlusExpr(node.getLineNum(), node.getExpr(), new ConstIntExpr(node.getLineNum(), "1"));
 
         if (node.getExpr() instanceof VarExpr) {
             VarExpr expr = (VarExpr) node.getExpr();
-            String refName = "";
+            String refName = null;
             if (expr.getRef() != null) {
                 if (expr.getRef() instanceof VarExpr) {
                     refName = ((VarExpr) expr.getRef()).getName();
@@ -1879,17 +1879,17 @@ public class CodeGenVisitor extends Visitor {
             assign = new AssignExpr(node.getLineNum(), refName, expr.getName(), increment);
         } else if (node.getExpr() instanceof ArrayExpr) {
             ArrayExpr expr = (ArrayExpr) node.getExpr();
-            String refName = "";
+            String refName = null;
             if (expr.getRef() != null) {
                 if (expr.getRef() instanceof VarExpr) {
                     refName = ((VarExpr) expr.getRef()).getName();
                 } 
             }
-            assign = new AssignExpr(node.getLineNum(), refName, expr.getName(), increment);
+            assign = new ArrayAssignExpr(node.getLineNum(), refName, expr.getName(), expr.getIndex(), increment);
         } else {
             throw new RuntimeException("Called increment on a node that was not a VarExpr or an ArrayExpr");
         }
-
+        assign.setExprType(node.getExprType());         
         if (node.isPostfix()) {
             assign.accept(this);
             pop();
@@ -1910,7 +1910,41 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(UnaryDecrExpr node) {
         node.getExpr().accept(this);
-        iconst(-1);
+        Expr assign;
+        BinaryArithPlusExpr increment = new BinaryArithPlusExpr(node.getLineNum(), node.getExpr(), new ConstIntExpr(node.getLineNum(), "-1"));
+
+        if (node.getExpr() instanceof VarExpr) {
+            VarExpr expr = (VarExpr) node.getExpr();
+            String refName = null;
+            if (expr.getRef() != null) {
+                if (expr.getRef() instanceof VarExpr) {
+                    refName = ((VarExpr) expr.getRef()).getName();
+                } 
+            }
+
+            assign = new AssignExpr(node.getLineNum(), refName, expr.getName(), increment);
+        } else if (node.getExpr() instanceof ArrayExpr) {
+            ArrayExpr expr = (ArrayExpr) node.getExpr();
+            String refName = null;
+            if (expr.getRef() != null) {
+                if (expr.getRef() instanceof VarExpr) {
+                    refName = ((VarExpr) expr.getRef()).getName();
+                } 
+            }
+            assign = new ArrayAssignExpr(node.getLineNum(), refName, expr.getName(), expr.getIndex(), increment);
+            
+        } else {
+            throw new RuntimeException("Called increment on a node that was not a VarExpr or an ArrayExpr");
+        }
+        assign.setExprType(node.getExprType());
+        if (node.isPostfix()) {
+            assign.accept(this);
+            pop();
+            node.getExpr().accept(this);
+        } else {
+            assign.accept(this);
+        }
+        
         return null;
     }
 
@@ -2022,6 +2056,7 @@ public class CodeGenVisitor extends Visitor {
             
             classTreeNode.getVarSymbolTable().print();
             node.getIndex().accept(this);
+            
             if (node.getExprType().equals("int"))
                 iaload();
             else if (node.getExprType().equals("boolean"))
