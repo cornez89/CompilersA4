@@ -1008,6 +1008,10 @@ public class CodeGenVisitor extends Visitor {
         // the method
         node.getStmtList().accept(this);
 
+        if (node.getName().equals("main")) {
+            returnStmt();
+        }
+
         //check that return stmt is at the end
         Iterator it = node.getStmtList().getIterator();
         Stmt stmt = (Stmt) it.next();
@@ -1151,15 +1155,10 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("if statement then block", node);
         node.getThenStmt().accept(this);
-        // while(currStackSize > conditionStack.peek().startStackHeight)
-        //     pop();
         goto_label(exitLabel);
 
         label(elseLabel);
         printComment("if statement else block", node);
-        node.getElseStmt().accept(this);
-        // while(currStackSize > conditionStack.peek().startStackHeight)
-        //     pop();
         label(exitLabel);
 
         controlFlowStack.pop();
@@ -1186,8 +1185,6 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("while statement body", node);
         node.getBodyStmt().accept(this);
-        // while(currStackSize > conditionStack.peek().startStackHeight)
-        //     pop();
         goto_label(condLabel);
         label(exitLabel);
 
@@ -1279,16 +1276,12 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(ReturnStmt node) {
         if (node.getExpr() != null) {
-            // while(currStackSize > sizesAtStart[0] + 1)
-            //     pop();
             node.getExpr().accept(this);
             if (SemantVisitor.isPrimitive(node.getExpr().getExprType()))
                 ireturnStmt();
             else
                 areturnStmt();
         }
-        // while(currStackSize > sizesAtStart[0])
-        //     pop();
         returnStmt();
         return null;
     }
