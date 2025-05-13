@@ -213,17 +213,17 @@ public class CodeGenVisitor extends Visitor {
         if (number < -(2 << 16))
             printBytecode("ldc " + number);
         else if (number < -(2 << 8))
-            printBytecode("bipush " + number);
-        else if (number < -1)
             printBytecode("sipush " + number);
+        else if (number < -1)
+            printBytecode("bipush " + number);
         else if (number == -1)
             printBytecode("iconst_m1");
         else if (number < 6)
             printBytecode("iconst_" + number);
         else if (number < (2 << 8))
-            printBytecode("sipush " + number);
-        else if (number < (2 << 16))
             printBytecode("bipush " + number);
+        else if (number < (2 << 16))
+            printBytecode("sipush " + number);
         else
             printBytecode("ldc " + number);
         currStackSize++;
@@ -731,11 +731,11 @@ public class CodeGenVisitor extends Visitor {
     /// All the fields in a class get initalized here with there actual/default values
     /// 
     void initializeFields(ArrayList<Field> fields) {
-        if (fields.isEmpty()) {
+        if (!fields.isEmpty()) {
             for (int i = 0; i < fields.size(); i++) {
                 Field field = fields.get(i);
                 Expr init = field.getInit();
-
+                aload(0);
                 // Assign default values if non exist
                 if (init != null) {
                     init.accept(this);
