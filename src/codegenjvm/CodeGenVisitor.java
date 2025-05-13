@@ -901,10 +901,10 @@ public class CodeGenVisitor extends Visitor {
             String signature = getMethodSignature(initMethod);
             out.println(".method " + "public " + "<init>" + signature);
             classTreeNode.getMethodSymbolTable().add(methodName, initMethod);
-            initializeFields(fields); // calls accept on each field and
-                                      // assigns default values
             if (classTreeNode.getParent() != null)
                 callSuper();
+            initializeFields(fields); // calls accept on each field and
+                                      // assigns default values
             printBytecode("return");
             out.println("    .limit " + "stack " + currLimits[0]);
             println("    .limit " + "stack " + currLimits[0]);
@@ -1017,9 +1017,6 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("Stack size at start = " + currStackSize + ". Local size = " + currLocalSize, node);
 
-        if (node.getName().equals("<init>")) {
-            callSuper();
-        }
         // deal with statements
         // for each bytecode that adds something to the stack, increment
         // currStackSize
