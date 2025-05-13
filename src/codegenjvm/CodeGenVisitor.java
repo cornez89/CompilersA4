@@ -63,7 +63,7 @@ public class CodeGenVisitor extends Visitor {
         (FormalList)new FormalList(node.getLineNum()).addElement(new Formal(node.getLineNum(), "String", "string")), 
         new StmtList(node.getLineNum()));
         ldc(message);
-        invokeVirtual(putString, classTreeNode.getName());
+        invokeVirtual(putString,"TextIO");
         returnStmt();
     }
 
@@ -589,8 +589,8 @@ public class CodeGenVisitor extends Visitor {
 
     // 2 args <index of local> <const to add>
     // no change to stack
-    private void iinc() {
-        printBytecode("iinc");
+    private void iinc(int index, int amount) {
+        printBytecode("iinc " + index + " " + amount);
     }
 
     // no args
@@ -1019,6 +1019,7 @@ public class CodeGenVisitor extends Visitor {
         //bring stack and local size down to where it should be
         currStackSize = sizesAtStart[0];
         currLocalSize = sizesAtStart[1];
+        
         if (!node.getReturnType().equals("void"))
             currStackSize++;
         return null;
@@ -1175,8 +1176,9 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("while statement body", node);
         node.getBodyStmt().accept(this);
+        while(currStackSize > conditionStack.peek().startStackHeight)
+            pop();
         goto_label(condLabel);
-
         label(exitLabel);
 
         conditionStack.pop();
@@ -1262,13 +1264,16 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(ReturnStmt node) {
         if (node.getExpr() != null) {
+            while(currStackSize > sizesAtStart[0] + 1)
+                pop();
             node.getExpr().accept(this);
             if (SemantVisitor.isPrimitive(node.getExpr().getExprType()))
                 ireturnStmt();
             else
                 areturnStmt();
         }
-
+        while(currStackSize > sizesAtStart[0])
+            pop();
         returnStmt();
         return null;
     }
@@ -1835,6 +1840,7 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(UnaryIncrExpr node) {
         node.getExpr().accept(this);
+        istore(currLocalSize++);
         return null;
     }
 
@@ -1847,6 +1853,7 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(UnaryDecrExpr node) {
         node.getExpr().accept(this);
+        iconst(-1);
         return null;
     }
 
@@ -1884,7 +1891,7 @@ public class CodeGenVisitor extends Visitor {
                     case "super":
                         refClass = classTreeNode.getParent().getName() + "/";
                         break;
-                    default: // field, local or formal
+                    default:
                         refClass = classTreeNode.lookupClass(refName).getName() + "/";
                 }
 
@@ -1900,19 +1907,18 @@ public class CodeGenVisitor extends Visitor {
         } else {// exists in locals or field of this
             
             println(node.getName());
-            //check if its a field (has .this)
-            if (varIsField(node.getName(), classTreeNode)) {
-                aload(0);
-                getField(classTreeNode.getName(), node.getName(), node.getExprType());
-            }   
-            
-            else {
+
+            if (SemantVisitor.existsInClass(node.getName(), classTreeNode) && !varIsField(node.getName(), classTreeNode)) {
+                
                 int localIndex = (int) classTreeNode.getVarSymbolTable()
                                                     .lookup(node.getName());
                 if (SemantVisitor.isPrimitive(node.getExprType()))
                     iload(localIndex);
                 else
                     aload(localIndex);
+            } else {
+                aload(0);
+                getField(classTreeNode.getName(), node.getName(), node.getExprType());
             }
         }
         return null;
@@ -1947,14 +1953,15 @@ public class CodeGenVisitor extends Visitor {
                 node.getName() + " is not a varexpr");
             }
         } else {
-            if (varIsField(node.getName(), classTreeNode)) {
-                aload(0);
-                getField(classTreeNode.getName(), node.getName(), node.getExprType());
-
-            } else {
+            if (SemantVisitor.existsInClass(node.getName(), classTreeNode) && !varIsField(node.getName(), classTreeNode)) {
                 int indexOfVar = (int)classTreeNode.getVarSymbolTable().lookup(node.getName());
                 aload(indexOfVar);
+
+            } else {
+                aload(0);
+                getField(classTreeNode.getName(), node.getName(), node.getExprType());
             }
+            
             classTreeNode.getVarSymbolTable().print();
             node.getIndex().accept(this);
             if (SemantVisitor.isPrimitive(node.getExprType()))
