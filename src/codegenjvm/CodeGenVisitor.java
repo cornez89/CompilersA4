@@ -1008,6 +1008,10 @@ public class CodeGenVisitor extends Visitor {
         // the method
         node.getStmtList().accept(this);
 
+        if (node.getName().equals("main")) {
+            returnStmt();
+        }
+
         //check that return stmt is at the end
         Iterator it = node.getStmtList().getIterator();
         Stmt stmt = (Stmt) it.next();
