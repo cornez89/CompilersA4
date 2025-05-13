@@ -471,13 +471,10 @@ public class CodeGenVisitor extends Visitor {
     // args <size>
     // removes 1 from the stack but adds reference so =
     private void newArray(String className) {
-        String type;
-
         if (SemantVisitor.isPrimitive(className)) {
-            type = "int"; //atype for int according to java reference
-            printBytecode("newarray " + type);
+            printBytecode("newarray " + className);
         } else {// if its a class, we need to call the constructor too
-            type = getDescriptor(className);
+            String type = getDescriptor(className);
             type = type.substring(1, type.length() - 1);
             printBytecode("anewarray " + type);
         }
@@ -972,7 +969,7 @@ public class CodeGenVisitor extends Visitor {
         // print the method signature
         if (node.getName().equals("main")) {
             println("main method");
-            out.println(".method public main([Ljava/lang/String;)V");
+            out.println(".method public static main([Ljava/lang/String;)V");
 
             // newClass("String[]");
             out.println(".throws java/lang/CloneNotSupportedException");
@@ -1130,7 +1127,7 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("if statement predicate", node);
         node.getPredExpr().accept(this);
-        ifne(elseLabel);
+        ifeq(elseLabel);
 
         printComment("if statement then block", node);
         node.getThenStmt().accept(this);
@@ -1162,7 +1159,7 @@ public class CodeGenVisitor extends Visitor {
         label(condLabel);
         printComment("while statement predicate", node);
         node.getPredExpr().accept(this);
-        ifne(exitLabel);
+        ifeq(exitLabel);
 
         printComment("while statement body", node);
         node.getBodyStmt().accept(this);
@@ -1196,7 +1193,7 @@ public class CodeGenVisitor extends Visitor {
         if (node.getPredExpr() != null) {
             printComment("for statement predicate", node);
             node.getPredExpr().accept(this);
-            ifne(exitLabel);
+            ifeq(exitLabel);
         }
 
         printComment("for statement body", node);
