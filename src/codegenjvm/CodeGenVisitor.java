@@ -34,13 +34,14 @@ public class CodeGenVisitor extends Visitor {
     private static class ConditionEntry {
         private String exitLabel;
         private int startStackHeight;
+        private boolean isLoop;
 
         /**
-         * @param condLabel The condition/exit label for where to go after the body statement
          * @param exitLabel The exit label for where to go on a break statement
          * @param startStackHeight The height of the stack before the loop started
+         * @param isLoop If this refers to a loop conditional
          */
-        ConditionEntry(String exitLabel, int startStackHeight) {
+        ControlFlowEntry(String exitLabel, int startStackHeight, boolean isLoop) {
             this.exitLabel = exitLabel;
             this.startStackHeight = startStackHeight;
         }
@@ -1120,7 +1121,7 @@ public class CodeGenVisitor extends Visitor {
         println("if: " + node.getLineNum());
         String elseLabel = createLabel();
         String exitLabel = createLabel();
-        conditionStack.add(new ConditionEntry(exitLabel, currStackSize));
+        controlFlowStack.add(new ControlFlowEntry(exitLabel, currStackSize, false));
 
         printComment("if statement predicate", node);
         node.getPredExpr().accept(this);
@@ -1136,7 +1137,7 @@ public class CodeGenVisitor extends Visitor {
 
         label(exitLabel);
 
-        conditionStack.pop();
+        controlFlowStack.pop();
         return null;
     }
 
@@ -1151,7 +1152,7 @@ public class CodeGenVisitor extends Visitor {
         print("while: " + node.getLineNum());
         String condLabel = createLabel();
         String exitLabel = createLabel();
-        conditionStack.add(new ConditionEntry(exitLabel, currStackSize));
+        controlFlowStack.add(new ControlFlowEntry(exitLabel, currStackSize, true));
 
         label(condLabel);
         printComment("while statement predicate", node);
@@ -1164,7 +1165,7 @@ public class CodeGenVisitor extends Visitor {
 
         label(exitLabel);
 
-        conditionStack.pop();
+        controlFlowStack.pop();
         return null;
     }
 
@@ -1179,7 +1180,7 @@ public class CodeGenVisitor extends Visitor {
         print("for: " + node.getLineNum());
         String condLabel = createLabel();
         String exitLabel = createLabel();
-        conditionStack.add(new ConditionEntry(exitLabel, currStackSize));
+        controlFlowStack.add(new ControlFlowEntry(exitLabel, currStackSize, true));
 
         if (node.getInitExpr() != null) {
             printComment("for statement initialization", node);
@@ -1204,7 +1205,7 @@ public class CodeGenVisitor extends Visitor {
 
         label(exitLabel);
 
-        conditionStack.pop();
+        controlFlowStack.pop();
         return null;
     }
 
@@ -1216,13 +1217,18 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BreakStmt node) {
-        ConditionEntry top = conditionStack.pop();
-        int numPops = currStackSize - top.startStackHeight;
+        ControlFlowEntry loop = controlFlowStack
+            .reversed()
+            .stream()
+            .filter(x -> x.isLoop)
+            .findFirst()
+            .get();
+        int numPops = currStackSize - loop.startStackHeight;
         for (int i = 0; i > numPops; i++) {
             pop();
             currStackSize--;
         }
-        goto_label(top.exitLabel);
+        goto_label(loop.exitLabel);
         return null;
     }
 
