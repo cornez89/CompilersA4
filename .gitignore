@@ -18,6 +18,8 @@ tests/*.jar
 bin/*.*
 tests/*.*
 
+jfiles
+
 # Idk prolly
 src/**/*.class
 
