@@ -1237,6 +1237,7 @@ public class CodeGenVisitor extends Visitor {
         if (node.getUpdateExpr() != null) {
             printComment("for statement update", node);
             node.getUpdateExpr().accept(this);
+            pop();
         }
         goto_label(condLabel);
 
@@ -1866,7 +1867,7 @@ public class CodeGenVisitor extends Visitor {
     public Object visit(UnaryIncrExpr node) {
         Expr assign;
         BinaryArithPlusExpr increment = new BinaryArithPlusExpr(node.getLineNum(), node.getExpr(), new ConstIntExpr(node.getLineNum(), "1"));
-
+        printComment("Increment " + ((node.isPostfix()) ? "post" : "pre"), node);
         if (node.getExpr() instanceof VarExpr) {
             VarExpr expr = (VarExpr) node.getExpr();
             String refName = null;
@@ -1895,6 +1896,8 @@ public class CodeGenVisitor extends Visitor {
             assign.accept(this);
             pop();
         } else {
+            node.getExpr().accept(this);
+            pop();
             assign.accept(this);
         }
         
@@ -1911,7 +1914,7 @@ public class CodeGenVisitor extends Visitor {
     public Object visit(UnaryDecrExpr node) {
         Expr assign;
         BinaryArithPlusExpr increment = new BinaryArithPlusExpr(node.getLineNum(), node.getExpr(), new ConstIntExpr(node.getLineNum(), "-1"));
-
+        printComment("Decrement " + ((node.isPostfix()) ? "post" : "pre"), node);
         if (node.getExpr() instanceof VarExpr) {
             VarExpr expr = (VarExpr) node.getExpr();
             String refName = null;
@@ -1941,6 +1944,8 @@ public class CodeGenVisitor extends Visitor {
             assign.accept(this);
             pop();
         } else {
+            node.getExpr().accept(this);
+            pop();
             assign.accept(this);
         }
         
