@@ -31,7 +31,7 @@ public class CodeGenVisitor extends Visitor {
     private int[] currLimits = { 0, 1 };
     
 
-    private static class ConditionEntry {
+    private static class ControlFlowEntry {
         private String exitLabel;
         private int startStackHeight;
         private boolean isLoop;
@@ -44,9 +44,10 @@ public class CodeGenVisitor extends Visitor {
         ControlFlowEntry(String exitLabel, int startStackHeight, boolean isLoop) {
             this.exitLabel = exitLabel;
             this.startStackHeight = startStackHeight;
+            this.isLoop = isLoop;
         }
     }
-    private Stack<ConditionEntry> conditionStack = new Stack<ConditionEntry>();
+    private Stack<ControlFlowEntry> controlFlowStack = new Stack<ControlFlowEntry>();
     private int labelNumber = 0;
 
     
