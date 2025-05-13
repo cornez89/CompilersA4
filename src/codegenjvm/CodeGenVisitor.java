@@ -1242,7 +1242,6 @@ public class CodeGenVisitor extends Visitor {
         int numPops = currStackSize - loop.startStackHeight;
         for (int i = 0; i > numPops; i++) {
             pop();
-            currStackSize--;
         }
         goto_label(loop.exitLabel);
         return null;
@@ -1274,6 +1273,8 @@ public class CodeGenVisitor extends Visitor {
                 ireturnStmt();
             else
                 areturnStmt();
+        } else {
+            returnStmt();
         }
 
         returnStmt();
