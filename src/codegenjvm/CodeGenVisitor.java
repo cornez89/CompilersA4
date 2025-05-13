@@ -1537,9 +1537,8 @@ public class CodeGenVisitor extends Visitor {
 
         if (varIsField(node.getName(), refClass)) {
             aload(0);
-            getField(refClass.getName(), node.getName(), node.getExprType());
+            getField(refClass.getName(), node.getName(), node.getExprType() + "[]");
         } else {
-            
             aload((int) refClass.getVarSymbolTable().lookup(node.getName()));
         }
 
@@ -1782,7 +1781,7 @@ public class CodeGenVisitor extends Visitor {
         String exitLabel = createLabel();
 
         node.getLeftExpr().accept(this);
-        ifne(shortCircuitLabel);          // if left expr is false, short
+        ifeq(shortCircuitLabel);          // if left expr is false, short
         node.getRightExpr().accept(this); // otherwise eval right expr
         goto_label(exitLabel);
         label(shortCircuitLabel);
@@ -1804,7 +1803,7 @@ public class CodeGenVisitor extends Visitor {
         String exitLabel = createLabel();
 
         node.getLeftExpr().accept(this);
-        ifeq(shortCircuitLabel);          // if left expr is true, short
+        ifne(shortCircuitLabel);          // if left expr is true, short
         node.getRightExpr().accept(this); // otherwise eval right expr
         goto_label(exitLabel);
         label(shortCircuitLabel);
