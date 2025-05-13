@@ -1848,7 +1848,40 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(UnaryIncrExpr node) {
         node.getExpr().accept(this);
-        istore(currLocalSize++);
+        AssignExpr assign;
+        BinaryArithPlusExpr increment = new BinaryArithPlusExpr(node.getLineNum(), node.getExpr(), new ConstIntExpr(node.getLineNum(), "1"));
+
+        if (node.getExpr() instanceof VarExpr) {
+            VarExpr expr = (VarExpr) node.getExpr();
+            String refName = "";
+            if (expr.getRef() != null) {
+                if (expr.getRef() instanceof VarExpr) {
+                    refName = ((VarExpr) expr.getRef()).getName();
+                } 
+            }
+
+            assign = new AssignExpr(node.getLineNum(), refName, expr.getName(), increment);
+        } else if (node.getExpr() instanceof ArrayExpr) {
+            ArrayExpr expr = (ArrayExpr) node.getExpr();
+            String refName = "";
+            if (expr.getRef() != null) {
+                if (expr.getRef() instanceof VarExpr) {
+                    refName = ((VarExpr) expr.getRef()).getName();
+                } 
+            }
+            assign = new AssignExpr(node.getLineNum(), refName, expr.getName(), increment);
+        } else {
+            throw new RuntimeException("Called increment on a node that was not a VarExpr or an ArrayExpr");
+        }
+
+        if (node.isPostfix()) {
+            assign.accept(this);
+            pop();
+            node.getExpr().accept(this);
+        } else {
+            assign.accept(this);
+        }
+        
         return null;
     }
 
@@ -1911,6 +1944,7 @@ public class CodeGenVisitor extends Visitor {
             }
 
             aload(0);
+            
             getField(refClass, node.getName(), node.getExprType());       
         } else {// exists in locals or field of this
             
