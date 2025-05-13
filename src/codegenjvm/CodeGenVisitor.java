@@ -318,6 +318,14 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
+    // 2 args <reference> <index>
+    // removes 2 from stack pushes an int. net -1
+    private void baload() {
+        printBytecode("baload");
+        currStackSize--;
+        checkLimits();
+    }
+
     // 1 args <value>
     // removes 1 from stack
     private void astore(int index) {
@@ -344,6 +352,14 @@ public class CodeGenVisitor extends Visitor {
     // removes 3 from stack
     private void iastore() {
         printBytecode("iastore");
+        currStackSize -= 3;
+        checkLimits();
+    }
+
+    // 3 args <reference> <index> <value>
+    // removes 3 from stack
+    private void bastore() {
+        printBytecode("bastore");
         currStackSize -= 3;
         checkLimits();
     }
@@ -1008,15 +1024,10 @@ public class CodeGenVisitor extends Visitor {
         // the method
         node.getStmtList().accept(this);
 
-        if (node.getName().equals("main")) {
-            returnStmt();
-        }
-
         //check that return stmt is at the end
-        Iterator it = node.getStmtList().getIterator();
+        Iterator<ASTNode> it = node.getStmtList().getIterator();
         Stmt stmt = (Stmt) it.next();
-        while(it.hasNext())
-            stmt = (Stmt)it.next();
+        while(it.hasNext()) stmt = (Stmt)it.next();
         if (!(stmt instanceof ReturnStmt))
             returnStmt();
             
@@ -1532,8 +1543,10 @@ public class CodeGenVisitor extends Visitor {
         node.getIndex().accept(this);
         node.getExpr().accept(this);
         dupx2();
-        if (SemantVisitor.isPrimitive(node.getExprType()))
+        if (node.getExprType().equals("int"))
             iastore();
+        else if (node.getExprType().equals("boolean"))
+            bastore();
         else
             aastore();
         return null;
@@ -1972,8 +1985,10 @@ public class CodeGenVisitor extends Visitor {
             
             classTreeNode.getVarSymbolTable().print();
             node.getIndex().accept(this);
-            if (SemantVisitor.isPrimitive(node.getExprType()))
+            if (node.getExprType().equals("int"))
                 iaload();
+            else if (node.getExprType().equals("boolean"))
+                baload();
             else
                 aaload();
         }
