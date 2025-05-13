@@ -39,7 +39,7 @@ public class CodeGenVisitor extends Visitor {
         /**
          * @param exitLabel The exit label for where to go on a break statement
          * @param startStackHeight The height of the stack before the loop started
-         * @param isLoop If this refers to a loop
+         * @param isLoop If this refers to a loop conditional
          */
         ControlFlowEntry(String exitLabel, int startStackHeight, boolean isLoop) {
             this.exitLabel = exitLabel;
@@ -1007,7 +1007,13 @@ public class CodeGenVisitor extends Visitor {
         // find max currstack size after each bytecode and track that through
         // the method
         node.getStmtList().accept(this);
-
+        
+        Iterator it = node.getStmtList().getIterator();
+        Stmt stmt = (Stmt) it.next();
+        while(it.hasNext())
+            stmt = (Stmt)it.next();
+        if (!(stmt instanceof ReturnStmt))
+            returnStmt();
         // print max sizes
         out.println("    .limit stack " + currLimits[0]);
         out.println("    .limit locals " + currLimits[1]);
@@ -1143,15 +1149,15 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("if statement then block", node);
         node.getThenStmt().accept(this);
-        while(currStackSize > controlFlowStack.peek().startStackHeight)
-            pop();
+        // while(currStackSize > conditionStack.peek().startStackHeight)
+        //     pop();
         goto_label(exitLabel);
 
         label(elseLabel);
         printComment("if statement else block", node);
         node.getElseStmt().accept(this);
-        while(currStackSize > controlFlowStack.peek().startStackHeight)
-            pop();
+        // while(currStackSize > conditionStack.peek().startStackHeight)
+        //     pop();
         label(exitLabel);
 
         controlFlowStack.pop();
@@ -1178,7 +1184,8 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("while statement body", node);
         node.getBodyStmt().accept(this);
-            pop();
+        // while(currStackSize > conditionStack.peek().startStackHeight)
+        //     pop();
         goto_label(condLabel);
         label(exitLabel);
 
@@ -1243,6 +1250,7 @@ public class CodeGenVisitor extends Visitor {
         int numPops = currStackSize - loop.startStackHeight;
         for (int i = 0; i > numPops; i++) {
             pop();
+            currStackSize--;
         }
         goto_label(loop.exitLabel);
         return null;
@@ -1269,18 +1277,16 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(ReturnStmt node) {
         if (node.getExpr() != null) {
-            while(currStackSize > sizesAtStart[0] + 1)
-                pop();
+            // while(currStackSize > sizesAtStart[0] + 1)
+            //     pop();
             node.getExpr().accept(this);
             if (SemantVisitor.isPrimitive(node.getExpr().getExprType()))
                 ireturnStmt();
             else
                 areturnStmt();
-        } else {
-            returnStmt();
         }
-        while(currStackSize > sizesAtStart[0])
-            pop();
+        // while(currStackSize > sizesAtStart[0])
+        //     pop();
         returnStmt();
         return null;
     }
@@ -1407,7 +1413,7 @@ public class CodeGenVisitor extends Visitor {
         
         String continueLabel = "L" + labelNumber++;
         if_icmple(continueLabel);
-        runtimeException("\"Max size exceeded\"", node);
+        runtimeException("\"Max array size exceeded (1500)\"", node);
         label(continueLabel);
         newArray(node.getType());
 
