@@ -874,8 +874,10 @@ public class CodeGenVisitor extends Visitor {
             out.println();
 
             // methods
-            while (!methods.isEmpty())
+            while (!methods.isEmpty()) {
                 methods.remove(0).accept(this);
+            }
+
             out.println();
 
             // doesn't work and doesn't complain if I get rid of it so yeah
@@ -1109,7 +1111,7 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("if statement predicate", node);
         node.getPredExpr().accept(this);
-        ifne(elseLabel);
+        ifeq(elseLabel);
 
         printComment("if statement then block", node);
         node.getThenStmt().accept(this);
@@ -1175,7 +1177,7 @@ public class CodeGenVisitor extends Visitor {
         if (node.getPredExpr() != null) {
             printComment("for statement predicate", node);
             node.getPredExpr().accept(this);
-            ifne(exitLabel);
+            ifeq(exitLabel);
         }
 
         printComment("for statement body", node);
