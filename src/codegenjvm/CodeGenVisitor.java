@@ -2,11 +2,8 @@ package codegenjvm;
 
 import visitor.Visitor;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +24,6 @@ public class CodeGenVisitor extends Visitor {
     // might need these to keep track of limits
     private int currStackSize = 0;
     private int currLocalSize = 1; // start at 1 for this reference
-    private int[] sizesAtStart = { 0, 1 };
     private int[] currLimits = { 0, 1 };
 
     private static class ControlFlowEntry {
@@ -915,7 +911,6 @@ public class CodeGenVisitor extends Visitor {
     public Object visit(Method node) {
         currStackSize = 0;
         int[] sizesAtStart = { currStackSize, currLocalSize };
-        this.sizesAtStart = sizesAtStart;
         currLimits = sizesAtStart.clone();
 
         String signature = getMethodSignature(node);
