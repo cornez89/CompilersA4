@@ -318,6 +318,14 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
+    // 2 args <reference> <index>
+    // removes 2 from stack pushes an int. net -1
+    private void baload() {
+        printBytecode("baload");
+        currStackSize--;
+        checkLimits();
+    }
+
     // 1 args <value>
     // removes 1 from stack
     private void astore(int index) {
@@ -344,6 +352,14 @@ public class CodeGenVisitor extends Visitor {
     // removes 3 from stack
     private void iastore() {
         printBytecode("iastore");
+        currStackSize -= 3;
+        checkLimits();
+    }
+
+    // 3 args <reference> <index> <value>
+    // removes 3 from stack
+    private void bastore() {
+        printBytecode("bastore");
         currStackSize -= 3;
         checkLimits();
     }
@@ -844,7 +860,7 @@ public class CodeGenVisitor extends Visitor {
             out = new PrintWriter(new File(node.getName() + ".j"));
 
             // print top of file info
-            out.println(".source " + node.getFilename().substring(8));
+            out.println(".source " + node.getFilename());
             out.println(".class " + "public " + node.getName());
             if (classTreeNode.getParent() != null) {
                 out.println(".super "
@@ -965,7 +981,6 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(Method node) {
-        printComment("Stack size at start = " + currStackSize + ". Local size = " + currLocalSize, node);
         int[] sizesAtStart = { currStackSize, currLocalSize };
         this.sizesAtStart = sizesAtStart;
         currLimits = sizesAtStart.clone();
@@ -1000,6 +1015,8 @@ public class CodeGenVisitor extends Visitor {
             out.println(".throws java/lang/CloneNotSupportedException");
         }
 
+        printComment("Stack size at start = " + currStackSize + ". Local size = " + currLocalSize, node);
+
         // deal with statements
         // for each bytecode that adds something to the stack, increment
         // currStackSize
@@ -1008,15 +1025,10 @@ public class CodeGenVisitor extends Visitor {
         // the method
         node.getStmtList().accept(this);
 
-        if (node.getName().equals("main")) {
-            returnStmt();
-        }
-
         //check that return stmt is at the end
-        Iterator it = node.getStmtList().getIterator();
+        Iterator<ASTNode> it = node.getStmtList().getIterator();
         Stmt stmt = (Stmt) it.next();
-        while(it.hasNext())
-            stmt = (Stmt)it.next();
+        while(it.hasNext()) stmt = (Stmt)it.next();
         if (!(stmt instanceof ReturnStmt))
             returnStmt();
 
@@ -1159,6 +1171,8 @@ public class CodeGenVisitor extends Visitor {
 
         label(elseLabel);
         printComment("if statement else block", node);
+        node.getElseStmt().accept(this);
+
         label(exitLabel);
 
         controlFlowStack.pop();
@@ -1532,8 +1546,10 @@ public class CodeGenVisitor extends Visitor {
         node.getIndex().accept(this);
         node.getExpr().accept(this);
         dupx2();
-        if (SemantVisitor.isPrimitive(node.getExprType()))
+        if (node.getExprType().equals("int"))
             iastore();
+        else if (node.getExprType().equals("boolean"))
+            bastore();
         else
             aastore();
         return null;
@@ -2006,8 +2022,10 @@ public class CodeGenVisitor extends Visitor {
             
             classTreeNode.getVarSymbolTable().print();
             node.getIndex().accept(this);
-            if (SemantVisitor.isPrimitive(node.getExprType() + "[]"))
+            if (node.getExprType().equals("int"))
                 iaload();
+            else if (node.getExprType().equals("boolean"))
+                baload();
             else
                 aaload();
         }
