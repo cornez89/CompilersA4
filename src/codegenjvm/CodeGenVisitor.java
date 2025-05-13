@@ -570,10 +570,9 @@ public class CodeGenVisitor extends Visitor {
     }
 
     // no args
-    // remove 1 from stack
+    // net =
     private void ineg() {
         printBytecode("ineg");
-        currStackSize -= 1;
     }
 
     // 2 args <index of local> <const to add>
