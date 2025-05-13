@@ -469,15 +469,11 @@ public class CodeGenVisitor extends Visitor {
 
     // args <size>
     // removes 1 from the stack but adds reference so =
-    private void newArray(String className) {
-        String type;
-
-        if (SemantVisitor.isPrimitive(className)) {
-            type = "int"; //atype for int according to java reference
+    private void newArray(String type) {
+        if (SemantVisitor.isPrimitive(type)) {
             printBytecode("newarray " + type);
         } else {// if its a class, we need to call the constructor too
-            type = getDescriptor(className);
-            type = type.substring(1, type.length() - 1);
+            type = getDescriptorShort(type);
             printBytecode("anewarray " + type);
         }
 
@@ -1444,12 +1440,23 @@ public class CodeGenVisitor extends Visitor {
                 default:
                     refClass = node.getRefName();
             }
-        }
+        } 
 
-        aload(0);
-        node.getExpr().accept(this);
-        dupx1();
-        putField(getClass(refClass), node.getName(), node.getExprType());     
+        if (varIsField(node.getName(), classTreeNode)) {
+            aload(0);
+            node.getExpr().accept(this);
+            dupx1();
+            putField(getClass(refClass), node.getName(), node.getExprType());     
+        } else {
+            int indexOfVar = (int) classTreeNode.getVarSymbolTable().lookup(node.getName());
+            node.getExpr().accept(this);
+            dup();   
+            if (SemantVisitor.isPrimitive(node.getExprType())) {    
+                istore(indexOfVar);
+            } else {
+                astore(indexOfVar);
+            }
+        }
 
         return null;
     }
