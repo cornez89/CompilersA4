@@ -364,6 +364,15 @@ public class CodeGenVisitor extends Visitor {
         checkLimits();
     }
 
+    // 1 arg anything
+    // adds 1 to stack
+    private void dupx2() {
+        if (currStackSize <= 1)
+            throw new RuntimeException("Error: Nothing to dup");
+        printBytecode("dup_x2");
+        currStackSize++;
+        checkLimits();
+    }
     // //
     // private void putStatic(ClassTreeNode classTreeNode, String fieldName,
     // String descriptor) {
@@ -389,7 +398,7 @@ public class CodeGenVisitor extends Visitor {
         
         className = getClass(className); 
         String descriptor = getDescriptor(type);
-        printBytecode("putfield " + className + "." + name + " " + descriptor);
+        printBytecode("putfield " + className + "/" + name + " " + descriptor);
         currStackSize--;
         currStackSize--;
         checkLimits();
@@ -403,7 +412,7 @@ public class CodeGenVisitor extends Visitor {
         if (descriptor.equals("Z") || descriptor.equals("[Z"))
             descriptor = descriptor.replace("Z", "I");
             //We only have int types
-        printBytecode("getfield " + className + "." + name + " " + descriptor);
+        printBytecode("getfield " + className + "/" + name + " " + descriptor);
     }
 
     // 1 arg <value>
@@ -963,10 +972,12 @@ public class CodeGenVisitor extends Visitor {
         // print the method signature
         if (node.getName().equals("main")) {
             println("main method");
-            out.println(".method public static main([Ljava/lang/String;)V");
+            out.println(".method public main([Ljava/lang/String;)V");
 
             // newClass("String[]");
             out.println(".throws java/lang/CloneNotSupportedException");
+            newObject("Main");
+            astore(0);
         } else {
             // print method signature
             out.print(".method " + "public " + node.getName() + "(");
@@ -1479,7 +1490,7 @@ public class CodeGenVisitor extends Visitor {
             
         node.getIndex().accept(this);
         node.getExpr().accept(this);
-        dup();
+        dupx2();
         if (SemantVisitor.isPrimitive(node.getExprType()))
             iastore();
         else
