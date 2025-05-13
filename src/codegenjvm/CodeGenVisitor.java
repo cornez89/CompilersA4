@@ -1604,7 +1604,8 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(BinaryCompEqExpr node) {
         String type = node.getExprType();
-        if (type.equals("int") || type.equals("bool"))
+        printComment("type " + node.getExprType(), node);
+        if (type.equals("int") || type.equals("boolean"))
             visitBinaryComp(node, this::if_icmpeq);
         else
             visitBinaryComp(node, this::if_acmpeq);
@@ -1871,7 +1872,7 @@ public class CodeGenVisitor extends Visitor {
             String refName = null;
             if (expr.getRef() != null) {
                 if (expr.getRef() instanceof VarExpr) {
-                    refName = ((VarExpr) expr.getRef()).getName();
+                    refName = ((VarExpr) expr.getRef()).getExprType();
                 } 
             }
 
@@ -1881,7 +1882,7 @@ public class CodeGenVisitor extends Visitor {
             String refName = null;
             if (expr.getRef() != null) {
                 if (expr.getRef() instanceof VarExpr) {
-                    refName = ((VarExpr) expr.getRef()).getName();
+                    refName = ((VarExpr) expr.getRef()).getExprType();
                 } 
             }
             assign = new ArrayAssignExpr(node.getLineNum(), refName, expr.getName(), expr.getIndex(), increment);
@@ -1916,7 +1917,7 @@ public class CodeGenVisitor extends Visitor {
             String refName = null;
             if (expr.getRef() != null) {
                 if (expr.getRef() instanceof VarExpr) {
-                    refName = ((VarExpr) expr.getRef()).getName();
+                    refName = ((VarExpr) expr.getRef()).getExprType();
                 } 
             }
 
@@ -1926,11 +1927,11 @@ public class CodeGenVisitor extends Visitor {
             String refName = null;
             if (expr.getRef() != null) {
                 if (expr.getRef() instanceof VarExpr) {
-                    refName = ((VarExpr) expr.getRef()).getName();
+                    refName = ((VarExpr) expr.getRef()).getExprType();
                 } 
             }
+
             assign = new ArrayAssignExpr(node.getLineNum(), refName, expr.getName(), expr.getIndex(), increment);
-            
         } else {
             throw new RuntimeException("Called increment on a node that was not a VarExpr or an ArrayExpr");
         }
