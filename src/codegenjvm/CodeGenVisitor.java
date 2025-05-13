@@ -1890,9 +1890,9 @@ public class CodeGenVisitor extends Visitor {
         }
         assign.setExprType(node.getExprType());         
         if (node.isPostfix()) {
+            node.getExpr().accept(this);
             assign.accept(this);
             pop();
-            node.getExpr().accept(this);
         } else {
             assign.accept(this);
         }
@@ -1936,9 +1936,9 @@ public class CodeGenVisitor extends Visitor {
         }
         assign.setExprType(node.getExprType());
         if (node.isPostfix()) {
+            node.getExpr().accept(this);
             assign.accept(this);
             pop();
-            node.getExpr().accept(this);
         } else {
             assign.accept(this);
         }
