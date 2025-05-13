@@ -576,6 +576,13 @@
     </antcall>
     </target>
 
+ <target name="vector">               <!-- COMPILE 'VectorTest.btm' -->
+    <antcall target="compile-to-${TARGET}">
+      <param name="FLAGS" value="${FLAGS}"/>
+      <param name="M"     value="Vector.btm"/>
+      <param name="N"     value="vector"/>
+    </antcall>
+    </target>
   <target name="nim">                             <!-- COMPILE 'Nim.btm' -->
     <antcall target="compile-to-${TARGET}">
       <param name="FLAGS" value="${FLAGS}"/>

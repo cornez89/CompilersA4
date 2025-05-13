@@ -56,6 +56,18 @@ public class CodeGenVisitor extends Visitor {
      * 
      */
 
+    private void runtimeException(String message, ASTNode node) {
+        newObject("TextIO");
+        Method putString = new Method(node.getLineNum(), 
+        "TextIO", 
+        "putString", 
+        (FormalList)new FormalList(node.getLineNum()).addElement(new Formal(node.getLineNum(), "String", "string")), 
+        new StmtList(node.getLineNum()));
+        ldc(message);
+        invokeVirtual(putString, classTreeNode.getName());
+        returnStmt();
+    }
+
     private void print(String string) {
         System.out.print(string);
     }
@@ -1129,12 +1141,15 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("if statement then block", node);
         node.getThenStmt().accept(this);
+        while(currStackSize > conditionStack.peek().startStackHeight)
+            pop();
         goto_label(exitLabel);
 
         label(elseLabel);
         printComment("if statement else block", node);
         node.getElseStmt().accept(this);
-
+        while(currStackSize > conditionStack.peek().startStackHeight)
+            pop();
         label(exitLabel);
 
         controlFlowStack.pop();
@@ -1381,6 +1396,13 @@ public class CodeGenVisitor extends Visitor {
     public Object visit(NewArrayExpr node) {
         printComment("new (" + node.getExprType() + ")", node);
         node.getSize().accept(this);
+        dup();
+        iconst(1500);
+        
+        String continueLabel = "L" + labelNumber++;
+        if_icmple(continueLabel);
+        runtimeException("\"Max size exceeded\"", node);
+        label(continueLabel);
         newArray(node.getType());
 
         return null;
@@ -1931,18 +1953,23 @@ public class CodeGenVisitor extends Visitor {
                 node.getName() + " is not a varexpr");
             }
         } else {
-            println(node.getName());
+            if (varIsField(node.getName(), classTreeNode)) {
+                aload(0);
+                getField(classTreeNode.getName(), node.getName(), node.getExprType());
+
+            } else {
+                int indexOfVar = (int)classTreeNode.getVarSymbolTable().lookup(node.getName());
+                aload(indexOfVar);
+            }
             classTreeNode.getVarSymbolTable().print();
-            int indexOfVar = (int)classTreeNode.getVarSymbolTable().lookup(node.getName());
-            aload(indexOfVar);
+            node.getIndex().accept(this);
+            if (SemantVisitor.isPrimitive(node.getExprType()))
+                iaload();
+            else
+                aaload();
         }
         
-        node.getIndex().accept(this);
-
-        if (SemantVisitor.isPrimitive(node.getExprType()))
-            iaload();
-        else
-            aaload();
+        
 
         // make sure we update the type of element for the expression
         String arrayElementType = node.getExprType().replaceFirst("\\[\\]$","");
