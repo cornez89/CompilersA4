@@ -1008,12 +1008,14 @@ public class CodeGenVisitor extends Visitor {
         // the method
         node.getStmtList().accept(this);
         
+        //check that return stmt is at the end
         Iterator it = node.getStmtList().getIterator();
         Stmt stmt = (Stmt) it.next();
         while(it.hasNext())
             stmt = (Stmt)it.next();
         if (!(stmt instanceof ReturnStmt))
             returnStmt();
+
         // print max sizes
         out.println("    .limit stack " + currLimits[0]);
         out.println("    .limit locals " + currLimits[1]);
