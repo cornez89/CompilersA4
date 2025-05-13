@@ -860,7 +860,7 @@ public class CodeGenVisitor extends Visitor {
             out = new PrintWriter(new File(node.getName() + ".j"));
 
             // print top of file info
-            out.println(".source " + node.getFilename().substring(8));
+            out.println(".source " + node.getFilename());
             out.println(".class " + "public " + node.getName());
             if (classTreeNode.getParent() != null) {
                 out.println(".super "
@@ -981,7 +981,6 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(Method node) {
-        printComment("Stack size at start = " + currStackSize + ". Local size = " + currLocalSize, node);
         int[] sizesAtStart = { currStackSize, currLocalSize };
         this.sizesAtStart = sizesAtStart;
         currLimits = sizesAtStart.clone();
@@ -1015,6 +1014,8 @@ public class CodeGenVisitor extends Visitor {
             out.println();
             out.println(".throws java/lang/CloneNotSupportedException");
         }
+
+        printComment("Stack size at start = " + currStackSize + ". Local size = " + currLocalSize, node);
 
         // deal with statements
         // for each bytecode that adds something to the stack, increment
@@ -1170,6 +1171,8 @@ public class CodeGenVisitor extends Visitor {
 
         label(elseLabel);
         printComment("if statement else block", node);
+        node.getElseStmt().accept(this);
+
         label(exitLabel);
 
         controlFlowStack.pop();
