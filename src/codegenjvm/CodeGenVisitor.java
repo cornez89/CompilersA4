@@ -409,8 +409,7 @@ public class CodeGenVisitor extends Visitor {
     private void getField(String className, String name, String type) {
         className = getClass(className); 
         String descriptor = getDescriptor(type);
-        if (descriptor.equals("Z") || descriptor.equals("[Z"))
-            descriptor = descriptor.replace("Z", "I");
+
             //We only have int types
         printBytecode("getfield " + className + "/" + name + " " + descriptor);
     }
