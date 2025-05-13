@@ -39,7 +39,7 @@ public class CodeGenVisitor extends Visitor {
         /**
          * @param exitLabel The exit label for where to go on a break statement
          * @param startStackHeight The height of the stack before the loop started
-         * @param isLoop If this refers to a loop conditional
+         * @param isLoop If this refers to a loop
          */
         ControlFlowEntry(String exitLabel, int startStackHeight, boolean isLoop) {
             this.exitLabel = exitLabel;
@@ -1143,14 +1143,14 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("if statement then block", node);
         node.getThenStmt().accept(this);
-        while(currStackSize > conditionStack.peek().startStackHeight)
+        while(currStackSize > controlFlowStack.peek().startStackHeight)
             pop();
         goto_label(exitLabel);
 
         label(elseLabel);
         printComment("if statement else block", node);
         node.getElseStmt().accept(this);
-        while(currStackSize > conditionStack.peek().startStackHeight)
+        while(currStackSize > controlFlowStack.peek().startStackHeight)
             pop();
         label(exitLabel);
 
@@ -1178,7 +1178,6 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("while statement body", node);
         node.getBodyStmt().accept(this);
-        while(currStackSize > conditionStack.peek().startStackHeight)
             pop();
         goto_label(condLabel);
         label(exitLabel);
