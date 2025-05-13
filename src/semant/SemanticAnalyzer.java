@@ -134,7 +134,10 @@ public class SemanticAnalyzer {
             (MemberList) (new MemberList(-1))
                 .addElement(new Method(-1, "Object", "clone",
                     new FormalList(-1), (StmtList) (new StmtList(-1))
-                        .addElement(new ReturnStmt(-1, null)))));
+                        .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "void", "<init>",
+                    new FormalList(-1),
+                    new StmtList(-1))));
         // create a class tree node for object, save in variable root
         root = new ClassTreeNode(astNode, /* built-in? */true,
             /* extendable? */true, classMap);

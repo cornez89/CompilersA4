@@ -18,9 +18,7 @@ abstract public class SemantVisitor extends Visitor {
     protected static String SUPER = "super";
     protected static String THIS = "this";
     protected static String NULL = "null";
-    static private String[] reservedWordsArray = { "this", "super", "null",
-        "class", "extends", "for", "while", "if", "else", "return", "break",
-        "new" };
+    static private String[] reservedWordsArray = { "this", "super", "null" };
 
     /**
      * Gets if 'type' is an array or array of primitives.

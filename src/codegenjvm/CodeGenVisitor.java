@@ -395,9 +395,6 @@ public class CodeGenVisitor extends Visitor {
         
         className = getClass(className); 
         String descriptor = getDescriptor(type);
-        if (descriptor.equals("Z") || descriptor.equals("[Z"))
-            descriptor = descriptor.replace("Z", "I");
-            //We only have int types
         printBytecode("putfield " + className + "." + name + " " + descriptor);
         currStackSize--;
         currStackSize--;
@@ -443,19 +440,15 @@ public class CodeGenVisitor extends Visitor {
         // call constructor if its an object
         if (!SemantVisitor.isPrimitive(className)) {
             dup();
-            if (className.equals("Object")) {
-                invokeSpecial("java/lang/Object/<init>()V");
+            Object temp = classTreeNode
+                .lookupClass(className)
+                .getMethodSymbolTable()
+                .lookup("<init>");
+            
+            if (temp instanceof Method) {
+                invokeSpecial(getFullMethodCall((Method) temp, className));
             } else {
-                Object temp = classTreeNode
-                    .lookupClass(className)
-                    .getMethodSymbolTable()
-                    .lookup("<init>");
-                
-                if (temp instanceof Method) {
-                    invokeSpecial(getFullMethodCall((Method) temp, className));
-                } else {
-                    throw new RuntimeException("Invalid return value of MethodSymbolTableLookup");
-                }
+                throw new RuntimeException("Invalid return value of MethodSymbolTableLookup");
             }
         }
 
@@ -513,6 +506,8 @@ public class CodeGenVisitor extends Visitor {
     }
 
     private String getFullMethodCall(Method method, String methodClass) {
+        if (methodClass.equals("Object") || methodClass.equals("String"))
+            methodClass = "java/lang/" + methodClass;
         return methodClass + "/" + method.getName() + getMethodSignature(method);
     }
     
