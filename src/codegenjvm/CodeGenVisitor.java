@@ -1604,8 +1604,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryCompEqExpr node) {
-        String type = node.getExprType();
-        printComment("type " + node.getExprType(), node);
+        String type = node.getLeftExpr().getExprType();
         if (type.equals("int") || type.equals("boolean"))
             visitBinaryComp(node, this::if_icmpeq);
         else
@@ -1621,8 +1620,8 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(BinaryCompNeExpr node) {
-        String type = node.getExprType();
-        if (type.equals("int") || type.equals("bool"))
+        String type = node.getLeftExpr().getExprType();
+        if (type.equals("int") || type.equals("boolean"))
             visitBinaryComp(node, this::if_icmpne);
         else
             visitBinaryComp(node, this::if_acmpne);
