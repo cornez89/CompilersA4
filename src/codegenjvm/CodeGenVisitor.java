@@ -254,19 +254,25 @@ public class CodeGenVisitor extends Visitor {
     private void aconstNull() {
         printBytecode("aconst_null");
         currStackSize++;
+        checkLimits();
     }
 
     // 1 arg <reference>
     // returns new type, net = stack
     private void checkCast(String type) {
-
-        printBytecode("checkcast " + getDescriptorShort(type));
+        if (type.endsWith("[]"))
+            printBytecode("checkcast " + getDescriptor(type));
+        else
+            printBytecode("checkcast " + getDescriptorShort(type));
     }
 
     // 1 arg <reference>
     // returns new type, net = stack
     private void instanceOf(String type) {
-        printBytecode("instanceof " + getDescriptorShort(type));
+        if (type.endsWith("[]"))
+            printBytecode("instanceof " + getDescriptor(type));
+        else
+            printBytecode("instanceof " + getDescriptorShort(type));
     }
 
     // no args
@@ -409,24 +415,6 @@ public class CodeGenVisitor extends Visitor {
         currStackSize++;
         checkLimits();
     }
-    // //
-    // private void putStatic(ClassTreeNode classTreeNode, String fieldName,
-    // String descriptor) {
-    // aload(0);
-    // printBytecode("putfield " + classTreeNode.getName() + "/" + fieldName
-    // + " " + descriptor);
-    // currStackSize--;
-    // currStackSize--;
-    // // net stack size - 1
-    // }
-
-    // private void getStatic(ClassTreeNode classTreeNode, String fieldName,
-    // String descriptor) {
-    // aload(0);
-    // printBytecode("getstatic " + classTreeNode.getName() + "/" + fieldName
-    // + " " + descriptor);
-    // // net stack size + 1
-    // }
 
     // 2 arg <reference> <value>
     // removes 2 from stack
@@ -448,22 +436,6 @@ public class CodeGenVisitor extends Visitor {
 
         // We only have int types
         printBytecode("getfield " + className + "/" + name + " " + descriptor);
-    }
-
-    // 1 arg <value>
-    // removes 1 from stack
-    private void putStatic(String field) {
-        printBytecode("putstatic " + field);
-        currStackSize--;
-        checkLimits();
-    }
-
-    // no args
-    // adds one element to the stack
-    private void getStatic(String field) {
-        printBytecode("getstatic " + field);
-        currStackSize++;
-        checkLimits();
     }
 
     // new array:
@@ -616,33 +588,6 @@ public class CodeGenVisitor extends Visitor {
         printBytecode("ineg");
     }
 
-    // 2 args <index of local> <const to add>
-    // no change to stack
-    private void iinc(int index, int amount) {
-        printBytecode("iinc " + index + " " + amount);
-    }
-
-    // no args
-    // remove 1 from stack
-    private void iand() {
-        printBytecode("iand");
-        currStackSize -= 1;
-    }
-
-    // no args
-    // remove 1 from stack
-    private void ior() {
-        printBytecode("ior");
-        currStackSize -= 1;
-    }
-
-    // no args
-    // remove 1 from stack
-    private void ixor() {
-        printBytecode("ixor");
-        currStackSize -= 1;
-    }
-
     // no args
     // nothing
     private void returnStmt() {
@@ -665,16 +610,6 @@ public class CodeGenVisitor extends Visitor {
 
     private void label(String label) {
         bytecodeBuffer.add("  " + label + ":");
-    }
-
-    /**
-     * 
-     * Other Helper Methods
-     * 
-     */
-    private void addLimits(int[] temp, int[] orig) {
-        orig[0] += temp[0];
-        orig[1] += temp[1];
     }
 
     private String getDescriptor(String type) {
@@ -755,21 +690,6 @@ public class CodeGenVisitor extends Visitor {
         return signature;
     }
 
-    // recursively creates a file path as so
-    // filepath/etc.../ParentOfParentClass/parentClass/class
-    private String getFilePath(ClassTreeNode classNode, String filePath) {
-        return filePath + getFilePathHelper(classNode.getParent())
-                + classNode.getName();
-    }
-
-    private String getFilePathHelper(ClassTreeNode classNode) {
-        if (classNode == null)
-            return "";
-        else
-            return getFilePathHelper(classNode.getParent())
-                    + classNode.getName() + "/";
-    }
-
     private boolean varIsField(String varName, ClassTreeNode classNode) {
         return SemantVisitor.existsInClass("this." + varName, classNode);
     }
@@ -786,12 +706,10 @@ public class CodeGenVisitor extends Visitor {
                 if (init != null) {
                     init.accept(this);
                 } else {
-
                     // assign default values
                     switch (getDescriptor(field.getType())) {
                         case "I":
                         case "Z":
-
                             iconst(0);
                             break;
                         case "S":
@@ -956,7 +874,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(MemberList node) {
-        for (Iterator it = node.getIterator(); it.hasNext();)
+        for (Iterator<ASTNode> it = node.getIterator(); it.hasNext();)
             ((Member) it.next()).accept(this);
         return null;
     }
@@ -1568,9 +1486,8 @@ public class CodeGenVisitor extends Visitor {
 
         if (varIsField(node.getName(), refClass)) {
             aload(0);
-            getField(refClass.getName(), node.getName(), node.getExprType());
+            getField(refClass.getName(), node.getName(), node.getExprType() + "[]");
         } else {
-
             aload((int) refClass.getVarSymbolTable().lookup(node.getName()));
         }
 
@@ -1814,7 +1731,7 @@ public class CodeGenVisitor extends Visitor {
         String exitLabel = createLabel();
 
         node.getLeftExpr().accept(this);
-        ifne(shortCircuitLabel); // if left expr is false, short
+        ifeq(shortCircuitLabel);          // if left expr is false, short
         node.getRightExpr().accept(this); // otherwise eval right expr
         goto_label(exitLabel);
         label(shortCircuitLabel);
@@ -1836,7 +1753,7 @@ public class CodeGenVisitor extends Visitor {
         String exitLabel = createLabel();
 
         node.getLeftExpr().accept(this);
-        ifeq(shortCircuitLabel); // if left expr is true, short
+        ifne(shortCircuitLabel);          // if left expr is true, short
         node.getRightExpr().accept(this); // otherwise eval right expr
         goto_label(exitLabel);
         label(shortCircuitLabel);
