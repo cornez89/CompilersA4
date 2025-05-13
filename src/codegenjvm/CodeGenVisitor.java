@@ -243,6 +243,11 @@ public class CodeGenVisitor extends Visitor {
     private void checkCast(String type) {
         printBytecode("checkcast " + getDescriptorShort(type));
     }
+    //1 arg <reference>
+    //returns new type, net = stack
+    private void instanceOf(String type) {
+        printBytecode("instanceof " + getDescriptorShort(type));
+    }
 
     // no args
     // net stack size + 1
@@ -1378,7 +1383,7 @@ public class CodeGenVisitor extends Visitor {
      */
     public Object visit(InstanceofExpr node) {
         node.getExpr().accept(this);
-
+        instanceOf(node.getType());
         return null;
     }
 
@@ -1394,6 +1399,7 @@ public class CodeGenVisitor extends Visitor {
         checkCast(node.getType());
         return null;
     }
+
 
     /**
      * Visit an assignment expression node
