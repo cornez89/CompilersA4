@@ -1015,7 +1015,7 @@ public class CodeGenVisitor extends Visitor {
             stmt = (Stmt)it.next();
         if (!(stmt instanceof ReturnStmt))
             returnStmt();
-            
+
         // print max sizes
         out.println("    .limit stack " + currLimits[0]);
         out.println("    .limit locals " + currLimits[1]);
@@ -1955,11 +1955,11 @@ public class CodeGenVisitor extends Visitor {
                 switch (refExpr.getName()) {
                     case "this": 
                         aload(0); 
-                        getField(classTreeNode.getName(), node.getName(), node.getExprType());
+                        getField(classTreeNode.getName(), node.getName(), node.getExprType() + "[]");
                         break;
                     case "super" : 
                         aload(0);
-                        getField(classTreeNode.getParent().getName(), node.getName(), node.getExprType());
+                        getField(classTreeNode.getParent().getName(), node.getName(), node.getExprType() + "[]");
                         break;
                     default: throw new RuntimeException("Reference to array " + node.getName() + " is not this, super or null.");
                 }
@@ -1974,12 +1974,12 @@ public class CodeGenVisitor extends Visitor {
 
             } else {
                 aload(0);
-                getField(classTreeNode.getName(), node.getName(), node.getExprType());
+                getField(classTreeNode.getName(), node.getName(), node.getExprType() + "[]");
             }
             
             classTreeNode.getVarSymbolTable().print();
             node.getIndex().accept(this);
-            if (SemantVisitor.isPrimitive(node.getExprType()))
+            if (SemantVisitor.isPrimitive(node.getExprType() + "[]"))
                 iaload();
             else
                 aaload();
