@@ -962,6 +962,9 @@ public class CodeGenVisitor extends Visitor {
 
             // newClass("String[]");
             out.println(".throws java/lang/CloneNotSupportedException");
+
+            newObject("Main");
+            astore(0);
         } else {
             // print method signature
             out.print(".method " + "public " + node.getName() + "(");
