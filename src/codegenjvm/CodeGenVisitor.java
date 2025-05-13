@@ -975,6 +975,7 @@ public class CodeGenVisitor extends Visitor {
 
             // newClass("String[]");
             out.println(".throws java/lang/CloneNotSupportedException");
+
             newObject("Main");
             astore(0);
         } else {
