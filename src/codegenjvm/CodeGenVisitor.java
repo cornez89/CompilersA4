@@ -942,7 +942,7 @@ public class CodeGenVisitor extends Visitor {
      * @return result of the visit
      */
     public Object visit(MemberList node) {
-        for (Iterator it = node.getIterator(); it.hasNext();)
+        for (Iterator<ASTNode> it = node.getIterator(); it.hasNext();)
             ((Member) it.next()).accept(this);
         return null;
     }
@@ -1017,6 +1017,9 @@ public class CodeGenVisitor extends Visitor {
 
         printComment("Stack size at start = " + currStackSize + ". Local size = " + currLocalSize, node);
 
+        if (node.getName().equals("<init>")) {
+            callSuper();
+        }
         // deal with statements
         // for each bytecode that adds something to the stack, increment
         // currStackSize
