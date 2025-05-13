@@ -14,12 +14,12 @@ public class JVMCodeGenerator {
     }
 
     public void generate() {
-
         CodeGenVisitor codeGenVisitor = new CodeGenVisitor();
         Iterator<ClassTreeNode> children = root.getChildrenList();
 
         System.out.printf("Begin generate %s\n", root.getName());
-        codeGenVisitor.visit(root);
+        if (!root.isBuiltIn())
+            codeGenVisitor.visit(root);
 
         while (children.hasNext()) {
             root = children.next();

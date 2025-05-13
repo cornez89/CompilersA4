@@ -168,7 +168,10 @@ public class SemanticAnalyzer {
                     (FormalList) (new FormalList(-1))
                         .addElement(new Formal(-1, "String", "str")),
                     (StmtList) (new StmtList(-1))
-                        .addElement(new ReturnStmt(-1, null)))));
+                        .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "void", "<init>",
+                    new FormalList(-1),
+                    new StmtList(-1))));
         // create class tree node for String, add it to the mapping
         classMap.put("String", new ClassTreeNode(astNode, /* built-in? */true,
             /* extendable? */false, classMap));
@@ -215,7 +218,10 @@ public class SemanticAnalyzer {
                     (FormalList) (new FormalList(-1))
                         .addElement(new Formal(-1, "int", "n")),
                     (StmtList) (new StmtList(-1))
-                        .addElement(new ReturnStmt(-1, null)))));
+                        .addElement(new ReturnStmt(-1, null))))
+                .addElement(new Method(-1, "void", "<init>",
+                    new FormalList(-1),
+                    new StmtList(-1))));
         // create class tree node for TextIO, add it to the mapping
         classMap.put("TextIO", new ClassTreeNode(astNode, /* built-in? */true,
             /* extendable? */false, classMap));
@@ -228,13 +234,9 @@ public class SemanticAnalyzer {
                         .addElement(new Formal(-1, "int", "status")),
                     (StmtList) (new StmtList(-1))
                         .addElement(new ReturnStmt(-1, null))))
-        /*
-         * .addElement(new Method(-1, "int", "time",
-         * new FormalList(-1),
-         * (StmtList)(new StmtList(-1))
-         * .addElement(new ReturnStmt(-1, null))))
-         */
-        );
+                .addElement(new Method(-1, "void", "<init>",
+                    new FormalList(-1),
+                    new StmtList(-1))));
         // create class tree node for Sys, add it to the mapping
         classMap.put("Sys", new ClassTreeNode(astNode, /* built-in? */true,
             /* extendable? */false, classMap));

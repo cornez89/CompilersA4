@@ -8,9 +8,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -56,11 +58,11 @@ public class CodeGenVisitor extends Visitor {
      */
 
     private void print(String string) {
-        System.out.print(string);
+        // System.out.print(string);
     }
 
     private void println(String string) {
-        System.out.println(string);
+        // System.out.println(string);
     }
 
     // Helper method to that indents the input by 4 spaces and puts a \n at
@@ -441,15 +443,19 @@ public class CodeGenVisitor extends Visitor {
         // call constructor if its an object
         if (!SemantVisitor.isPrimitive(className)) {
             dup();
-            Object temp = classTreeNode
-                .lookupClass(className).getMethodSymbolTable()
-                .lookup("<init>");
-            println("DEBUG: return type of MethodSymbolTableLookup is: " + temp.getClass().getSimpleName());
-            
-            if (temp instanceof Method) {
-                invokeSpecial(getFullMethodCall((Method) temp, className));
+            if (className.equals("Object")) {
+                invokeSpecial("java/lang/Object/<init>()V");
             } else {
-                throw new RuntimeException("Invalid return value of MethodSymbolTableLookup");
+                Object temp = classTreeNode
+                    .lookupClass(className)
+                    .getMethodSymbolTable()
+                    .lookup("<init>");
+                
+                if (temp instanceof Method) {
+                    invokeSpecial(getFullMethodCall((Method) temp, className));
+                } else {
+                    throw new RuntimeException("Invalid return value of MethodSymbolTableLookup");
+                }
             }
         }
 
@@ -817,7 +823,7 @@ public class CodeGenVisitor extends Visitor {
             out = new PrintWriter(new File(node.getName() + ".j"));
 
             // print top of file info
-            out.println(".source " + node.getFilename().substring(8));
+            out.println(".source " + node.getFilename());
             out.println(".class " + "public " + node.getName());
             if (classTreeNode.getParent() != null) {
                 out.println(".super "
@@ -1239,9 +1245,10 @@ public class CodeGenVisitor extends Visitor {
                 ireturnStmt();
             else
                 areturnStmt();
+        } else {
+            returnStmt();
         }
 
-        returnStmt();
         return null;
     }
 

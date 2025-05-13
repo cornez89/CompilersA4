@@ -28,7 +28,7 @@
   </target>
 
   <target name="build-compiler" depends="build-parser">
-    <javac srcdir="${basedir}" classpath="${classpath}" fork="true" debug="true"/>
+    <javac srcdir="${basedir}" classpath="${classpath}" fork="true" debug="true"/><!-- TODO remove debug=true -->
   </target>
 
   <target name="create-bantamc" depends="build-compiler">
